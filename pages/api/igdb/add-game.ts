@@ -10,7 +10,7 @@ export default async function handler(req, res) {
 
   const gameId = req.body.id
   const authToken = req.body.token
-  const pollEligible = !!req.body.pollEligible
+  const notPollable = !!req.body.notPollable
 
   axios({
     url: 'https://api.igdb.com/v4/games',
@@ -42,7 +42,7 @@ export default async function handler(req, res) {
         developers,
         releaseYear,
         igdbUrl: g.url,
-        pollEligible,
+        notPollable,
         finishedDate: null,
         comment: null,
         timeSpent: null,

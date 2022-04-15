@@ -15,7 +15,7 @@ export default function AddGame({ ADMIN_USER_ID }) {
   const { data: session, status } = useSession()
 
   const [searchTerm, setSearchTerm] = useState<string>('')
-  const [pollEligible, setPollEligible] = useState<boolean>(false)
+  const [notPollable, setNotPollable] = useState<boolean>(false)
   const [options, setOptions] = useState<GameOptions[]>([])
   const [igdbToken, setIgdbToken] = useState<string>('')
 
@@ -50,7 +50,7 @@ export default function AddGame({ ADMIN_USER_ID }) {
   }
 
   const addGameById = (id: number) => {
-    axios.post(`api/igdb/add-game`, { token: igdbToken, pollEligible, id }).then((res) => {
+    axios.post(`api/igdb/add-game`, { token: igdbToken, notPollable, id }).then((res) => {
       console.log('SUCCESSFULLY ADDED GAME WITH ID ' + id)
     })
   }
@@ -75,7 +75,7 @@ export default function AddGame({ ADMIN_USER_ID }) {
         <div>
           <input value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} />
           <button onClick={() => getGamesByTitle(searchTerm)}>get gaem</button>
-          <input type='checkbox' checked={pollEligible} onChange={(e) => setPollEligible(e.target.checked)} />
+          <input type='checkbox' checked={notPollable} onChange={(e) => setNotPollable(e.target.checked)} />
         </div>
 
         <div>

@@ -5,10 +5,14 @@ const { connectToDatabase } = require('../../lib/mongo')
 const ObjectId = require('mongodb').ObjectId
 
 export default async function handler(req, res) {
+  if (!req.body.id && !req.query.id) {
+    return getGames(req, res)
+  }
+
   // switch the methods
   switch (req.method) {
     case 'GET': {
-      return getGames(req, res)
+      return getGame(req, res)
     }
 
     case 'POST': {
@@ -34,10 +38,32 @@ async function getGames(req, res) {
     // connect to the database
     let { db } = await connectToDatabase()
     // fetch the posts
-    let posts = await db.collection('games').find({}).sort({ published: -1 }).toArray()
+    let games = await db.collection('games').find({}).sort({ published: -1 }).toArray()
     // return the posts
     return res.json({
-      message: JSON.parse(JSON.stringify(posts)),
+      message: JSON.parse(JSON.stringify(games)),
+      success: true,
+    })
+  } catch (error: any) {
+    // return the error
+    return res.json({
+      message: new Error(error).message,
+      success: false,
+    })
+  }
+}
+
+async function getGame(req, res) {
+  try {
+    // connect to the database
+    let { db } = await connectToDatabase()
+    // fetch the posts
+    console.log(req.query.id)
+    let game = await db.collection('games').findOne({ igdbId: parseInt(req.query.id) })
+    console.log('gaem', game)
+    // return the posts
+    return res.json({
+      message: JSON.parse(JSON.stringify(game)),
       success: true,
     })
   } catch (error: any) {
