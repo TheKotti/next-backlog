@@ -36,9 +36,9 @@ async function getGames(req, res) {
   console.log('t', t)
   try {
     // connect to the database
-    let { db } = await connectToDatabase()
+    const { db } = await connectToDatabase()
     // fetch the posts
-    let games = await db.collection('games').find({}).sort({ published: -1 }).toArray()
+    const games = await db.collection('games').find({}).sort({ published: -1 }).toArray()
     // return the posts
     return res.json({
       message: JSON.parse(JSON.stringify(games)),
@@ -56,11 +56,9 @@ async function getGames(req, res) {
 async function getGame(req, res) {
   try {
     // connect to the database
-    let { db } = await connectToDatabase()
+    const { db } = await connectToDatabase()
     // fetch the posts
-    console.log(req.query.id)
-    let game = await db.collection('games').findOne({ igdbId: parseInt(req.query.id) })
-    console.log('gaem', game)
+    const game = await db.collection('games').findOne({ _id: ObjectId(req.query.id) })
     // return the posts
     return res.json({
       message: JSON.parse(JSON.stringify(game)),
