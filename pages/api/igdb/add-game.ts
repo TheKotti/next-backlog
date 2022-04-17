@@ -10,7 +10,7 @@ export default async function handler(req, res) {
 
   const gameId = req.body.id
   const authToken = req.body.token
-  const notPollable = !!req.body.notPollable
+  const notPollable = req.body.notPollable
 
   axios({
     url: 'https://api.igdb.com/v4/games',
@@ -34,7 +34,7 @@ export default async function handler(req, res) {
       const developers = g.involved_companies.filter((x) => x.developer).map((x) => x.company.name)
       const releaseYear = g.release_dates ? Math.min(...g.release_dates.map((x) => x.y).filter((x) => x)) : null
 
-      const game = {
+      const game: Game = {
         title: g.name,
         igdbId: g.id,
         coverImageId: g.cover.image_id,
@@ -51,6 +51,8 @@ export default async function handler(req, res) {
         tss: null,
         rating: null,
         platform: null,
+        streamed: null,
+        vods: null,
       }
 
       axios.post(process.env.APP_URL + '/api/games', game).then((postGameResponse) => {
