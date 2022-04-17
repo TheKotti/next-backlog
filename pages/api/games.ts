@@ -1,3 +1,4 @@
+import axios from 'axios'
 import { getToken } from 'next-auth/jwt'
 import { getSession } from 'next-auth/react'
 
@@ -75,15 +76,80 @@ async function getGame(req, res) {
 
 async function addGame(req, res) {
   try {
-    // connect to the database
-    let { db } = await connectToDatabase()
-    // add the post
-    await db.collection('games').insertOne(req.body)
-    // return a message
-    res.json({
-      message: 'Game added successfully',
-      success: true,
+    const session = await getSession({ req })
+
+    if (session?.userId !== process.env.ADMIN_USER_ID) {
+      res.status(401).json({ error: 'Unauthorized' })
+    }
+
+    const gameId = req.body.id
+    const authToken = req.body.token
+    const notPollable = req.body.notPollable
+    const comment = req.body.comment
+    const timeSpent = req.body.timeSpent
+    const finished = req.body.finished
+    const finishedDate = req.body.finished ? req.body.finishedDate : null
+    const stealth = req.body.stealth
+    const tss = req.body.tss
+    const streamed = req.body.streamed
+    const rating = req.body.rating
+    const platform = req.body.platform
+
+    axios({
+      url: 'https://api.igdb.com/v4/games',
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+        'Client-ID': process.env.TWITCH_CLIENT_ID!,
+        Authorization: `Bearer ${authToken}`,
+      },
+      data: `
+      where id = ${gameId};
+      fields name, id, genres.name, themes.name, cover.image_id, release_dates.y, url, involved_companies.company.name, involved_companies.developer;`,
     })
+      .then(async (getGameResponse) => {
+        if (getGameResponse.data.length < 1) {
+          res.status(404).json({ error: 'Not found' })
+        }
+
+        const g = getGameResponse.data[0]
+        const keywords = [...g.genres.map((x) => x.name), ...g.themes.map((x) => x.name)]
+        const developers = g.involved_companies.filter((x) => x.developer).map((x) => x.company.name)
+        const releaseYear = g.release_dates ? Math.min(...g.release_dates.map((x) => x.y).filter((x) => x)) : null
+
+        const game: Game = {
+          title: g.name,
+          igdbId: g.id,
+          coverImageId: g.cover.image_id,
+          keywords,
+          developers,
+          releaseYear,
+          igdbUrl: g.url,
+          notPollable,
+          finishedDate,
+          comment,
+          timeSpent: timeSpent || null,
+          finished,
+          stealth,
+          tss,
+          rating: rating || null,
+          platform,
+          streamed,
+          vods: null,
+        }
+        // connect to the database
+        let { db } = await connectToDatabase()
+        // add the post
+        await db.collection('games').insertOne(game)
+        // return a message
+        res.json({
+          message: 'Game added successfully',
+          success: true,
+        })
+      })
+      .catch((err) => {
+        res.send(err)
+      })
   } catch (error: any) {
     // return an error
     res.json({

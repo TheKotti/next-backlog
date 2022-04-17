@@ -9,7 +9,7 @@ import PostCard from '../components/PostCard'
 import styles from '../styles/Home.module.css'
 
 export default function Home() {
-  const [games, setGames] = useState<any[]>([])
+  const [games, setGames] = useState<Game[]>([])
 
   useEffect(() => {
     axios
@@ -35,11 +35,14 @@ export default function Home() {
           {games.length === 0 ? (
             <h2>No added posts</h2>
           ) : (
-            <ul>
-              {games.map((post, i) => (
-                <PostCard post={post} key={i} />
+            <div style={{ display: 'flex', flexDirection: 'column' }}>
+              {games.map((game, i) => (
+                <div key={game._id} style={{ display: 'flex', flexDirection: 'row' }}>
+                  <div>{game.title}</div>
+                  <a href={`recap?id=${game._id}`}>RECAP</a>
+                </div>
               ))}
-            </ul>
+            </div>
           )}
         </div>
       </main>

@@ -55,7 +55,7 @@ export default function AddGame({ ADMIN_USER_ID }) {
 
   const addGameById = (id: number) => {
     axios
-      .post(`api/igdb/add-game`, {
+      .post(`api/games`, {
         token: igdbToken,
         notPollable,
         comment,
