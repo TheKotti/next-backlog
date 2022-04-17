@@ -19,3 +19,10 @@ type Game = {
   streamed: boolean | null
   vods: Array<string> | null
 }
+
+type GameOptions = {
+  id: number
+  title: string
+  year: number
+  url: string
+}

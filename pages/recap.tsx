@@ -44,31 +44,31 @@ export default function Home() {
             onChange={(e) => setGame({ ...game, comment: e.target.value })}
           ></textarea>
         </div>
-      </div>
 
-      <div>
-        <label>Finished</label>
-        <input value={game?.finished || ''} onChange={(e) => setGame({ ...game, finished: e.target.value })}></input>
-      </div>
+        <div>
+          <label>Finished</label>
+          <input value={game?.finished || ''} onChange={(e) => setGame({ ...game, finished: e.target.value })}></input>
+        </div>
 
-      <div>
-        <label>Rating</label>
-        <input
-          type='number'
-          min={1}
-          max={10}
-          value={game?.rating || ''}
-          onChange={(e) => setGame({ ...game, rating: parseInt(e.target.value) })}
-        ></input>
-      </div>
+        <div>
+          <label>Rating</label>
+          <input
+            type='number'
+            min={1}
+            max={10}
+            value={game?.rating || ''}
+            onChange={(e) => setGame({ ...game, rating: parseInt(e.target.value) })}
+          ></input>
+        </div>
 
-      <div>
-        <label>Stealöth?</label>
-        <input
-          type='checkbox'
-          checked={!!game?.stealth}
-          onChange={(e) => setGame({ ...game, stealth: e.target.checked })}
-        ></input>
+        <div>
+          <label>Stealöth?</label>
+          <input
+            type='checkbox'
+            checked={!!game?.stealth}
+            onChange={(e) => setGame({ ...game, stealth: e.target.checked })}
+          ></input>
+        </div>
       </div>
     </div>
   )

@@ -5,7 +5,7 @@ const { connectToDatabase } = require('../../lib/mongo')
 const ObjectId = require('mongodb').ObjectId
 
 export default async function handler(req, res) {
-  if (!req.body.id && !req.query.id) {
+  if (!req.body && !req.query.id) {
     return getGames(req, res)
   }
 
@@ -74,14 +74,14 @@ async function getGame(req, res) {
 }
 
 async function addGame(req, res) {
-  /*   try {
+  try {
     // connect to the database
     let { db } = await connectToDatabase()
     // add the post
     await db.collection('games').insertOne(req.body)
     // return a message
     res.json({
-      message: 'Post added successfully',
+      message: 'Game added successfully',
       success: true,
     })
   } catch (error: any) {
@@ -90,7 +90,7 @@ async function addGame(req, res) {
       message: new Error(error).message,
       success: false,
     })
-  } */
+  }
 }
 
 async function updatePost(req, res) {

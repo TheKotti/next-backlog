@@ -11,6 +11,15 @@ export default async function handler(req, res) {
   const gameId = req.body.id
   const authToken = req.body.token
   const notPollable = req.body.notPollable
+  const comment = req.body.comment
+  const timeSpent = req.body.timeSpent
+  const finished = req.body.finished
+  const finishedDate = req.body.finished ? req.body.finishedDate : null
+  const stealth = req.body.stealth
+  const tss = req.body.tss
+  const streamed = req.body.streamed
+  const rating = req.body.rating
+  const platform = req.body.platform
 
   axios({
     url: 'https://api.igdb.com/v4/games',
@@ -43,15 +52,15 @@ export default async function handler(req, res) {
         releaseYear,
         igdbUrl: g.url,
         notPollable,
-        finishedDate: null,
-        comment: null,
-        timeSpent: null,
-        finished: null,
-        stealth: null,
-        tss: null,
-        rating: null,
-        platform: null,
-        streamed: null,
+        finishedDate,
+        comment,
+        timeSpent: timeSpent || null,
+        finished,
+        stealth,
+        tss,
+        rating: rating || null,
+        platform,
+        streamed,
         vods: null,
       }
 
