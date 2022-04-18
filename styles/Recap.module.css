@@ -1,0 +1,43 @@
+.root {
+    display: flex;
+    flex-direction: row;
+    background-color: olive;
+    color: white
+}
+
+.gameMeta {
+    display: flex;
+    flex-direction: column;
+}
+
+.gameForm {
+    display: flex;
+    flex-direction: column;
+}
+
+.formFinished {
+    display: flex;
+    flex-direction: row;
+}
+
+.comment {
+    display: flex;
+    flex-direction: column;
+}
+
+.ratings {
+    display: flex;
+    flex-direction: row;
+    gap: 0.5em;
+}
+
+.ratingBox {
+    width: 3em;
+    height: 3em;
+    background-color: green;
+    cursor: pointer;
+}
+
+.ratingBox:hover {
+    background-color: red;
+}
