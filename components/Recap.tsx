@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
-import Image from 'next/image'
 
 import styles from '../styles/Recap.module.css'
+import { Rating } from './Rating'
 
 type Props = {
   game: Game
@@ -11,19 +11,17 @@ type Props = {
 export const Recap = (props: Props) => {
   const { game, setGame } = props
 
-  const [rating, setRating] = useState<number | null>(null)
-  const [lockedRating, setLockedRating] = useState<number>()
-
   return (
     <div className={styles.root}>
       <div className={styles.gameMeta}>
         <img src={`https://images.igdb.com/igdb/image/upload/t_cover_big/${game.coverImageId}.png`} alt='cover' />
         <h1>{game.title}</h1>
+        <div className={styles.webcam}></div>
       </div>
 
       <div className={styles.gameForm}>
         <div className={styles.formFinished}>
-          <div>
+          <div className={styles.formInput}>
             <label>Finished</label>
             <input
               value={game?.finished || ''}
@@ -31,7 +29,7 @@ export const Recap = (props: Props) => {
             ></input>
           </div>
 
-          <div>
+          <div className={styles.formInput}>
             <label>Time spent</label>
             <input
               value={game?.timeSpent || ''}
@@ -40,13 +38,13 @@ export const Recap = (props: Props) => {
           </div>
         </div>
 
-        <div>
+        <div className={styles.formInput}>
           <input
             type='checkbox'
             checked={!!game?.stealth}
             onChange={(e) => setGame({ ...game, stealth: e.target.checked })}
           ></input>
-          <label>Stealth?</label>
+          <label>Felt sneaky</label>
         </div>
 
         <div className={styles.comment}>
@@ -57,33 +55,7 @@ export const Recap = (props: Props) => {
           ></textarea>
         </div>
 
-        <div className={styles.ratings}>
-          <div
-            className={styles.ratingBox}
-            onClick={() => setLockedRating(1)}
-            onMouseEnter={() => setRating(1)}
-            onMouseLeave={() => setRating(null)}
-          >
-            1
-          </div>
-          <div
-            className={styles.ratingBox}
-            onClick={() => setLockedRating(2)}
-            onMouseEnter={() => setRating(2)}
-            onMouseLeave={() => setRating(null)}
-          >
-            2
-          </div>
-          <div
-            className={styles.ratingBox}
-            onClick={() => setLockedRating(3)}
-            onMouseEnter={() => setRating(3)}
-            onMouseLeave={() => setRating(null)}
-          >
-            3
-          </div>
-          <span>{lockedRating || rating}</span>
-        </div>
+        <Rating rating={game.rating} setRating={(r) => setGame({ ...game, rating: r })} />
       </div>
     </div>
   )

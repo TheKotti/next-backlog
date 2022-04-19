@@ -1,0 +1,39 @@
+.ratings {
+    display: flex;
+    flex-direction: row;
+    gap: 0.4em;
+    width: fit-content;
+}
+
+.ratingBox {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 1.4em;
+    height: 1.4em;
+    background-color: green;
+    cursor: pointer;
+    text-shadow: 1px 1px 6px #000, -1px -1px 6px #000;
+    filter: brightness(50%);
+    border-radius: 4px;
+}
+
+.ratingBox:hover {
+    filter: brightness(85%)
+}
+
+.selected {
+    filter: brightness(100%)
+}
+
+.notSelected {
+    filter: brightness(100%);
+    color: transparent;
+    text-shadow: none;
+}
+
+.tooBig {
+    filter: brightness(10%);
+    color: transparent;
+    text-shadow: none;
+}

@@ -1,43 +1,68 @@
 .root {
     display: flex;
     flex-direction: row;
-    background-color: olive;
-    color: white
+    color: white;
+    aspect-ratio: 16/9;
+    border: 1px red solid;
+    background-image: url('/NJBG.jpg');
+    background-size: contain;
 }
+ 
 
 .gameMeta {
     display: flex;
     flex-direction: column;
+    width: 22%;
+    align-items: center;
+    text-align: center;
+    justify-content: center;
+    border: 1px blue solid;
+}
+
+.gameMeta img {
+    max-height: 45%;
+    max-width: 90%;
+    object-fit: scale-down;
+}
+
+.gameMeta .webcam {
+    height: 30%;
 }
 
 .gameForm {
     display: flex;
+    flex-grow: 1;
     flex-direction: column;
+    height: 80%;
+    margin: auto;
+    align-items: center;
+    justify-content: space-evenly;
+    font-size: 2.5em;
+    
 }
 
 .formFinished {
     display: flex;
     flex-direction: row;
+    gap: 50px;
+}
+
+.formInput {
+    display: flex;
+    align-items: center;
+}
+
+.gameForm input {
+    height: 2.8em;
+    color: white;
+    text-align: center;
+    background: transparent;
+    padding: 0;
+    margin: 0;
+    margin-left: 0.5em;
 }
 
 .comment {
     display: flex;
     flex-direction: column;
-}
-
-.ratings {
-    display: flex;
-    flex-direction: row;
-    gap: 0.5em;
-}
-
-.ratingBox {
-    width: 3em;
-    height: 3em;
-    background-color: green;
-    cursor: pointer;
-}
-
-.ratingBox:hover {
-    background-color: red;
 }
