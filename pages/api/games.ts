@@ -21,7 +21,7 @@ export default async function handler(req, res) {
     }
 
     case 'PUT': {
-      return updatePost(req, res)
+      return updateGame(req, res)
     }
 
     case 'DELETE': {
@@ -159,22 +159,32 @@ async function addGame(req, res) {
   }
 }
 
-async function updatePost(req, res) {
-  /*   try {
+async function updateGame(req, res) {
+  try {
+    const session = await getSession({ req })
+
+    if (session?.userId !== process.env.ADMIN_USER_ID) {
+      res.status(401).json({ error: 'Unauthorized' })
+    }
+
+    const game: Game = req.body.game
+    game.finishedDate = new Date()
+    game._id = new ObjectId(game._id)
+
     // connect to the database
     let { db } = await connectToDatabase()
 
     // update the published status of the post
-    await db.collection('games').updateOne(
+    await db.collection('games').replaceOne(
       {
-        _id: new ObjectId(req.body),
+        _id: game._id,
       },
-      { $set: { published: true } }
+      game
     )
 
     // return a message
     return res.json({
-      message: 'Post updated successfully',
+      message: 'Game updated successfully',
       success: true,
     })
   } catch (error: any) {
@@ -183,7 +193,7 @@ async function updatePost(req, res) {
       message: new Error(error).message,
       success: false,
     })
-  } */
+  }
 }
 
 async function deletePost(req, res) {

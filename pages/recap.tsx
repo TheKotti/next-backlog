@@ -26,6 +26,17 @@ export default function Home() {
       })
   }, [])
 
+  const updateGame = (game: Game) => {
+    axios
+      .put('api/games', { game })
+      .then((res) => {
+        console.log(res.data.message)
+      })
+      .catch((err) => {
+        console.log('ERROR: ', err)
+      })
+  }
+
   if (!game) {
     return null
   }
@@ -36,9 +47,7 @@ export default function Home() {
         <title>Recap</title>
       </Head>
 
-      <div>{JSON.stringify(game)}</div>
-
-      <Recap game={game} setGame={setGame} />
+      <Recap game={game} setGame={setGame} updateGame={updateGame} />
     </div>
   )
 }

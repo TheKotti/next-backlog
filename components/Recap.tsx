@@ -6,10 +6,11 @@ import { Rating } from './Rating'
 type Props = {
   game: Game
   setGame: (game: Game) => void
+  updateGame: (game: Game) => void
 }
 
 export const Recap = (props: Props) => {
-  const { game, setGame } = props
+  const { game, setGame, updateGame } = props
 
   return (
     <div className={styles.root}>
@@ -36,15 +37,13 @@ export const Recap = (props: Props) => {
               onChange={(e) => setGame({ ...game, timeSpent: parseInt(e.target.value) })}
             ></input>
           </div>
-        </div>
 
-        <div className={styles.formInput}>
-          <input
-            type='checkbox'
-            checked={!!game?.stealth}
-            onChange={(e) => setGame({ ...game, stealth: e.target.checked })}
-          ></input>
-          <label>Felt sneaky</label>
+          <div className={styles.formInput}>
+            <label>Felt sneaky</label>
+            <div className={styles.checkbox} onClick={() => setGame({ ...game, stealth: !game.stealth })}>
+              {!!game?.stealth ? <div className={styles.checked} /> : <div className={styles.unchecked} />}
+            </div>
+          </div>
         </div>
 
         <div className={styles.comment}>
@@ -57,6 +56,10 @@ export const Recap = (props: Props) => {
 
         <Rating rating={game.rating} setRating={(r) => setGame({ ...game, rating: r })} />
       </div>
+
+      <button className={styles.saveButton} onClick={() => updateGame(game)}>
+        Save
+      </button>
     </div>
   )
 }

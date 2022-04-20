@@ -5,7 +5,7 @@ type Game = {
   coverImageId: string
   developers: Array<string>
   finished: string | null
-  finishedDate: any | null
+  finishedDate: Date | null
   igdbId: number
   igdbUrl: string
   keywords: Array<string>
