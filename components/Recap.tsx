@@ -1,4 +1,5 @@
-import React, { useState } from 'react'
+import React from 'react'
+import Link from 'next/link'
 
 import styles from '../styles/Recap.module.css'
 import { Rating } from './Rating'
@@ -57,9 +58,13 @@ export const Recap = (props: Props) => {
         <Rating rating={game.rating} setRating={(r) => setGame({ ...game, rating: r })} />
       </div>
 
-      <button className={styles.saveButton} onClick={() => updateGame(game)}>
-        Save
-      </button>
+      <div className={styles.saveControls}>
+        <button>
+          <Link href='/'>Back</Link>
+        </button>
+
+        <button onClick={() => updateGame(game)}>Save</button>
+      </div>
     </div>
   )
 }

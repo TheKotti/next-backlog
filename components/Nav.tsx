@@ -3,7 +3,12 @@ import { useSession, signIn, signOut } from 'next-auth/react'
 
 import styles from '../styles/Nav.module.css'
 
-export default function Nav() {
+type Props = {
+  isAdmin: boolean
+}
+
+export default function Nav(props: Props) {
+  const { isAdmin } = props
   const { data: session } = useSession()
 
   return (

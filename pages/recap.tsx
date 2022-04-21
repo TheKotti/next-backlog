@@ -1,30 +1,40 @@
+import { useEffect, useState } from 'react'
 import axios from 'axios'
 import Head from 'next/head'
-import { useEffect, useState } from 'react'
-import { Recap } from '../components/Recap'
+import router from 'next/router'
 
-export default function Home() {
+import { Recap } from '../components/Recap'
+import { useAdminStatus } from '../lib/hooks'
+
+export default function Home({ ADMIN_USER_ID }) {
   const [game, setGame] = useState<Game>()
+  const adminStatus = useAdminStatus(ADMIN_USER_ID)
 
   useEffect(() => {
+    if (adminStatus === 'notAdmin') {
+      router.push('/')
+      return
+    }
+
     const queryString = window.location.search
     const urlParams = new URLSearchParams(queryString)
-    const id = urlParams.get('id') // 6252d3ee276d78b3f366bfc0
+    const id = urlParams.get('id')
 
-    axios
-      .get('api/games', {
-        params: {
-          id,
-        },
-      })
-      .then((res) => {
-        console.log(res.data.message)
-        setGame(res.data.message)
-      })
-      .catch((err) => {
-        console.log('ERROR: ', err)
-      })
-  }, [])
+    if (adminStatus === 'admin') {
+      axios
+        .get('api/games', {
+          params: {
+            id,
+          },
+        })
+        .then((res) => {
+          setGame(res.data.message)
+        })
+        .catch((err) => {
+          console.log('ERROR: ', err)
+        })
+    }
+  }, [adminStatus])
 
   const updateGame = (game: Game) => {
     axios
@@ -37,7 +47,7 @@ export default function Home() {
       })
   }
 
-  if (!game) {
+  if (!game || adminStatus !== 'admin') {
     return null
   }
 
@@ -50,4 +60,12 @@ export default function Home() {
       <Recap game={game} setGame={setGame} updateGame={updateGame} />
     </div>
   )
+}
+
+export async function getStaticProps() {
+  return {
+    props: {
+      ADMIN_USER_ID: process.env.ADMIN_USER_ID,
+    },
+  }
 }

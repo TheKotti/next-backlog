@@ -1,13 +1,13 @@
 import axios from 'axios'
-import { useSession } from 'next-auth/react'
+import router from 'next/router'
 import { useEffect, useState } from 'react'
 import DatePicker from 'react-datepicker'
 import 'react-datepicker/dist/react-datepicker.css'
 
 import Nav from '../components/Nav'
+import { useAdminStatus } from '../lib/hooks'
 
 export default function AddGame({ ADMIN_USER_ID }) {
-  const { data: session, status } = useSession()
   const [igdbToken, setIgdbToken] = useState<string>('')
   const [searchTerm, setSearchTerm] = useState<string>('')
   const [options, setOptions] = useState<GameOptions[]>([])
@@ -23,20 +23,25 @@ export default function AddGame({ ADMIN_USER_ID }) {
   const [timeSpent, setTimeSpent] = useState<number>()
   const [finishedDate, setFinishedDate] = useState(new Date())
 
-  const isAdmin = session?.userId === ADMIN_USER_ID
+  const adminStatus = useAdminStatus(ADMIN_USER_ID)
 
   useEffect(() => {
-    if (!isAdmin) return
+    if (adminStatus !== 'admin') {
+      router.push('/')
+      return
+    }
 
-    axios
-      .get('api/igdb/token')
-      .then((res) => {
-        setIgdbToken(res.data.token)
-      })
-      .catch(() => {
-        console.log('error')
-      })
-  }, [isAdmin])
+    if (adminStatus === 'admin') {
+      axios
+        .get('api/igdb/token')
+        .then((res) => {
+          setIgdbToken(res.data.token)
+        })
+        .catch(() => {
+          console.log('error')
+        })
+    }
+  }, [adminStatus])
 
   const getGamesByTitle = (title: string) => {
     axios.post(`api/igdb/find-games`, { token: igdbToken, searchTerm: title }).then((response) => {
@@ -74,22 +79,13 @@ export default function AddGame({ ADMIN_USER_ID }) {
       })
   }
 
-  if (status === 'loading') {
+  if (adminStatus !== 'admin') {
     return null
-  }
-
-  if (!isAdmin) {
-    return (
-      <>
-        <Nav />
-        <h1>YOURE NOT ADMIN</h1>
-      </>
-    )
   }
 
   return (
     <div>
-      <Nav />
+      <Nav isAdmin={adminStatus === 'admin'} />
       <div className='App' style={{ display: 'flex', flexDirection: 'row' }}>
         <div className='App' style={{ display: 'flex', flexDirection: 'column' }}>
           <div>

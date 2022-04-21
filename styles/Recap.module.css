@@ -3,8 +3,6 @@
     flex-direction: row;
     color: white;
     aspect-ratio: 16/9;
-    background-image: url('/NJBG.jpg');
-    background-size: contain;
     position: relative;
     max-height: 100vh;
 }
@@ -110,10 +108,13 @@
     height: 100%;
 }
 
-.saveButton {
-    background-color: transparent;
-    color:white;
+.saveControls {
     position: absolute;
     bottom: 0;
     right: 0;
+}
+
+.saveControls button {
+    background-color: transparent;
+    color:white;
 }

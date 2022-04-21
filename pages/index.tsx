@@ -1,15 +1,26 @@
-import axios from 'axios'
-import { getToken } from 'next-auth/jwt'
-import { getSession } from 'next-auth/react'
-import Head from 'next/head'
 import { useEffect, useState } from 'react'
+import axios from 'axios'
+import Head from 'next/head'
+import router from 'next/router'
+import { signIn } from 'next-auth/react'
 
 import Nav from '../components/Nav'
-import PostCard from '../components/PostCard'
+import { useAdminStatus } from '../lib/hooks'
 import styles from '../styles/Home.module.css'
 
-export default function Home() {
+export default function Home({ ADMIN_USER_ID }) {
   const [games, setGames] = useState<Game[]>([])
+  const adminStatus = useAdminStatus(ADMIN_USER_ID)
+
+  useEffect(() => {
+    window.addEventListener(
+      'keypress',
+      (e) => {
+        if (e.key === 'å') signIn()
+      },
+      { once: true }
+    )
+  }, [])
 
   useEffect(() => {
     axios
@@ -22,32 +33,58 @@ export default function Home() {
       })
   }, [])
 
+  const gameClick = (id) => {
+    if (adminStatus) {
+      router.push('/recap?id=' + id)
+    }
+  }
+
   return (
     <div>
       <Head>
         <title>Home</title>
       </Head>
 
-      <Nav />
+      <Nav isAdmin={adminStatus === 'admin'} />
 
       <main>
         <div className={styles.container}>
           {games.length === 0 ? (
-            <h2>No added posts</h2>
+            <h2></h2>
           ) : (
-            <div style={{ display: 'flex', flexDirection: 'column' }}>
-              {games.map((game, i) => (
-                <div key={game._id} style={{ display: 'flex', flexDirection: 'row' }}>
-                  <div>{game.title}</div>
-                  <a href={`recap?id=${game._id}`}>RECAP</a>
-                </div>
-              ))}
-            </div>
+            <table>
+              <thead>
+                <tr>
+                  <th>Game</th>
+                </tr>
+              </thead>
+              <tbody>
+                {games.map((game, i) => (
+                  <tr key={game._id}>
+                    <td
+                      onClick={() => {
+                        gameClick(game._id)
+                      }}
+                    >
+                      {game.title}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
           )}
         </div>
       </main>
     </div>
   )
+}
+
+export async function getStaticProps() {
+  return {
+    props: {
+      ADMIN_USER_ID: process.env.ADMIN_USER_ID,
+    },
+  }
 }
 
 /* export async function getServerSideProps(ctx) {

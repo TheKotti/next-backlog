@@ -33,8 +33,8 @@ export default async function handler(req, res) {
 async function getGames(req, res) {
   const s = await getSession({ req })
   const t = await getToken({ req })
-  console.log('s', s)
-  console.log('t', t)
+  //console.log('s', s)
+  //console.log('t', t)
   try {
     // connect to the database
     const { db } = await connectToDatabase()
