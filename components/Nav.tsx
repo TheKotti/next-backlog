@@ -11,6 +11,10 @@ export default function Nav(props: Props) {
   const { isAdmin } = props
   const { data: session } = useSession()
 
+  if (!isAdmin) {
+    return null
+  }
+
   return (
     <nav className={styles.nav}>
       <ul className={styles.list}>

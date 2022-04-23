@@ -1,40 +1,26 @@
-import { useEffect, useState } from 'react'
-import axios from 'axios'
+import { useEffect } from 'react'
 import Head from 'next/head'
 import router from 'next/router'
-import { signIn } from 'next-auth/react'
+import { getSession, signIn } from 'next-auth/react'
 
 import Nav from '../components/Nav'
-import { useAdminStatus } from '../lib/hooks'
 import styles from '../styles/Home.module.css'
+import { connectToDatabase } from '../lib/mongo'
 
-export default function Home({ ADMIN_USER_ID }) {
-  const [games, setGames] = useState<Game[]>([])
-  const adminStatus = useAdminStatus(ADMIN_USER_ID)
+type Props = {
+  isAdmin: boolean
+  games: Array<Game>
+}
 
+export default function Home({ isAdmin, games = [] }: Props) {
   useEffect(() => {
-    window.addEventListener(
-      'keypress',
-      (e) => {
-        if (e.key === 'å') signIn()
-      },
-      { once: true }
-    )
-  }, [])
-
-  useEffect(() => {
-    axios
-      .get('api/games')
-      .then((res) => {
-        setGames(res.data.message)
-      })
-      .catch((err) => {
-        console.log('ERROR: ', err)
-      })
+    window.addEventListener('keypress', (e) => {
+      if (e.key === 'å') signIn()
+    }) // Should clean this up but fuck next is doing a thing so fuck it for now
   }, [])
 
   const gameClick = (id) => {
-    if (adminStatus) {
+    if (isAdmin) {
       router.push('/recap?id=' + id)
     }
   }
@@ -45,7 +31,7 @@ export default function Home({ ADMIN_USER_ID }) {
         <title>Home</title>
       </Head>
 
-      <Nav isAdmin={adminStatus === 'admin'} />
+      <Nav isAdmin={isAdmin} />
 
       <main>
         <div className={styles.container}>
@@ -79,34 +65,18 @@ export default function Home({ ADMIN_USER_ID }) {
   )
 }
 
-export async function getStaticProps() {
+export async function getServerSideProps(ctx) {
+  const { res } = ctx
+  res.setHeader('Cache-Control', 'public, s-maxage=300, stale-while-revalidate=600')
+  const session = await getSession(ctx)
+  const isAdmin = process.env.ADMIN_USER_ID === session?.userId
+  const { db } = await connectToDatabase()
+  const games = await db.collection('games').find({}).sort({ published: -1 }).toArray()
+
   return {
     props: {
-      ADMIN_USER_ID: process.env.ADMIN_USER_ID,
+      isAdmin,
+      games: JSON.parse(JSON.stringify(games)), //What the fuck
     },
   }
 }
-
-/* export async function getServerSideProps(ctx) {
-  // get the current environment
-  const { APP_URL } = process.env
-
-  // THIS IS THE ONE
-  const session = await getSession(ctx)
-  const token = await getToken(ctx)
-
-  console.log('aaa', session)
-  //console.log('aeaa', token)
-
-  // request posts from api
-  const response = await axios.get(`${APP_URL}/api/games`)
-
-  // extract the data
-  const data = response.data
-
-  return {
-    props: {
-      games: data['message'],
-    },
-  }
-} */

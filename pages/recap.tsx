@@ -4,14 +4,13 @@ import Head from 'next/head'
 import router from 'next/router'
 
 import { Recap } from '../components/Recap'
-import { useAdminStatus } from '../lib/hooks'
+import { getSession } from 'next-auth/react'
 
-export default function Home({ ADMIN_USER_ID }) {
+export default function Home({ isAdmin }) {
   const [game, setGame] = useState<Game>()
-  const adminStatus = useAdminStatus(ADMIN_USER_ID)
 
   useEffect(() => {
-    if (adminStatus === 'notAdmin') {
+    if (!isAdmin) {
       router.push('/')
       return
     }
@@ -20,7 +19,7 @@ export default function Home({ ADMIN_USER_ID }) {
     const urlParams = new URLSearchParams(queryString)
     const id = urlParams.get('id')
 
-    if (adminStatus === 'admin') {
+    if (isAdmin) {
       axios
         .get('api/games', {
           params: {
@@ -34,7 +33,7 @@ export default function Home({ ADMIN_USER_ID }) {
           console.log('ERROR: ', err)
         })
     }
-  }, [adminStatus])
+  }, [isAdmin])
 
   const updateGame = (game: Game) => {
     axios
@@ -47,7 +46,7 @@ export default function Home({ ADMIN_USER_ID }) {
       })
   }
 
-  if (!game || adminStatus !== 'admin') {
+  if (!game || !isAdmin) {
     return null
   }
 
@@ -62,10 +61,13 @@ export default function Home({ ADMIN_USER_ID }) {
   )
 }
 
-export async function getStaticProps() {
+export async function getServerSideProps(ctx) {
+  const session = await getSession(ctx)
+  const isAdmin = process.env.ADMIN_USER_ID === session?.userId
+
   return {
     props: {
-      ADMIN_USER_ID: process.env.ADMIN_USER_ID,
+      isAdmin,
     },
   }
 }

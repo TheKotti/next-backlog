@@ -1,13 +1,13 @@
 import axios from 'axios'
+import { getSession } from 'next-auth/react'
 import router from 'next/router'
 import { useEffect, useState } from 'react'
 import DatePicker from 'react-datepicker'
 import 'react-datepicker/dist/react-datepicker.css'
 
 import Nav from '../components/Nav'
-import { useAdminStatus } from '../lib/hooks'
 
-export default function AddGame({ ADMIN_USER_ID }) {
+export default function AddGame({ isAdmin }) {
   const [igdbToken, setIgdbToken] = useState<string>('')
   const [searchTerm, setSearchTerm] = useState<string>('')
   const [options, setOptions] = useState<GameOptions[]>([])
@@ -23,15 +23,13 @@ export default function AddGame({ ADMIN_USER_ID }) {
   const [timeSpent, setTimeSpent] = useState<number>()
   const [finishedDate, setFinishedDate] = useState(new Date())
 
-  const adminStatus = useAdminStatus(ADMIN_USER_ID)
-
   useEffect(() => {
-    if (adminStatus !== 'admin') {
+    if (!isAdmin) {
       router.push('/')
       return
     }
 
-    if (adminStatus === 'admin') {
+    if (isAdmin) {
       axios
         .get('api/igdb/token')
         .then((res) => {
@@ -41,7 +39,7 @@ export default function AddGame({ ADMIN_USER_ID }) {
           console.log('error')
         })
     }
-  }, [adminStatus])
+  }, [isAdmin])
 
   const getGamesByTitle = (title: string) => {
     axios.post(`api/igdb/find-games`, { token: igdbToken, searchTerm: title }).then((response) => {
@@ -74,18 +72,18 @@ export default function AddGame({ ADMIN_USER_ID }) {
         finishedDate,
         id,
       })
-      .then((res) => {
+      .then(() => {
         console.log('SUCCESSFULLY ADDED GAME WITH ID ' + id)
       })
   }
 
-  if (adminStatus !== 'admin') {
+  if (!isAdmin) {
     return null
   }
 
   return (
     <div>
-      <Nav isAdmin={adminStatus === 'admin'} />
+      <Nav isAdmin={isAdmin} />
       <div className='App' style={{ display: 'flex', flexDirection: 'row' }}>
         <div className='App' style={{ display: 'flex', flexDirection: 'column' }}>
           <div>
@@ -173,10 +171,13 @@ export default function AddGame({ ADMIN_USER_ID }) {
   )
 }
 
-export async function getStaticProps() {
+export async function getServerSideProps(ctx) {
+  const session = await getSession(ctx)
+  const isAdmin = process.env.ADMIN_USER_ID === session?.userId
+
   return {
     props: {
-      ADMIN_USER_ID: process.env.ADMIN_USER_ID,
+      isAdmin,
     },
   }
 }
