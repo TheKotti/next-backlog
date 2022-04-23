@@ -32,11 +32,6 @@ export default function Home({ isAdmin, games = [] }: Props) {
   const columns = useMemo(() => {
     return [
       {
-        Header: 'Id',
-        accessor: '_id',
-        disableGlobalFilter: true,
-      },
-      {
         Header: 'Date',
         accessor: 'finishedDate',
         disableGlobalFilter: true,
@@ -110,7 +105,7 @@ export default function Home({ isAdmin, games = [] }: Props) {
                   {rows.map((row) => {
                     prepareRow(row)
                     return (
-                      <tr {...row.getRowProps()} onClick={() => gameClick(row.values._id)}>
+                      <tr {...row.getRowProps()} onClick={() => gameClick((row.original as any)._id)}>
                         {row.cells.map((cell) => {
                           return <td {...cell.getCellProps()}>{cell.render('Cell')}</td>
                         })}
