@@ -43,7 +43,6 @@ export default function AddGame({ isAdmin }) {
 
   const getGamesByTitle = (title: string) => {
     axios.post(`api/igdb/find-games`, { token: igdbToken, searchTerm: title }).then((response) => {
-      console.log('games', response, igdbToken)
       const modifiedOptions: GameOptions[] = response.data.map((x) => {
         return {
           id: x.id,

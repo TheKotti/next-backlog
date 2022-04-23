@@ -39,7 +39,7 @@ export default function Home({ isAdmin }) {
     axios
       .put('api/games', { game })
       .then((res) => {
-        console.log(res.data.message)
+        console.log('Game updated')
       })
       .catch((err) => {
         console.log('ERROR: ', err)
