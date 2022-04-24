@@ -1,32 +1,40 @@
 import axios from 'axios'
 import { getToken } from 'next-auth/jwt'
-import { getSession } from 'next-auth/react'
 
 export default async function handler(req, res) {
-  const session = await getSession({ req })
   const token = await getToken({ req })
 
-  /* axios
+  if (!token) {
+    res.send('poll update failed, no token')
+    return
+  }
+
+  const choices = req.body.options.map((x: string) => {
+    const title = x.length > 25 ? x.substring(0, 22) + '...' : x
+    return { title }
+  })
+
+  axios
     .post(
       'https://api.twitch.tv/helix/polls',
       {
-        broadcaster_id: user.id,
+        broadcaster_id: token.sub,
         title: 'Next game?',
-        choices: options,
+        choices: choices,
         duration: 60,
       },
       {
         headers: {
-          'Client-ID': process.env.TWITCH_CLIENT_ID,
+          'Client-ID': process.env.TWITCH_CLIENT_ID!,
           'Content-Type': 'application/json',
-          Authorization: `Bearer ${req.session?.passport?.user?.accessToken}`,
+          Authorization: `Bearer ${token.access_token}`,
         },
       }
     )
     .then(() => {
       res.send('poll updated')
     })
-    .catch(() => {
-      res.send('poll update failed')
-    }) */
+    .catch((e) => {
+      res.send('poll update failed, ' + e.data?.message)
+    })
 }

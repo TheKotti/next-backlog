@@ -58,6 +58,12 @@ export const GameTable = ({ games, isAdmin }: Props) => {
       data,
       initialState: {
         hiddenColumns,
+        sortBy: [
+          {
+            id: 'finishedDate',
+            desc: true,
+          },
+        ],
       },
     },
     useGlobalFilter,

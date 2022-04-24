@@ -20,6 +20,10 @@ type Game = {
   vods: Array<string> | null
 }
 
+type RandomGame = Game & {
+  selected?: boolean
+}
+
 type GameOptions = {
   id: number
   title: string
