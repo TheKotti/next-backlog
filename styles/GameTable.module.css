@@ -1,0 +1,8 @@
+.gameTable {
+    border-collapse: collapse;
+}
+
+.gameTable td  {
+    border: 1px solid;
+    padding: 8px;
+}
