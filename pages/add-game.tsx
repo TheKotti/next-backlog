@@ -146,8 +146,9 @@ export default function AddGame({ isAdmin }) {
             <label>Time spent</label>
             <input
               type='number'
+              step={0.5}
               value={timeSpent || ''}
-              onChange={(e) => setTimeSpent(parseInt(e.target.value))}
+              onChange={(e) => setTimeSpent(parseFloat(e.target.value))}
             ></input>
           </div>
         </div>
