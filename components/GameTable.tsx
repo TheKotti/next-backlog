@@ -25,6 +25,11 @@ const CommentCell = ({ value }) => {
   )
 }
 
+const DateCell = ({ value }) => {
+  const formattedDate = value ? dayjs(new Date(value)).format('DD MMM YYYY') : ''
+  return <span>{formattedDate}</span>
+}
+
 export const GameTable = ({ games, isAdmin }: Props) => {
   const columns = useMemo(() => {
     return [
@@ -32,6 +37,7 @@ export const GameTable = ({ games, isAdmin }: Props) => {
         Header: 'Date',
         accessor: 'finishedDate',
         disableGlobalFilter: true,
+        Cell: DateCell,
       },
       {
         Header: 'Game',
@@ -55,7 +61,7 @@ export const GameTable = ({ games, isAdmin }: Props) => {
       return {
         _id: x._id,
         title: x.title,
-        finishedDate: x.finishedDate ? dayjs(new Date(x.finishedDate)).format('DD MMM YYYY') : '', // What the heck next/dayjs?
+        finishedDate: x.finishedDate,
         rating: x.rating,
         comment: x.comment,
       }

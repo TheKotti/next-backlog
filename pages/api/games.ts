@@ -112,19 +112,33 @@ async function addGame(req, res) {
           res.status(404).json({ error: 'Not found' })
         }
 
-        const g = getGameResponse.data[0]
-        const keywords = [...g.genres.map((x) => x.name), ...g.themes.map((x) => x.name)]
-        const developers = g.involved_companies.filter((x) => x.developer).map((x) => x.company.name)
-        const releaseYear = g.release_dates ? Math.min(...g.release_dates.map((x) => x.y).filter((x) => x)) : null
+        const fetchedGame = getGameResponse.data[0]
+
+        const keywords: Array<string> = []
+
+        if (fetchedGame.genres) {
+          const genres = fetchedGame.genres.map((x) => x.name)
+          keywords.push(...genres)
+        }
+
+        if (fetchedGame.themes) {
+          const themes = fetchedGame.themes.map((x) => x.name)
+          keywords.push(...themes)
+        }
+        console.log('key234234o', keywords)
+        const developers = fetchedGame.involved_companies.filter((x) => x.developer).map((x) => x.company.name)
+        const releaseYear = fetchedGame.release_dates
+          ? Math.min(...fetchedGame.release_dates.map((x) => x.y).filter((x) => x))
+          : null
 
         const game: Game = {
-          title: g.name,
-          igdbId: g.id,
-          coverImageId: g.cover.image_id,
+          title: fetchedGame.name,
+          igdbId: fetchedGame.id,
+          coverImageId: fetchedGame.cover.image_id,
           keywords,
           developers,
           releaseYear,
-          igdbUrl: g.url,
+          igdbUrl: fetchedGame.url,
           notPollable,
           finishedDate,
           comment,

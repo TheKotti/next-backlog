@@ -71,8 +71,12 @@ export default function AddGame({ isAdmin }) {
         finishedDate,
         id,
       })
-      .then(() => {
-        console.log('SUCCESSFULLY ADDED GAME WITH ID ' + id)
+      .then((res) => {
+        if (res.data.success) {
+          console.log('SUCCESSFULLY ADDED GAME WITH ID ' + id)
+        } else {
+          console.error('OH NO IT FAIOLED ' + id)
+        }
       })
   }
 
