@@ -87,7 +87,7 @@ export async function getServerSideProps(ctx) {
   const session = await getSession(ctx)
   const isAdmin = process.env.ADMIN_USER_ID === session?.userId
   const { db } = await connectToDatabase()
-  const games = await db.collection('games').find({ finished: '' }).toArray()
+  const games = await db.collection('games').find({ finishedDate: null }).toArray()
 
   return {
     props: {

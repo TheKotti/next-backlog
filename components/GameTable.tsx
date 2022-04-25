@@ -74,7 +74,6 @@ export const GameTable = ({ games, isAdmin }: Props) => {
     getTableProps,
     getTableBodyProps,
     headers,
-    rows,
     prepareRow,
     state,
     setGlobalFilter,
