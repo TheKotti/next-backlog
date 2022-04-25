@@ -3,7 +3,7 @@ body {
   padding: 0;
   margin: 0;
   font-family: DejaVu Sans, Arial, Helvetica, sans-serif;
-  color: white;
+  color: grey;
   background: url('/NJBG.jpg') no-repeat center center fixed;
   background-size: cover;
 }

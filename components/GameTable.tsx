@@ -1,7 +1,7 @@
 /* eslint-disable react/jsx-key */
 import { useMemo, useState } from 'react'
 import dayjs from 'dayjs'
-import { useGlobalFilter, useSortBy, useTable } from 'react-table'
+import { useGlobalFilter, usePagination, useSortBy, useTable } from 'react-table'
 import router from 'next/router'
 
 import { GlobalFilter } from './GlobalFilter'
@@ -70,7 +70,25 @@ export const GameTable = ({ games, isAdmin }: Props) => {
 
   const hiddenColumns = useMemo(() => ['_id'], [])
 
-  const { getTableProps, getTableBodyProps, headers, rows, prepareRow, state, setGlobalFilter } = useTable(
+  const {
+    getTableProps,
+    getTableBodyProps,
+    headers,
+    rows,
+    prepareRow,
+    state,
+    setGlobalFilter,
+    page,
+    canPreviousPage,
+    canNextPage,
+    pageOptions,
+    pageCount,
+    gotoPage,
+    nextPage,
+    previousPage,
+    setPageSize,
+    state: { pageIndex, pageSize },
+  } = useTable(
     {
       columns,
       data,
@@ -85,7 +103,8 @@ export const GameTable = ({ games, isAdmin }: Props) => {
       },
     },
     useGlobalFilter,
-    useSortBy
+    useSortBy,
+    usePagination
   )
 
   const { globalFilter } = state
@@ -99,6 +118,7 @@ export const GameTable = ({ games, isAdmin }: Props) => {
   return (
     <>
       <GlobalFilter globalFilter={globalFilter} setGlobalFilter={(e) => setGlobalFilter(e)} />
+
       <table {...getTableProps} className={styles.gameTable}>
         <thead>
           <tr>
@@ -109,7 +129,7 @@ export const GameTable = ({ games, isAdmin }: Props) => {
         </thead>
 
         <tbody {...getTableBodyProps()}>
-          {rows.map((row) => {
+          {page.map((row) => {
             prepareRow(row)
             return (
               <tr {...row.getRowProps()}>
@@ -129,6 +149,51 @@ export const GameTable = ({ games, isAdmin }: Props) => {
           })}
         </tbody>
       </table>
+
+      <div className='pagination'>
+        <button onClick={() => gotoPage(0)} disabled={!canPreviousPage}>
+          {'<<'}
+        </button>{' '}
+        <button onClick={() => previousPage()} disabled={!canPreviousPage}>
+          {'<'}
+        </button>{' '}
+        <button onClick={() => nextPage()} disabled={!canNextPage}>
+          {'>'}
+        </button>{' '}
+        <button onClick={() => gotoPage(pageCount - 1)} disabled={!canNextPage}>
+          {'>>'}
+        </button>{' '}
+        <span>
+          Page{' '}
+          <strong>
+            {pageIndex + 1} of {pageOptions.length}
+          </strong>{' '}
+        </span>
+        <span>
+          | Go to page:{' '}
+          <input
+            type='number'
+            defaultValue={pageIndex + 1}
+            onChange={(e) => {
+              const page = e.target.value ? Number(e.target.value) - 1 : 0
+              gotoPage(page)
+            }}
+            style={{ width: '100px' }}
+          />
+        </span>{' '}
+        <select
+          value={pageSize}
+          onChange={(e) => {
+            setPageSize(Number(e.target.value))
+          }}
+        >
+          {[10, 20, 30, 40, 50].map((pageSize) => (
+            <option key={pageSize} value={pageSize}>
+              Show {pageSize}
+            </option>
+          ))}
+        </select>
+      </div>
     </>
   )
 }
