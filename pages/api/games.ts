@@ -125,7 +125,6 @@ async function addGame(req, res) {
           const themes = fetchedGame.themes.map((x) => x.name)
           keywords.push(...themes)
         }
-        console.log('key234234o', keywords)
         const developers = fetchedGame.involved_companies.filter((x) => x.developer).map((x) => x.company.name)
         const releaseYear = fetchedGame.release_dates
           ? Math.min(...fetchedGame.release_dates.map((x) => x.y).filter((x) => x))
