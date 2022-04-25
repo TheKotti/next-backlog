@@ -1,5 +1,6 @@
 .gameTable {
     border-collapse: collapse;
+    background-color: rgb(0, 0, 0, 0.7);
 }
 
 .gameTable td  {
