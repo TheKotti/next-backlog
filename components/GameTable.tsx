@@ -49,9 +49,18 @@ export const GameTable = ({ games, isAdmin }: Props) => {
         disableGlobalFilter: true,
       },
       {
+        Header: 'Comments',
         accessor: 'comment',
         disableGlobalFilter: true,
         Cell: CommentCell,
+      },
+      {
+        Header: 'Streamed',
+        accessor: 'streamed',
+        disableGlobalFilter: true,
+        Cell: ({ value }) => {
+          return <span>{value ? 'X' : ''}</span>
+        },
       },
     ]
   }, [])
@@ -64,6 +73,7 @@ export const GameTable = ({ games, isAdmin }: Props) => {
         finishedDate: x.finishedDate,
         rating: x.rating,
         comment: x.comment,
+        streamed: x.streamed,
       }
     })
   }, [games])
