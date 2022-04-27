@@ -1,5 +1,6 @@
 .container {
-  max-width: 800px;
+  width: 80%;
+  max-width: 1500px;
   margin: 20px auto;
   padding: 10px;
 }
@@ -36,4 +37,14 @@
 
 .message {
   color: green;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+}
+
+.header button {
+  height: fit-content;
+  margin-left: 16px;
 }

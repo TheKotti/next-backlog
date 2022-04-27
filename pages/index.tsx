@@ -36,8 +36,13 @@ export default function Home({ isAdmin, games = [] }: Props) {
 
       <main>
         <div className={styles.container}>
-          <button onClick={() => setViewBacklog(!viewBacklog)}>Toggle played/backlog</button>
-          <h1>{viewBacklog ? 'Backlog' : 'Previously played'}</h1>
+          <div className={styles.header}>
+            <h1>{viewBacklog ? 'Backlog' : 'Previously played'}</h1>
+            <button onClick={() => setViewBacklog(!viewBacklog)}>
+              {viewBacklog ? 'Show previously played' : 'Show backlog'}
+            </button>
+          </div>
+
           {viewBacklog ? ( // TODO: Clean up this mess
             playedGames.length === 0 ? (
               <h2></h2>
