@@ -35,8 +35,8 @@ const DateCell = ({ value, row }) => {
 const dateSort = (rowA, rowB, id, desc) => {
   if (rowA.original['finished'] === 'Happening') return 1
 
-  const a = Number.parseFloat(rowA.values[id])
-  const b = Number.parseFloat(rowB.values[id])
+  const a = new Date(rowA.values[id]).getTime()
+  const b = new Date(rowB.values[id]).getTime()
   return a - b
 }
 

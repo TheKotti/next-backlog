@@ -9,3 +9,10 @@
     border: 1px solid;
     padding: 8px;
 }
+
+.gameTable th  {
+    border: 1px solid;
+    padding: 16px;
+    font-size: 1.2em;
+    text-transform: uppercase;
+}
