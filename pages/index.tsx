@@ -17,8 +17,20 @@ type Props = {
 export default function Home({ isAdmin, games = [] }: Props) {
   const [viewBacklog, setViewBacklog] = useState(false)
 
-  const playedGames = useMemo(() => games.filter((x) => x.finishedDate), [games])
-  const backlogGames = useMemo(() => games.filter((x) => !x.finishedDate && x.notPollable !== 'Ehh...'), [games])
+  const playedGames = useMemo(
+    () =>
+      games
+        .filter((x) => x.finishedDate || x.finished === 'Happening')
+        .map((x) => {
+          // Hacky shit because I fucked up the initial date insertions
+          return { ...x, finishedDate: x.finishedDate ? new Date(x.finishedDate).toISOString() : null }
+        }),
+    [games]
+  )
+  const backlogGames = useMemo(
+    () => games.filter((x) => !x.finishedDate && x.notPollable !== 'Ehh...' && x.finished !== 'Happening'),
+    [games]
+  )
 
   useEffect(() => {
     window.addEventListener('keypress', (e) => {

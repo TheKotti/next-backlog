@@ -1,7 +1,7 @@
 /* eslint-disable react/jsx-key */
 import { useMemo, useState } from 'react'
 import dayjs from 'dayjs'
-import { useGlobalFilter, usePagination, useSortBy, useTable } from 'react-table'
+import { Cell, Row, useGlobalFilter, usePagination, useSortBy, useTable } from 'react-table'
 import router from 'next/router'
 
 import { GlobalFilter } from './GlobalFilter'
@@ -25,9 +25,19 @@ const CommentCell = ({ value }) => {
   )
 }
 
-const DateCell = ({ value }) => {
+const DateCell = ({ value, row }) => {
+  if (row.original['finished'] === 'Happening') return <span>Ongoing or soon™</span>
+
   const formattedDate = value ? dayjs(new Date(value)).format('DD MMM YYYY') : ''
   return <span>{formattedDate}</span>
+}
+
+const dateSort = (rowA, rowB, id, desc) => {
+  if (rowA.original['finished'] === 'Happening') return 1
+
+  const a = Number.parseFloat(rowA.values[id])
+  const b = Number.parseFloat(rowB.values[id])
+  return a - b
 }
 
 export const GameTable = ({ games, isAdmin }: Props) => {
@@ -38,6 +48,7 @@ export const GameTable = ({ games, isAdmin }: Props) => {
         accessor: 'finishedDate',
         disableGlobalFilter: true,
         Cell: DateCell,
+        sortType: dateSort,
       },
       {
         Header: 'Game',
@@ -70,6 +81,7 @@ export const GameTable = ({ games, isAdmin }: Props) => {
       return {
         _id: x._id,
         title: x.title,
+        finished: x.finished,
         finishedDate: x.finishedDate,
         rating: x.rating,
         comment: x.comment,
@@ -124,6 +136,35 @@ export const GameTable = ({ games, isAdmin }: Props) => {
     }
   }
 
+  // Surely you can improve this
+  const formatCell = (cell: Cell<object, any>, row: Row<object>) => {
+    // TITLE COLUMN
+    if (cell.column.id === 'title') {
+      return (
+        <td {...cell.getCellProps()} onClick={() => gameClick((row.original as any)._id)}>
+          {cell.render('Cell')}
+        </td>
+      )
+    }
+
+    // CENTERED COLUMN
+    if (['streamed', 'rating', 'finishedDate'].includes(cell.column.id)) {
+      return (
+        <td
+          {...cell.getCellProps(() => ({
+            style: {
+              textAlign: 'center',
+            },
+          }))}
+        >
+          {cell.render('Cell')}
+        </td>
+      )
+    }
+
+    return <td {...cell.getCellProps()}>{cell.render('Cell')}</td>
+  }
+
   return (
     <>
       <GlobalFilter globalFilter={globalFilter} setGlobalFilter={(e) => setGlobalFilter(e)} />
@@ -144,14 +185,7 @@ export const GameTable = ({ games, isAdmin }: Props) => {
               <tr {...row.getRowProps()}>
                 {row.cells.map((cell) => {
                   //console.log(cell)
-                  if (cell.column.id === 'title') {
-                    return (
-                      <td {...cell.getCellProps()} onClick={() => gameClick((row.original as any)._id)}>
-                        {cell.render('Cell')}
-                      </td>
-                    )
-                  }
-                  return <td {...cell.getCellProps()}>{cell.render('Cell')}</td>
+                  return formatCell(cell, row)
                 })}
               </tr>
             )

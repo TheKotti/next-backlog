@@ -181,7 +181,7 @@ async function updateGame(req, res) {
     }
 
     const game: Game = req.body.game
-    game.finishedDate = game.finishedDate ?? new Date()
+    game.finishedDate = game.finishedDate ?? new Date().toISOString()
     game._id = new ObjectId(game._id)
 
     // connect to the database
