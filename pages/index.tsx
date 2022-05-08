@@ -41,7 +41,7 @@ export default function Home({ isAdmin, games = [] }: Props) {
   return (
     <div>
       <Head>
-        <title>Home</title>
+        <title>YAME! YAME!</title>
       </Head>
 
       <Nav isAdmin={isAdmin} />

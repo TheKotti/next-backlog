@@ -1,0 +1,35 @@
+.gameContainer {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    justify-content: center;
+}
+
+.gameCover {
+    margin: 16px;
+    width: fit-content;
+    max-width: 100%;
+}
+
+.gameTitle {
+    font-size: calc(10px + 2vmin);
+    cursor: pointer;
+    margin-bottom: 8px;
+}
+
+.gameGenres {
+    color: rgb(196, 195, 195);
+}
+
+.gameDeveloper {
+    color: rgb(217, 164, 32);
+    margin-top: 0;
+}
+
+.gameButton {
+    padding: 10px;
+    font-size: 1rem;
+    border-radius: 5px;
+}

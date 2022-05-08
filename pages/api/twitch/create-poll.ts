@@ -21,7 +21,7 @@ export default async function handler(req, res) {
         broadcaster_id: token.sub,
         title: 'Next game?',
         choices: choices,
-        duration: 60,
+        duration: 300,
       },
       {
         headers: {
@@ -35,6 +35,6 @@ export default async function handler(req, res) {
       res.send('poll updated')
     })
     .catch((e) => {
-      res.send('poll update failed, ' + e.data?.message)
+      res.send('poll update failed, ', e)
     })
 }

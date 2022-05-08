@@ -1,14 +1,13 @@
 /* eslint-disable react/jsx-key */
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import Head from 'next/head'
 import { getSession } from 'next-auth/react'
-
-import Nav from '../components/Nav'
-import styles from '../styles/Home.module.css'
-import { connectToDatabase } from '../lib/mongo'
-import { GameTable } from '../components/GameTable'
 import router from 'next/router'
 import axios from 'axios'
+
+import styles from '../styles/random.module.css'
+import { connectToDatabase } from '../lib/mongo'
+import RandomGame from '../components/RandomGame'
 
 type Props = {
   isAdmin: boolean
@@ -23,6 +22,9 @@ export default function Home({ isAdmin, games = [] }: Props) {
   }, [isAdmin])
 
   const [gameOptions, setGameOptions] = useState<Array<RandomGame>>(games)
+  const selectedGames = useMemo(() => {
+    return gameOptions.filter((x) => x.selected)
+  }, [gameOptions])
 
   const pickRandomGame = () => {
     const notSelected = gameOptions.filter((x) => !x.selected)
@@ -30,15 +32,21 @@ export default function Home({ isAdmin, games = [] }: Props) {
     const selectedId = notSelected[Math.floor(Math.random() * notSelected.length)]._id
     const selectedIndex = gameOptions.findIndex((x) => x._id === selectedId)
     const updatedOptions = [...gameOptions]
-    updatedOptions[selectedIndex].selected = !updatedOptions[selectedIndex].selected
+    updatedOptions[selectedIndex].selected = selectedGames.length + 1
+    setGameOptions(updatedOptions)
+  }
+
+  const vetoGame = (id: string) => {
+    const updatedOptions = [...gameOptions]
+    const targetGame = updatedOptions.find((x) => x._id === id)
+    if (!targetGame) return
+    const targetIndex = updatedOptions.indexOf(targetGame)
+    updatedOptions[targetIndex].selected = 0
     setGameOptions(updatedOptions)
   }
 
   const poll = () => {
-    const options = gameOptions
-      .filter((x) => x.selected)
-      .map((x) => x.title)
-      .slice(0, 4)
+    const options = selectedGames.map((x) => x.title).slice(0, 4)
     axios
       .post('api/twitch/create-poll', { options })
       .then((res) => {
@@ -55,28 +63,24 @@ export default function Home({ isAdmin, games = [] }: Props) {
         <title>Randomize</title>
       </Head>
 
-      <Nav isAdmin={isAdmin} />
-
-      <main>
-        <button onClick={() => pickRandomGame()}>randomize</button>
-        <button onClick={() => poll()}>poll</button>
-        <div style={{ display: 'flex', flexDirection: 'row' }}>
-          <pre>
-            {JSON.stringify(
-              gameOptions.filter((x) => !x.selected),
-              null,
-              2
-            )}
-          </pre>
-          <pre>
-            {JSON.stringify(
-              gameOptions.filter((x) => x.selected),
-              null,
-              2
-            )}
-          </pre>
+      <div className={styles.main}>
+        <div className={styles.gameRow}>
+          {selectedGames
+            .sort((a, b) => a.selected! - b.selected!)
+            .map((x) => (
+              <RandomGame key={x._id} game={x} vetoGame={vetoGame} />
+            ))}
         </div>
-      </main>
+        <div className={styles.buttonRow}>
+          <div className={styles.buttons} />
+          <div className={styles.buttons}>
+            <button onClick={() => pickRandomGame()}>Randomize</button>
+          </div>
+          <div className={styles.buttons}>
+            <button onClick={() => poll()}>Create poll</button>
+          </div>
+        </div>
+      </div>
     </div>
   )
 }
@@ -87,7 +91,7 @@ export async function getServerSideProps(ctx) {
   const session = await getSession(ctx)
   const isAdmin = process.env.ADMIN_USER_ID === session?.userId
   const { db } = await connectToDatabase()
-  const games = await db.collection('games').find({ finishedDate: null }).toArray()
+  const games = await db.collection('games').find({ finishedDate: null, notPollable: '' }).toArray()
 
   return {
     props: {

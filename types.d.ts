@@ -21,7 +21,7 @@ type Game = {
 }
 
 type RandomGame = Game & {
-  selected?: boolean
+  selected?: number
 }
 
 type GameOptions = {

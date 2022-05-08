@@ -1,0 +1,29 @@
+.main {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+}
+
+.gameRow {
+    display: flex;
+    flex-direction: row;
+}
+
+.buttonRow {
+    display: flex;
+    flex-direction: row;
+    flex-grow: 1;
+    align-items: center;
+}
+
+.buttons {
+    display: flex;
+    flex: 1;
+    justify-content: center;
+}
+
+.buttons button {
+    padding: 10px;
+    font-size: 2rem;
+    border-radius: 5px;
+}
