@@ -61,10 +61,7 @@ async function getGame(req, res) {
     // fetch the posts
     const game = await db.collection('games').findOne({ _id: ObjectId(req.query.id) })
     // return the posts
-    return res.json({
-      message: JSON.parse(JSON.stringify(game)),
-      success: true,
-    })
+    return res.json(game)
   } catch (error: any) {
     // return the error
     return res.json({
@@ -183,6 +180,7 @@ async function updateGame(req, res) {
     const game: Game = req.body.game
     game.finishedDate = game.finishedDate ?? new Date().toISOString()
     game._id = new ObjectId(game._id)
+    game.streamed = true
 
     // connect to the database
     let { db } = await connectToDatabase()

@@ -21,7 +21,7 @@ export default function AddGame({ isAdmin }) {
   const [streamed, setStreamed] = useState<boolean>(false)
   const [platform, setPlatform] = useState<string>('')
   const [timeSpent, setTimeSpent] = useState<number>()
-  const [finishedDate, setFinishedDate] = useState(new Date())
+  const [finishedDate, setFinishedDate] = useState<Date | null>(null)
 
   useEffect(() => {
     if (!isAdmin) {

@@ -33,7 +33,9 @@ const DateCell = ({ value, row }) => {
 }
 
 const dateSort = (rowA, rowB, id, desc) => {
+  // I am a hack
   if (rowA.original['finished'] === 'Happening') return 1
+  if (rowB.original['finished'] === 'Happening') return -1
 
   const a = new Date(rowA.values[id]).getTime()
   const b = new Date(rowB.values[id]).getTime()
@@ -141,7 +143,7 @@ export const GameTable = ({ games, isAdmin }: Props) => {
     // TITLE COLUMN
     if (cell.column.id === 'title') {
       return (
-        <td {...cell.getCellProps()} onClick={() => gameClick((row.original as any)._id)}>
+        <td {...cell.getCellProps()} onClick={() => gameClick((row.original as any)._id)} key={cell.column.id + row.id}>
           {cell.render('Cell')}
         </td>
       )
@@ -156,13 +158,18 @@ export const GameTable = ({ games, isAdmin }: Props) => {
               textAlign: 'center',
             },
           }))}
+          key={cell.column.id + row.id}
         >
           {cell.render('Cell')}
         </td>
       )
     }
 
-    return <td {...cell.getCellProps()}>{cell.render('Cell')}</td>
+    return (
+      <td {...cell.getCellProps()} key={cell.column.id + row.id}>
+        {cell.render('Cell')}
+      </td>
+    )
   }
 
   return (
@@ -172,17 +179,21 @@ export const GameTable = ({ games, isAdmin }: Props) => {
       <table {...getTableProps} className={styles.gameTable}>
         <thead>
           <tr>
-            {headers.map((column) => {
-              return <th {...column.getHeaderProps(column.getSortByToggleProps())}>{column.render('Header')}</th>
+            {headers.map((column, i) => {
+              return (
+                <th {...column.getHeaderProps(column.getSortByToggleProps())} key={i}>
+                  {column.render('Header')}
+                </th>
+              )
             })}
           </tr>
         </thead>
 
         <tbody {...getTableBodyProps()}>
-          {page.map((row) => {
+          {page.map((row, i) => {
             prepareRow(row)
             return (
-              <tr {...row.getRowProps()}>
+              <tr {...row.getRowProps()} key={i}>
                 {row.cells.map((cell) => {
                   //console.log(cell)
                   return formatCell(cell, row)
