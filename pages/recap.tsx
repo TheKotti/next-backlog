@@ -27,7 +27,7 @@ export default function Home({ isAdmin }) {
           },
         })
         .then((res) => {
-          setGame(res.data.message)
+          setGame(res.data)
         })
         .catch((err) => {
           console.log('ERROR: ', err)
