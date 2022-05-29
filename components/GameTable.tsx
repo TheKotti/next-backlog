@@ -43,6 +43,8 @@ const dateSort = (rowA, rowB, id, desc) => {
 }
 
 export const GameTable = ({ games, isAdmin }: Props) => {
+  const [stealthFilter, setStealthFilter] = useState(false)
+
   const columns = useMemo(() => {
     return [
       {
@@ -79,18 +81,20 @@ export const GameTable = ({ games, isAdmin }: Props) => {
   }, [])
 
   const data: Array<any> = useMemo(() => {
-    return games.map((x) => {
-      return {
-        _id: x._id,
-        title: x.title,
-        finished: x.finished,
-        finishedDate: x.finishedDate,
-        rating: x.rating,
-        comment: x.comment,
-        streamed: x.streamed,
-      }
-    })
-  }, [games])
+    return games
+      .filter((x) => (stealthFilter && x.stealth) || !stealthFilter)
+      .map((x) => {
+        return {
+          _id: x._id,
+          title: x.title,
+          finished: x.finished,
+          finishedDate: x.finishedDate,
+          rating: x.rating,
+          comment: x.comment,
+          streamed: x.streamed,
+        }
+      })
+  }, [games, stealthFilter])
 
   const hiddenColumns = useMemo(() => ['_id'], [])
 
@@ -174,7 +178,13 @@ export const GameTable = ({ games, isAdmin }: Props) => {
 
   return (
     <>
-      <GlobalFilter globalFilter={globalFilter} setGlobalFilter={(e) => setGlobalFilter(e)} />
+      <div className={styles.filters}>
+        <GlobalFilter globalFilter={globalFilter} setGlobalFilter={(e) => setGlobalFilter(e)} />
+        <label>
+          Sneaky?
+          <input type='checkbox' checked={stealthFilter} onChange={(e) => setStealthFilter(e.target.checked)} />
+        </label>
+      </div>
 
       <table {...getTableProps} className={styles.gameTable}>
         <thead>
