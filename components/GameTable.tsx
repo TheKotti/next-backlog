@@ -14,7 +14,7 @@ type Props = {
 
 const CommentCell = ({ value }) => {
   const [showFull, setShowFull] = useState(false)
-  const shortThreshold = 200
+  const shortThreshold = 2000
   const shortText = value.length > shortThreshold ? value.substring(0, shortThreshold - 3) + '...' : value
   const displayedText = showFull ? value : shortText
   return (
