@@ -38,20 +38,6 @@
     font-size: 2.5em;
 }
 
-.formFinished {
-    display: flex;
-    flex-direction: row;
-    width: 90%;
-    justify-content: space-around;
-}
-
-.formInput {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 10px
-}
-
 .gameForm input {
     height: 2.8em;
     color: white;
@@ -61,6 +47,25 @@
     margin: 0;
     margin-left: 0.5em;
     font-size: large;
+}
+
+.topRow {
+    width: 90%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.formFinished, .formTimeSpent {
+    display: flex;
+    flex-direction: column;
+}
+
+.formFinished textarea, .formTimeSpent textarea {
+    background: transparent;
+    color: white;
+    font-size: xx-large;
+    resize: none;
 }
 
 .comment {
@@ -80,6 +85,12 @@
     color: white;
     font-size: xx-large;
     resize: none;
+}
+
+.feltSneaky {
+    display: flex;
+    flex-direction: row-reverse;
+    gap: 1rem;
 }
 
 .checkbox {
