@@ -61,6 +61,7 @@ export const BacklogTable = ({ games, isAdmin }: Props) => {
             desc: false,
           },
         ],
+        pageSize: 30,
       },
     },
     useGlobalFilter,
