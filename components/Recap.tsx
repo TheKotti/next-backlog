@@ -22,24 +22,26 @@ export const Recap = (props: Props) => {
       </div>
 
       <div className={styles.gameForm}>
-        <div className={styles.formFinished}>
-          <div className={styles.formInput}>
+        <div className={styles.topRow}>
+          <div className={styles.formFinished}>
             <label>Finished</label>
-            <input
+            <textarea
+              rows={1}
               value={game?.finished || ''}
               onChange={(e) => setGame({ ...game, finished: e.target.value })}
-            ></input>
+            ></textarea>
           </div>
 
-          <div className={styles.formInput}>
+          <div className={styles.formTimeSpent}>
             <label>Time spent</label>
-            <input
+            <textarea
+              rows={1}
               value={game?.timeSpent || ''}
               onChange={(e) => setGame({ ...game, timeSpent: parseInt(e.target.value) })}
-            ></input>
+            ></textarea>
           </div>
 
-          <div className={styles.formInput}>
+          <div className={styles.feltSneaky}>
             <label>Felt sneaky</label>
             <div className={styles.checkbox} onClick={() => setGame({ ...game, stealth: !game.stealth })}>
               {!!game?.stealth ? <div className={styles.checked} /> : <div className={styles.unchecked} />}
