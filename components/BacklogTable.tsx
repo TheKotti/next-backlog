@@ -111,44 +111,49 @@ export const BacklogTable = ({ games, isAdmin }: Props) => {
         </tbody>
       </table>
 
-      <div className='pagination'>
-        <button onClick={() => gotoPage(0)} disabled={!canPreviousPage}>
-          {'<<'}
-        </button>{' '}
-        <button onClick={() => previousPage()} disabled={!canPreviousPage}>
-          {'<'}
-        </button>{' '}
-        <button onClick={() => nextPage()} disabled={!canNextPage}>
-          {'>'}
-        </button>{' '}
-        <button onClick={() => gotoPage(pageCount - 1)} disabled={!canNextPage}>
-          {'>>'}
-        </button>{' '}
+      <div className='pagination d-flex align-items-center gap-2'>
+        <div className='btn-group'>
+          <button className='btn btn-light' onClick={() => gotoPage(0)} disabled={!canPreviousPage}>
+            {'<<'}
+          </button>
+          <button className='btn btn-light' onClick={() => previousPage()} disabled={!canPreviousPage}>
+            {'<'}
+          </button>
+        </div>
+
+        <div className='btn-group'>
+          <button className='btn btn-light' onClick={() => nextPage()} disabled={!canNextPage}>
+            {'>'}
+          </button>
+          <button className='btn btn-light' onClick={() => gotoPage(pageCount - 1)} disabled={!canNextPage}>
+            {'>>'}
+          </button>
+        </div>
+
         <span>
-          Page{' '}
-          <strong>
-            {pageIndex + 1} of {pageOptions.length}
-          </strong>{' '}
+          Page<strong>{` ${pageIndex + 1} of ${pageOptions.length} `}</strong>| Go to page:
         </span>
-        <span>
-          | Go to page:{' '}
-          <input
-            type='number'
-            defaultValue={pageIndex + 1}
-            onChange={(e) => {
-              const page = e.target.value ? Number(e.target.value) - 1 : 0
-              gotoPage(page)
-            }}
-            style={{ width: '100px' }}
-          />
-        </span>{' '}
+
+        <input
+          className='form-control'
+          type='number'
+          defaultValue={pageIndex + 1}
+          onChange={(e) => {
+            const page = e.target.value ? Number(e.target.value) - 1 : 0
+            gotoPage(page)
+          }}
+          style={{ width: '100px' }}
+        />
+
         <select
+          className='form-select'
           value={pageSize}
           onChange={(e) => {
             setPageSize(Number(e.target.value))
           }}
+          style={{ width: '120px' }}
         >
-          {[10, 20, 30, 40, 50].map((pageSize) => (
+          {[10, 30, 50].map((pageSize) => (
             <option key={pageSize} value={pageSize}>
               Show {pageSize}
             </option>
