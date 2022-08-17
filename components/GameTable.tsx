@@ -70,11 +70,27 @@ export const GameTable = ({ games, isAdmin }: Props) => {
         Cell: CommentCell,
       },
       {
+        Header: 'Time',
+        accessor: 'timeSpent',
+        disableGlobalFilter: true,
+        Cell: ({ value }) => {
+          return <>{value ? `${value} h` : null}</>
+        },
+      },
+      {
+        Header: 'Sneaky',
+        accessor: 'stealth',
+        disableGlobalFilter: true,
+        Cell: ({ value }) => {
+          return <>{value ? 'X' : ''}</>
+        },
+      },
+      {
         Header: 'Streamed',
         accessor: 'streamed',
         disableGlobalFilter: true,
         Cell: ({ value }) => {
-          return <span>{value ? 'X' : ''}</span>
+          return <>{value ? 'X' : ''}</>
         },
       },
     ]
@@ -92,6 +108,8 @@ export const GameTable = ({ games, isAdmin }: Props) => {
           rating: x.rating,
           comment: x.comment,
           streamed: x.streamed,
+          timeSpent: x.timeSpent,
+          stealth: x.stealth,
         }
       })
   }, [games, stealthFilter])
@@ -154,7 +172,7 @@ export const GameTable = ({ games, isAdmin }: Props) => {
     }
 
     // CENTERED COLUMN
-    if (['streamed', 'rating', 'finishedDate'].includes(cell.column.id)) {
+    if (['streamed', 'rating', 'finishedDate', 'timeSpent', 'stealth'].includes(cell.column.id)) {
       return (
         <td
           {...cell.getCellProps(() => ({
