@@ -68,19 +68,22 @@ export const GameTable = ({ games, isAdmin }: Props) => {
         accessor: 'comment',
         disableGlobalFilter: true,
         Cell: CommentCell,
+        disableSortBy: true,
       },
       {
         Header: 'Time',
         accessor: 'timeSpent',
         disableGlobalFilter: true,
-        Cell: ({ value }) => {
-          return <>{value ? `${value} h` : null}</>
+        Cell: ({ value, row }) => {
+          const dnf = row.original.finished === 'Nope' ? ' (DNF)' : ''
+          return <>{value ? `${value} h${dnf}` : null}</>
         },
       },
       {
         Header: 'Sneaky',
         accessor: 'stealth',
         disableGlobalFilter: true,
+        disableSortBy: true,
         Cell: ({ value }) => {
           return <>{value ? 'X' : ''}</>
         },
@@ -89,6 +92,7 @@ export const GameTable = ({ games, isAdmin }: Props) => {
         Header: 'Streamed',
         accessor: 'streamed',
         disableGlobalFilter: true,
+        disableSortBy: true,
         Cell: ({ value }) => {
           return <>{value ? 'X' : ''}</>
         },
@@ -145,6 +149,7 @@ export const GameTable = ({ games, isAdmin }: Props) => {
             desc: true,
           },
         ],
+        pageSize: 30,
       },
     },
     useGlobalFilter,
@@ -196,12 +201,17 @@ export const GameTable = ({ games, isAdmin }: Props) => {
 
   return (
     <>
-      <div className={styles.filters}>
+      <div className={`d-flex align-items-center ${styles.filters}`}>
         <GlobalFilter globalFilter={globalFilter} setGlobalFilter={(e) => setGlobalFilter(e)} />
-        <label>
-          Sneaky?
-          <input type='checkbox' checked={stealthFilter} onChange={(e) => setStealthFilter(e.target.checked)} />
-        </label>
+        <div className='form-check'>
+          <input
+            className='form-check-input'
+            type='checkbox'
+            checked={stealthFilter}
+            onChange={(e) => setStealthFilter(e.target.checked)}
+          />
+          <label className='form-check-label'>Sneaky?</label>
+        </div>
       </div>
 
       <table {...getTableProps} className={styles.gameTable}>
@@ -232,44 +242,49 @@ export const GameTable = ({ games, isAdmin }: Props) => {
         </tbody>
       </table>
 
-      <div className='pagination'>
-        <button onClick={() => gotoPage(0)} disabled={!canPreviousPage}>
-          {'<<'}
-        </button>{' '}
-        <button onClick={() => previousPage()} disabled={!canPreviousPage}>
-          {'<'}
-        </button>{' '}
-        <button onClick={() => nextPage()} disabled={!canNextPage}>
-          {'>'}
-        </button>{' '}
-        <button onClick={() => gotoPage(pageCount - 1)} disabled={!canNextPage}>
-          {'>>'}
-        </button>{' '}
+      <div className='pagination d-flex align-items-center gap-2'>
+        <div className='btn-group'>
+          <button className='btn btn-light' onClick={() => gotoPage(0)} disabled={!canPreviousPage}>
+            {'<<'}
+          </button>
+          <button className='btn btn-light' onClick={() => previousPage()} disabled={!canPreviousPage}>
+            {'<'}
+          </button>
+        </div>
+
+        <div className='btn-group'>
+          <button className='btn btn-light' onClick={() => nextPage()} disabled={!canNextPage}>
+            {'>'}
+          </button>
+          <button className='btn btn-light' onClick={() => gotoPage(pageCount - 1)} disabled={!canNextPage}>
+            {'>>'}
+          </button>
+        </div>
+
         <span>
-          Page{' '}
-          <strong>
-            {pageIndex + 1} of {pageOptions.length}
-          </strong>{' '}
+          Page<strong>{` ${pageIndex + 1} of ${pageOptions.length} `}</strong>| Go to page:
         </span>
-        <span>
-          | Go to page:{' '}
-          <input
-            type='number'
-            defaultValue={pageIndex + 1}
-            onChange={(e) => {
-              const page = e.target.value ? Number(e.target.value) - 1 : 0
-              gotoPage(page)
-            }}
-            style={{ width: '100px' }}
-          />
-        </span>{' '}
+
+        <input
+          className='form-control'
+          type='number'
+          defaultValue={pageIndex + 1}
+          onChange={(e) => {
+            const page = e.target.value ? Number(e.target.value) - 1 : 0
+            gotoPage(page)
+          }}
+          style={{ width: '100px' }}
+        />
+
         <select
+          className='form-select'
           value={pageSize}
           onChange={(e) => {
             setPageSize(Number(e.target.value))
           }}
+          style={{ width: '120px' }}
         >
-          {[10, 20, 30, 40, 50].map((pageSize) => (
+          {[10, 30, 50].map((pageSize) => (
             <option key={pageSize} value={pageSize}>
               Show {pageSize}
             </option>

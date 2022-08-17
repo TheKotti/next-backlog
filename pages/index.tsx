@@ -48,9 +48,10 @@ export default function Home({ isAdmin, games = [] }: Props) {
 
       <main>
         <div className={styles.container}>
-          <div className={styles.header}>
+          <div className={`d-flex justify-content-between mb-3 ${styles.header}`}>
             <h1>{viewBacklog ? 'Backlog' : 'Previously played'}</h1>
-            <button onClick={() => setViewBacklog(!viewBacklog)}>
+
+            <button className='btn btn-primary' onClick={() => setViewBacklog(!viewBacklog)}>
               {viewBacklog ? 'Show previously played' : 'Show backlog'}
             </button>
           </div>
