@@ -61,7 +61,7 @@ export const BacklogTable = ({ games, isAdmin }: Props) => {
             desc: false,
           },
         ],
-        pageSize: 30,
+        pageSize: 10,
       },
     },
     useGlobalFilter,
@@ -81,7 +81,7 @@ export const BacklogTable = ({ games, isAdmin }: Props) => {
     <>
       <GlobalFilter globalFilter={globalFilter} setGlobalFilter={(e) => setGlobalFilter(e)} />
 
-      <table {...getTableProps} className={styles.gameTable}>
+      <table {...getTableProps} className={`w-100 ${styles.gameTable}`}>
         <thead>
           <tr>
             {headers.map((column) => {
@@ -146,20 +146,17 @@ export const BacklogTable = ({ games, isAdmin }: Props) => {
           style={{ width: '100px' }}
         />
 
-        <select
-          className='form-select'
-          value={pageSize}
-          onChange={(e) => {
-            setPageSize(Number(e.target.value))
-          }}
-          style={{ width: '120px' }}
-        >
-          {[10, 30, 50].map((pageSize) => (
-            <option key={pageSize} value={pageSize}>
-              Show {pageSize}
-            </option>
-          ))}
-        </select>
+        <div className='btn-group'>
+          <button className='btn btn-light' onClick={() => setPageSize(10)} disabled={pageSize === 10}>
+            {'Show 10'}
+          </button>
+          <button className='btn btn-light' onClick={() => setPageSize(30)} disabled={pageSize === 30}>
+            {'Show 30'}
+          </button>
+          <button className='btn btn-light' onClick={() => setPageSize(50)} disabled={pageSize === 50}>
+            {'Show 50'}
+          </button>
+        </div>
       </div>
     </>
   )
