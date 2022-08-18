@@ -74,10 +74,14 @@ export default function Home({ isAdmin, games = [] }: Props) {
         <div className={styles.buttonRow}>
           <div className={styles.buttons} />
           <div className={styles.buttons}>
-            <button onClick={() => pickRandomGame()}>Randomize</button>
+            <button className='btn btn-light' onClick={() => pickRandomGame()}>
+              Randomize
+            </button>
           </div>
           <div className={styles.buttons}>
-            <button onClick={() => poll()}>Create poll</button>
+            <button className='btn btn-light' onClick={() => poll()}>
+              Create poll
+            </button>
           </div>
         </div>
       </div>

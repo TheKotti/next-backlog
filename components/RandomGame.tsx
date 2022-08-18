@@ -24,7 +24,7 @@ export default function RandomGame(props: Props) {
       <p className={styles.gameDeveloper}>{game.developers.join(', ')}</p>
       <p className={styles.gameGenres}>{game.keywords.join(', ')}</p>
 
-      <button onClick={() => vetoGame(game._id!)} className={styles.gameButton}>
+      <button onClick={() => vetoGame(game._id!)} className={`btn btn-light ${styles.gameButton}`}>
         Veto
       </button>
     </div>

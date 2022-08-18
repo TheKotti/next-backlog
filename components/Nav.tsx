@@ -16,26 +16,22 @@ export default function Nav(props: Props) {
   }
 
   return (
-    <nav className={styles.nav}>
-      <ul className={styles.list}>
-        <li>
-          {!session ? (
-            <button onClick={() => signIn()}>Sign in</button>
-          ) : (
-            <button onClick={() => signOut()}>Sign out</button>
-          )}
-        </li>
-        <li className={styles.item}>
-          <Link href='/'>
-            <a>Home</a>
-          </Link>
-        </li>
-        <li>
-          <Link href='/add-game'>
-            <a>Add game</a>
-          </Link>
-        </li>
-      </ul>
+    <nav className='w-100 py-3 border-bottom d-flex justify-content-evenly align-items-center'>
+      <button className='btn btn-light' onClick={() => signOut()}>
+        Sign out
+      </button>
+
+      <Link href='/'>
+        <a>Home</a>
+      </Link>
+
+      <Link href='/add-game'>
+        <a>Add game</a>
+      </Link>
+
+      <Link href='/random'>
+        <a>Random</a>
+      </Link>
     </nav>
   )
 }
