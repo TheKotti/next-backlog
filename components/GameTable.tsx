@@ -149,7 +149,7 @@ export const GameTable = ({ games, isAdmin }: Props) => {
             desc: true,
           },
         ],
-        pageSize: 30,
+        pageSize: 10,
       },
     },
     useGlobalFilter,
