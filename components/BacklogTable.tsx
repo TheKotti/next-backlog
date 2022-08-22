@@ -18,6 +18,10 @@ export const BacklogTable = ({ games, isAdmin }: Props) => {
         Header: 'Game',
         accessor: 'title',
       },
+      {
+        Header: 'Blocked from polls by',
+        accessor: 'notPollable',
+      },
     ]
   }, [])
 
@@ -26,6 +30,7 @@ export const BacklogTable = ({ games, isAdmin }: Props) => {
       return {
         _id: x._id,
         title: x.title,
+        notPollable: x.notPollable,
       }
     })
   }, [games])
