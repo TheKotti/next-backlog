@@ -22,13 +22,14 @@ export const Recap = (props: Props) => {
       </div>
 
       <div className={styles.gameForm}>
-        <div className={styles.topRow}>
+        <div className={`d-flex justify-content-between align-items-end ${styles.topRow}`}>
           <div className={styles.formFinished}>
             <label>Finished</label>
             <textarea
               rows={1}
               value={game?.finished || ''}
               onChange={(e) => setGame({ ...game, finished: e.target.value })}
+              className='p-2'
             ></textarea>
           </div>
 
@@ -37,14 +38,19 @@ export const Recap = (props: Props) => {
             <textarea
               rows={1}
               value={game?.timeSpent || ''}
-              onChange={(e) => setGame({ ...game, timeSpent: parseInt(e.target.value) })}
+              onChange={(e) => setGame({ ...game, timeSpent: parseFloat(e.target.value) })}
+              className='p-2'
             ></textarea>
           </div>
 
           <div className={styles.feltSneaky}>
             <label>Felt sneaky</label>
-            <div className={styles.checkbox} onClick={() => setGame({ ...game, stealth: !game.stealth })}>
-              {!!game?.stealth ? <div className={styles.checked} /> : <div className={styles.unchecked} />}
+            <div className={`${styles.checkbox}`} onClick={() => setGame({ ...game, stealth: !game.stealth })}>
+              {!!game?.stealth ? (
+                <div className={`d-flex align-items-center justify-content-center ${styles.checked}`} />
+              ) : (
+                <div className={styles.unchecked} />
+              )}
             </div>
           </div>
         </div>
@@ -54,6 +60,7 @@ export const Recap = (props: Props) => {
           <textarea
             value={game?.comment || ''}
             onChange={(e) => setGame({ ...game, comment: e.target.value })}
+            className='p-2'
           ></textarea>
         </div>
 
