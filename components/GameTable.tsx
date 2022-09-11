@@ -71,12 +71,14 @@ export const GameTable = ({ games, isAdmin }: Props) => {
         disableSortBy: true,
       },
       {
-        Header: 'Time',
+        Header: 'Finished',
         accessor: 'timeSpent',
         disableGlobalFilter: true,
         Cell: ({ value, row }) => {
-          const dnf = row.original.finished === 'Nope' ? ' (DNF)' : ''
-          return <>{value ? `${value} h${dnf}` : null}</>
+          let finished = row.original.finished
+          if (row.original.finished === 'Nope') finished = 'Did not finish'
+          if (row.original.finished === 'Yes') finished = 'Completed'
+          return <>{value ? `${finished} (${value}h)` : null}</>
         },
       },
       {
