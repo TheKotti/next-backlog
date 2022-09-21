@@ -96,7 +96,7 @@ export default function Home({ adminId, games = [] }: Props) {
       },
       {
         key: 'Total time spent',
-        value: `${totalTime}h)`,
+        value: `${totalTime}h`,
       },
       {
         key: 'Streamed games',
