@@ -81,6 +81,7 @@ export default function Home({ isAdmin, games = [] }: Props) {
           <div className={styles.buttons}></div>
         </div>
       </div>
+      <iframe className={styles.poll} src='https://www.twitch.tv/popout/thekotti/poll' height='430' width='500' />
     </div>
   )
 }
