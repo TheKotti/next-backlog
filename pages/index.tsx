@@ -1,7 +1,7 @@
 /* eslint-disable react/jsx-key */
 import { useEffect, useMemo, useState } from 'react'
 import Head from 'next/head'
-import { getSession, signIn } from 'next-auth/react'
+import { getSession, signIn, useSession } from 'next-auth/react'
 import Modal from 'react-bootstrap/Modal'
 
 import Nav from '../components/Nav'
@@ -11,13 +11,19 @@ import { GameTable } from '../components/GameTable'
 import { BacklogTable } from '../components/BacklogTable'
 
 type Props = {
-  isAdmin: boolean
+  adminId: string
   games: Array<Game>
 }
 
-export default function Home({ isAdmin, games = [] }: Props) {
+export default function Home({ adminId, games = [] }: Props) {
   const [viewBacklog, setViewBacklog] = useState(false)
   const [show, setShow] = useState(false)
+
+  const session = useSession()
+
+  const isAdmin = useMemo(() => {
+    return session?.data?.userId === adminId
+  }, [session, adminId])
 
   const playedGames = useMemo(
     () =>
@@ -199,7 +205,7 @@ export async function getServerSideProps(ctx) {
   return {
     props: {
       isAdmin,
-      session,
+      adminId: process.env.ADMIN_USER_ID,
       games: JSON.parse(JSON.stringify(games)), //What the fuck
     },
   }
