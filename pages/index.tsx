@@ -42,6 +42,7 @@ export default function Home({ isAdmin, games = [] }: Props) {
 
   // It's a disaster but whatever, clean up when drunk or something
   const stats = useMemo(() => {
+    if (games.length === 0) return []
     // This filter crap shouldn't be necessary but fuck it
     const ratings = games.map((x) => x.rating).filter((x): x is number => x !== null)
     const times = games.map((x) => x.timeSpent).filter((x): x is number => x !== null)
@@ -186,7 +187,7 @@ export async function getServerSideProps(ctx) {
   const { res } = ctx
   res.setHeader('Cache-Control', 'public, s-maxage=600, stale-while-revalidate=0')
   const session = await getSession(ctx)
-  const isAdmin = session?.userId && process.env.ADMIN_USER_ID === session?.userId
+  const isAdmin = session?.userId ? process.env.ADMIN_USER_ID === session?.userId : null
   const { db } = await connectToDatabase()
   const games = await db
     .collection('games')
@@ -198,6 +199,7 @@ export async function getServerSideProps(ctx) {
   return {
     props: {
       isAdmin,
+      session,
       games: JSON.parse(JSON.stringify(games)), //What the fuck
     },
   }
