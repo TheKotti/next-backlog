@@ -187,7 +187,7 @@ export default function Home({ isAdmin, games = [] }: Props) {
 
 export async function getServerSideProps(ctx) {
   const { res } = ctx
-  res.setHeader('Cache-Control', 'public, s-maxage=600, stale-while-revalidate=900')
+  res.setHeader('Cache-Control', 'public, s-maxage=600, stale-while-revalidate=0')
   const session = await getSession(ctx)
   const isAdmin = process.env.ADMIN_USER_ID === session?.userId
   const { db } = await connectToDatabase()
