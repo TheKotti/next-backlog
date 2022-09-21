@@ -47,7 +47,8 @@ export default function Home({ isAdmin, games = [] }: Props) {
     const times = games.map((x) => x.timeSpent).filter((x): x is number => x !== null)
 
     const averageRating = ratings.reduce((a, b) => a + b, 0) / ratings.length
-    const averageTime = times.reduce((a, b) => a + b, 0) / times.length
+    const totalTime = times.reduce((a, b) => a + b, 0)
+    const averageTime = totalTime / times.length
     const sneakyGames = games.filter((x) => x.stealth).length
     const streamedGames = games.filter((x) => x.streamed).length
     const finishedGames = games.filter((x) => x.finished && x.finished !== 'Nope').length
@@ -77,10 +78,6 @@ export default function Home({ isAdmin, games = [] }: Props) {
       .map((x) => x.title)
       .join(', ')
 
-    const longest = games
-      .filter((x) => x.timeSpent && x.finished !== 'Nope')
-      .reduce((longest, game) => (longest.timeSpent! > game.timeSpent! ? longest : game))
-
     return [
       {
         key: 'Average rating',
@@ -89,6 +86,10 @@ export default function Home({ isAdmin, games = [] }: Props) {
       {
         key: 'Average time spent',
         value: `${averageTime.toFixed(2)}h`,
+      },
+      {
+        key: 'Total time spent',
+        value: `${totalTime}h)`,
       },
       {
         key: 'Streamed games',
@@ -109,10 +110,6 @@ export default function Home({ isAdmin, games = [] }: Props) {
       {
         key: 'Games in backlog',
         value: backlogLength,
-      },
-      {
-        key: 'Most time spent',
-        value: `${longest.title} (${longest.timeSpent}h)`,
       },
       {
         key: 'Best year for games, objectively',
