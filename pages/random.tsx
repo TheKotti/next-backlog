@@ -78,11 +78,7 @@ export default function Home({ isAdmin, games = [] }: Props) {
               Randomize
             </button>
           </div>
-          <div className={styles.buttons}>
-            <button className='btn btn-light' onClick={() => poll()}>
-              Create poll
-            </button>
-          </div>
+          <div className={styles.buttons}></div>
         </div>
       </div>
     </div>

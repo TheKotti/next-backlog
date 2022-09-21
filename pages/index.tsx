@@ -163,7 +163,7 @@ export default function Home({ isAdmin, games = [] }: Props) {
             <tbody>
               {stats.map(({ key, value }) => {
                 return (
-                  <tr className='border-bottom lh-lg'>
+                  <tr key={key} className='border-bottom lh-lg'>
                     <td className='w-50'>{key}</td>
                     <td>{value}</td>
                   </tr>
@@ -186,7 +186,7 @@ export async function getServerSideProps(ctx) {
   const { res } = ctx
   res.setHeader('Cache-Control', 'public, s-maxage=600, stale-while-revalidate=0')
   const session = await getSession(ctx)
-  const isAdmin = process.env.ADMIN_USER_ID === session?.userId
+  const isAdmin = session?.userId && process.env.ADMIN_USER_ID === session?.userId
   const { db } = await connectToDatabase()
   const games = await db
     .collection('games')
