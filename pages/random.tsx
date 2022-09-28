@@ -3,7 +3,6 @@ import { useEffect, useMemo, useState } from 'react'
 import Head from 'next/head'
 import { getSession } from 'next-auth/react'
 import router from 'next/router'
-import axios from 'axios'
 
 import styles from '../styles/random.module.css'
 import { connectToDatabase } from '../lib/mongo'
@@ -45,18 +44,6 @@ export default function Home({ isAdmin, games = [] }: Props) {
     setGameOptions(updatedOptions)
   }
 
-  const poll = () => {
-    const options = selectedGames.map((x) => x.title).slice(0, 4)
-    axios
-      .post('api/twitch/create-poll', { options })
-      .then((res) => {
-        console.log('Poll created')
-      })
-      .catch((err) => {
-        console.log('ERROR: ', err)
-      })
-  }
-
   return (
     <div>
       <Head>
@@ -81,7 +68,6 @@ export default function Home({ isAdmin, games = [] }: Props) {
           <div className={styles.buttons}></div>
         </div>
       </div>
-      <iframe className={styles.poll} src='https://www.twitch.tv/popout/thekotti/poll' height='430' width='500' />
     </div>
   )
 }

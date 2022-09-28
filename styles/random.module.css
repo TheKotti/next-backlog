@@ -27,17 +27,3 @@
     font-size: 2rem;
     border-radius: 5px;
 }
-
-.poll {
-    zoom: 125%;
-    position: absolute;
-    bottom: 120px;
-    right: 100px;
-    margin-top: -200px;
-    clip-path: polygon(
-        4% 60%, 
-        96% 60%, 
-        96% 100%,
-        4% 100%
-        );
-}
