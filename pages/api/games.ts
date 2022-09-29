@@ -32,7 +32,9 @@ export default async function handler(req, res) {
 
 async function getGames(req, res) {
   try {
-    if (req.query.refresh) {
+    const cachedGames = cache.get('games')
+
+    if (req.query.refresh || !cachedGames) {
       // connect to the database
       const { db } = await connectToDatabase()
       // fetch the posts
@@ -43,8 +45,7 @@ async function getGames(req, res) {
       return res.json(parsedGames)
     }
 
-    const asd = cache.get('games')
-    return res.json(asd)
+    return res.json(cachedGames)
   } catch (error: any) {
     // return the error
     return res.json({
