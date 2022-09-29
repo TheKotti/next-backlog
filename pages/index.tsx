@@ -59,8 +59,6 @@ export default function Home({ adminId, games = [] }: Props) {
     const droppedGames = games.filter((x) => x.finished && x.finished === 'Nope').length
     const backlogLength = games.filter((x) => !x.finishedDate).length
 
-    console.log(games.sort((a, b) => a.title.localeCompare(b.title)))
-
     const gamesByYear = games
       .filter((x) => x.rating)
       .reduce((acc, obj) => {

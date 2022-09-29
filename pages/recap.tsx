@@ -5,6 +5,7 @@ import router from 'next/router'
 
 import { Recap } from '../components/Recap'
 import { getSession } from 'next-auth/react'
+import { toast } from 'react-toastify'
 
 export default function Home({ isAdmin }) {
   const [game, setGame] = useState<Game>()
@@ -38,10 +39,11 @@ export default function Home({ isAdmin }) {
   const updateGame = (game: Game) => {
     axios
       .put('api/games', { game })
-      .then((res) => {
-        console.log('Game updated')
+      .then((_res) => {
+        toast.success('Game saved 👌')
       })
       .catch((err) => {
+        toast.error('Save failed')
         console.log('ERROR: ', err)
       })
   }

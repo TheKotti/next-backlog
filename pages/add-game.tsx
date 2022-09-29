@@ -4,6 +4,7 @@ import router from 'next/router'
 import { useEffect, useState } from 'react'
 import DatePicker from 'react-datepicker'
 import 'react-datepicker/dist/react-datepicker.css'
+import { toast } from 'react-toastify'
 
 import Nav from '../components/Nav'
 
@@ -73,8 +74,10 @@ export default function AddGame({ isAdmin }) {
       })
       .then((res) => {
         if (res.data.success) {
+          toast.success('Game saved 👌')
           console.log('SUCCESSFULLY ADDED GAME WITH ID ' + id)
         } else {
+          toast.error("IT'S BROKEN")
           console.error('OH NO IT FAIOLED ' + id)
         }
       })
