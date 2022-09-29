@@ -1,25 +1,25 @@
 /* eslint-disable react/jsx-key */
 import { useEffect, useMemo, useState } from 'react'
 import Head from 'next/head'
-import { getSession, signIn, useSession } from 'next-auth/react'
+import { signIn, useSession } from 'next-auth/react'
 import Modal from 'react-bootstrap/Modal'
 
 import Nav from '../components/Nav'
 import styles from '../styles/Home.module.css'
-import { connectToDatabase } from '../lib/mongo'
 import { GameTable } from '../components/GameTable'
 import { BacklogTable } from '../components/BacklogTable'
+import { useGamesList } from '../hooks/useGamesList'
 
 type Props = {
   adminId: string
-  games: Array<Game>
 }
 
-export default function Home({ adminId, games = [] }: Props) {
+export default function Home({ adminId }: Props) {
   const [viewBacklog, setViewBacklog] = useState(false)
   const [show, setShow] = useState(false)
 
   const session = useSession()
+  const games = useGamesList()
 
   const isAdmin = useMemo(() => {
     return session?.data?.userId === adminId
@@ -189,21 +189,10 @@ export default function Home({ adminId, games = [] }: Props) {
 export async function getServerSideProps(ctx) {
   const { res } = ctx
   res.setHeader('Cache-Control', 'public, s-maxage=600, stale-while-revalidate=0')
-  const session = await getSession(ctx)
-  const isAdmin = session?.userId ? process.env.ADMIN_USER_ID === session?.userId : null
-  const { db } = await connectToDatabase()
-  const games = await db
-    .collection('games')
-    .find({
-      /* finishedDate: { $ne: null } */
-    })
-    .toArray()
 
   return {
     props: {
-      isAdmin,
       adminId: process.env.ADMIN_USER_ID,
-      games: JSON.parse(JSON.stringify(games)), //What the fuck
     },
   }
 }

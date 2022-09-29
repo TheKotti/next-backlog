@@ -1,6 +1,6 @@
 import axios from 'axios'
-import { getToken } from 'next-auth/jwt'
 import { getSession } from 'next-auth/react'
+var cache = require('memory-cache')
 
 const { connectToDatabase } = require('../../lib/mongo')
 const ObjectId = require('mongodb').ObjectId
@@ -31,20 +31,20 @@ export default async function handler(req, res) {
 }
 
 async function getGames(req, res) {
-  const s = await getSession({ req })
-  const t = await getToken({ req })
-  //console.log('s', s)
-  //console.log('t', t)
   try {
-    // connect to the database
-    const { db } = await connectToDatabase()
-    // fetch the posts
-    const games = await db.collection('games').find({}).sort({ published: -1 }).toArray()
-    // return the posts
-    return res.json({
-      message: JSON.parse(JSON.stringify(games)),
-      success: true,
-    })
+    if (req.query.refresh) {
+      // connect to the database
+      const { db } = await connectToDatabase()
+      // fetch the posts
+      const games = await db.collection('games').find({}).sort({ published: -1 }).toArray()
+      // return the posts
+      const parsedGames = JSON.parse(JSON.stringify(games))
+      cache.put('games', parsedGames)
+      return res.json(parsedGames)
+    }
+
+    const asd = cache.get('games')
+    return res.json(asd)
   } catch (error: any) {
     // return the error
     return res.json({
