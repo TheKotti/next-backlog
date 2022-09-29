@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import Link from 'next/link'
 
 import styles from '../styles/Recap.module.css'
@@ -12,6 +12,20 @@ type Props = {
 
 export const Recap = (props: Props) => {
   const { game, setGame, updateGame } = props
+
+  const textareaRef = useRef<HTMLTextAreaElement>(null)
+  const [textSize, setTextSize] = useState<'large' | 'x-large' | 'xx-large'>('xx-large')
+
+  useEffect(() => {
+    const clientHeight = textareaRef.current?.clientHeight || 0
+    const scrollHeight = textareaRef.current?.scrollHeight || 0
+
+    if (scrollHeight > clientHeight) {
+      if (textSize === 'xx-large') setTextSize('x-large')
+      if (textSize === 'x-large') setTextSize('large')
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [game.comment])
 
   return (
     <div className={styles.root}>
@@ -58,9 +72,11 @@ export const Recap = (props: Props) => {
         <div className={styles.comment}>
           <label>Comment</label>
           <textarea
+            ref={textareaRef}
             value={game?.comment || ''}
             onChange={(e) => setGame({ ...game, comment: e.target.value })}
             className='p-2'
+            style={{ fontSize: textSize }}
           ></textarea>
         </div>
 
