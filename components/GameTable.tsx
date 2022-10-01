@@ -1,7 +1,7 @@
 /* eslint-disable react/jsx-key */
 import { useMemo, useState } from 'react'
 import dayjs from 'dayjs'
-import { Cell, Row, useGlobalFilter, usePagination, useSortBy, useTable } from 'react-table'
+import { Cell, ColumnInstance, Row, useGlobalFilter, usePagination, useSortBy, useTable } from 'react-table'
 import router from 'next/router'
 
 import { GlobalFilter } from './GlobalFilter'
@@ -52,6 +52,7 @@ export const GameTable = ({ games, isAdmin }: Props) => {
         Header: 'Date',
         accessor: 'finishedDate',
         disableGlobalFilter: true,
+        sortDescFirst: true,
         Cell: DateCell,
         sortType: dateSort,
       },
@@ -63,6 +64,7 @@ export const GameTable = ({ games, isAdmin }: Props) => {
         Header: 'Rating',
         accessor: 'rating',
         disableGlobalFilter: true,
+        sortDescFirst: true,
         Cell: ({ value }) => {
           return <ScoreIndicator rating={value} />
         },
@@ -81,7 +83,7 @@ export const GameTable = ({ games, isAdmin }: Props) => {
         Cell: ({ value, row }) => {
           let finished = row.original.finished
           if (row.original.finished === 'Nope') finished = 'Did not finish'
-          if (row.original.finished === 'Yes') finished = 'Completed'
+          if (row.original.finished === 'Yes') finished = 'Finished'
           return <>{value ? `${finished} (${value}h)` : null}</>
         },
       },
@@ -91,7 +93,7 @@ export const GameTable = ({ games, isAdmin }: Props) => {
         disableGlobalFilter: true,
         disableSortBy: true,
         Cell: ({ value }) => {
-          return <>{value ? 'X' : ''}</>
+          return <span style={{ fontFamily: 'Noto Color Emoji' }}>{value ? '✔️' : ''}</span>
         },
       },
       {
@@ -99,8 +101,9 @@ export const GameTable = ({ games, isAdmin }: Props) => {
         accessor: 'streamed',
         disableGlobalFilter: true,
         disableSortBy: true,
+        width: '500px',
         Cell: ({ value }) => {
-          return <>{value ? 'X' : ''}</>
+          return <span style={{ fontFamily: 'Noto Color Emoji' }}>{value ? '✔️' : ''}</span>
         },
       },
     ]
@@ -157,6 +160,8 @@ export const GameTable = ({ games, isAdmin }: Props) => {
         ],
         pageSize: 10,
       },
+      autoResetSortBy: false,
+      disableSortRemove: true,
     },
     useGlobalFilter,
     useSortBy,
@@ -220,6 +225,35 @@ export const GameTable = ({ games, isAdmin }: Props) => {
     )
   }
 
+  const formatHeader = (column: ColumnInstance<object>) => {
+    // CONDENCED
+    if (['streamed', 'timeSpent', 'stealth'].includes(column.id)) {
+      return (
+        <th
+          {...column.getHeaderProps(() => ({
+            style: {
+              fontStretch: 'condensed',
+              paddingLeft: '8px',
+              paddingRight: '8px',
+              textAlign: 'center',
+            },
+          }))}
+          key={column.id}
+        >
+          {column.render('Header')}
+        </th>
+      )
+    }
+    return (
+      <th {...column.getHeaderProps(column.getSortByToggleProps())} key={column.id}>
+        <span className='d-flex'>
+          {column.render('Header')}
+          <span>{column.isSorted ? (column.isSortedDesc ? ' 🔻' : ' 🔺') : ''}</span>
+        </span>
+      </th>
+    )
+  }
+
   return (
     <>
       <div className={`d-flex align-items-center ${styles.filters}`}>
@@ -235,15 +269,11 @@ export const GameTable = ({ games, isAdmin }: Props) => {
         </div>
       </div>
 
-      <table {...getTableProps} className={`w-100 ${styles.gameTable}`}>
+      <table {...getTableProps()} className={`w-100 ${styles.gameTable}`}>
         <thead>
           <tr>
             {headers.map((column, i) => {
-              return (
-                <th {...column.getHeaderProps(column.getSortByToggleProps())} key={i}>
-                  {column.render('Header')}
-                </th>
-              )
+              return formatHeader(column)
             })}
           </tr>
         </thead>

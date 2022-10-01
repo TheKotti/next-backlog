@@ -43,6 +43,7 @@ export default function Home({ games }: Props) {
     const finishedGames = games.filter((x) => x.finished && x.finished !== 'Nope').length
     const droppedGames = games.filter((x) => x.finished && x.finished === 'Nope').length
     const backlogLength = games.filter((x) => !x.finishedDate).length
+    const pollOptions = games.filter((x) => !x.notPollable && !x.finishedDate).length
 
     const gamesByYear = games
       .filter((x) => x.rating)
@@ -74,11 +75,11 @@ export default function Home({ games }: Props) {
       },
       {
         key: 'Average time spent',
-        value: `${averageTime.toFixed(2)}h`,
+        value: `${averageTime.toFixed(2)} hours`,
       },
       {
         key: 'Total time spent',
-        value: `${totalTime}h`,
+        value: `${totalTime} hours`,
       },
       {
         key: 'Streamed games',
@@ -99,6 +100,10 @@ export default function Home({ games }: Props) {
       {
         key: 'Games in backlog',
         value: backlogLength,
+      },
+      {
+        key: 'Possible poll options',
+        value: pollOptions,
       },
       {
         key: 'Best year for games, objectively',
@@ -148,9 +153,9 @@ export default function Home({ games }: Props) {
         <Modal.Body>
           <table className='w-100'>
             <tbody>
-              {stats.map(({ key, value }) => {
+              {stats.map(({ key, value }, i) => {
                 return (
-                  <tr key={key} className='border-bottom lh-lg'>
+                  <tr key={key} className={`lh-lg ${i !== stats.length - 1 ? 'border-bottom' : ''}`}>
                     <td className='w-50'>{key}</td>
                     <td>{value}</td>
                   </tr>
