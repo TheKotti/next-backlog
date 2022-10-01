@@ -6,7 +6,7 @@ import { toast } from 'react-toastify'
 
 type Props = {
   isAdmin: boolean
-  userId: string
+  userId?: string
 }
 
 export default function Nav(props: Props) {
@@ -42,9 +42,11 @@ export default function Nav(props: Props) {
             <a>Random</a>
           </Link>
 
-          <button className='btn btn-light' onClick={() => refresh()}>
-            Refresh
-          </button>
+          {userId && (
+            <button className='btn btn-light' onClick={() => refresh()}>
+              Refresh
+            </button>
+          )}
         </>
       ) : (
         <button className='btn btn-light' onClick={() => signIn()}>
