@@ -50,7 +50,7 @@ export default function Nav(props: Props) {
         </>
       ) : (
         <button className='btn btn-light' onClick={() => signIn()}>
-          Sign out
+          Sign in
         </button>
       )}
     </nav>

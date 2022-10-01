@@ -177,9 +177,6 @@ export default function Home({ isAdmin, userId }: Props) {
 }
 
 export async function getServerSideProps(ctx) {
-  const { res } = ctx
-  res.setHeader('Cache-Control', 'public, s-maxage=60, stale-while-revalidate=0')
-
   const session = await getSession(ctx)
   const isAdmin = process.env.ADMIN_USER_ID === session?.userId
 
