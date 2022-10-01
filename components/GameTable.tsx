@@ -6,6 +6,7 @@ import router from 'next/router'
 
 import { GlobalFilter } from './GlobalFilter'
 import styles from '../styles/GameTable.module.css'
+import { ScoreIndicator } from './ScoreIndicator'
 
 type Props = {
   games: Array<Game>
@@ -62,6 +63,9 @@ export const GameTable = ({ games, isAdmin }: Props) => {
         Header: 'Rating',
         accessor: 'rating',
         disableGlobalFilter: true,
+        Cell: ({ value }) => {
+          return <ScoreIndicator rating={value} />
+        },
       },
       {
         Header: 'Comments',
@@ -178,8 +182,23 @@ export const GameTable = ({ games, isAdmin }: Props) => {
       )
     }
 
+    if (cell.column.id === 'rating') {
+      return (
+        <td
+          {...cell.getCellProps(() => ({
+            style: {
+              textAlign: 'center',
+            },
+          }))}
+          key={cell.column.id + row.id}
+        >
+          {cell.render('Cell')}
+        </td>
+      )
+    }
+
     // CENTERED COLUMN
-    if (['streamed', 'rating', 'finishedDate', 'timeSpent', 'stealth'].includes(cell.column.id)) {
+    if (['streamed', 'finishedDate', 'timeSpent', 'stealth'].includes(cell.column.id)) {
       return (
         <td
           {...cell.getCellProps(() => ({
@@ -235,7 +254,6 @@ export const GameTable = ({ games, isAdmin }: Props) => {
             return (
               <tr {...row.getRowProps()} key={i}>
                 {row.cells.map((cell) => {
-                  //console.log(cell)
                   return formatCell(cell, row)
                 })}
               </tr>
