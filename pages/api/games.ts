@@ -1,6 +1,5 @@
 import axios from 'axios'
 import { getSession } from 'next-auth/react'
-var cache = require('memory-cache')
 
 const { connectToDatabase } = require('../../lib/mongo')
 const ObjectId = require('mongodb').ObjectId
@@ -32,20 +31,13 @@ export default async function handler(req, res) {
 
 async function getGames(req, res) {
   try {
-    const cachedGames = cache.get('games')
-
-    if (req.query.refresh || !cachedGames) {
-      // connect to the database
-      const { db } = await connectToDatabase()
-      // fetch the posts
-      const games = await db.collection('games').find({}).sort({ published: -1 }).toArray()
-      // return the posts
-      const parsedGames = JSON.parse(JSON.stringify(games))
-      cache.put('games', parsedGames)
-      return res.json(parsedGames)
-    }
-
-    return res.json(cachedGames)
+    // connect to the database
+    const { db } = await connectToDatabase()
+    // fetch the posts
+    const games = await db.collection('games').find({}).sort({ published: -1 }).toArray()
+    // return the posts
+    const parsedGames = JSON.parse(JSON.stringify(games))
+    return res.json(parsedGames)
   } catch (error: any) {
     // return the error
     return res.json({

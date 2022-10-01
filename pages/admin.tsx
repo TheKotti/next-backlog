@@ -1,20 +1,25 @@
 /* eslint-disable react/jsx-key */
 import { useMemo, useState } from 'react'
 import Head from 'next/head'
+import { getSession } from 'next-auth/react'
 import Modal from 'react-bootstrap/Modal'
 
+import Nav from '../components/Nav'
 import styles from '../styles/Home.module.css'
 import { GameTable } from '../components/GameTable'
 import { BacklogTable } from '../components/BacklogTable'
-import { connectToDatabase } from '../lib/mongo'
+import { useGamesList } from '../hooks/useGamesList'
 
 type Props = {
-  games: Game[]
+  isAdmin: boolean
+  userId: string
 }
 
-export default function Home({ games }: Props) {
+export default function Home({ isAdmin, userId }: Props) {
   const [viewBacklog, setViewBacklog] = useState(false)
   const [show, setShow] = useState(false)
+
+  const games = useGamesList()
 
   const playedGames = useMemo(
     () =>
@@ -113,6 +118,8 @@ export default function Home({ games }: Props) {
         <title>YAME! YAME!</title>
       </Head>
 
+      <Nav isAdmin={isAdmin} userId={userId} />
+
       <main>
         <div className={styles.container}>
           <div className={`d-flex justify-content-between mb-3 ${styles.header}`}>
@@ -131,12 +138,12 @@ export default function Home({ games }: Props) {
             playedGames.length === 0 ? (
               <h2></h2>
             ) : (
-              <BacklogTable games={backlogGames} isAdmin={false} />
+              <BacklogTable games={backlogGames} isAdmin={isAdmin} />
             )
           ) : playedGames.length === 0 ? (
             <h2></h2>
           ) : (
-            <GameTable games={playedGames} isAdmin={false} />
+            <GameTable games={playedGames} isAdmin={isAdmin} />
           )}
         </div>
       </main>
@@ -169,13 +176,17 @@ export default function Home({ games }: Props) {
   )
 }
 
-export async function getStaticProps(ctx) {
-  const { db } = await connectToDatabase()
-  const games = await db.collection('games').find().toArray()
+export async function getServerSideProps(ctx) {
+  const { res } = ctx
+  res.setHeader('Cache-Control', 'public, s-maxage=60, stale-while-revalidate=0')
+
+  const session = await getSession(ctx)
+  const isAdmin = process.env.ADMIN_USER_ID === session?.userId
 
   return {
     props: {
-      games: JSON.parse(JSON.stringify(games)), //What the fuck
+      isAdmin,
+      userId: session?.userId,
     },
   }
 }

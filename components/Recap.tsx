@@ -85,7 +85,7 @@ export const Recap = (props: Props) => {
 
       <div className={styles.saveControls}>
         <button>
-          <Link href='/'>Back</Link>
+          <Link href='/admin'>Back</Link>
         </button>
 
         <button onClick={() => updateGame(game)}>Save</button>
