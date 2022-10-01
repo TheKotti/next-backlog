@@ -84,7 +84,23 @@ export const GameTable = ({ games, isAdmin }: Props) => {
           let finished = row.original.finished
           if (row.original.finished === 'Nope') finished = 'Did not finish'
           if (row.original.finished === 'Yes') finished = 'Finished'
-          return <>{value ? `${finished} (${value}h)` : null}</>
+          const wordArray = row.original.finished.split(/(\/)/)
+          const withWordBreaks = wordArray.map((x) => {
+            return (
+              <>
+                {x}
+                <wbr />
+              </>
+            )
+          })
+
+          console.log(withWordBreaks)
+          //return thing
+          return value ? (
+            <>
+              {withWordBreaks} {`(${value}h)`}
+            </>
+          ) : null
         },
       },
       {
