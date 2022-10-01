@@ -81,9 +81,9 @@ export const GameTable = ({ games, isAdmin }: Props) => {
         accessor: 'timeSpent',
         disableGlobalFilter: true,
         Cell: ({ value, row }) => {
-          let finished = row.original.finished
-          if (row.original.finished === 'Nope') finished = 'Did not finish'
-          if (row.original.finished === 'Yes') finished = 'Finished'
+          if (row.original.finished === 'Nope') return <>Did not finish {`(${value}h)`}</>
+          if (row.original.finished === 'Yes') return <>Finished {`(${value}h)`}</>
+
           const wordArray = row.original.finished.split(/(\/)/)
           const withWordBreaks = wordArray.map((x) => {
             return (
@@ -94,8 +94,6 @@ export const GameTable = ({ games, isAdmin }: Props) => {
             )
           })
 
-          console.log(withWordBreaks)
-          //return thing
           return value ? (
             <>
               {withWordBreaks} {`(${value}h)`}
