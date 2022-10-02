@@ -1,5 +1,5 @@
 /* eslint-disable react/jsx-key */
-import { useMemo, useState } from 'react'
+import React, { useMemo, useState } from 'react'
 import dayjs from 'dayjs'
 import { Cell, ColumnInstance, Row, useGlobalFilter, usePagination, useSortBy, useTable } from 'react-table'
 import router from 'next/router'
@@ -88,10 +88,10 @@ export const GameTable = ({ games, isAdmin }: Props) => {
           const wordArray = row.original.finished.split(/(\/)/)
           const withWordBreaks = wordArray.map((x, i) => {
             return (
-              <div key={i}>
+              <React.Fragment key={i}>
                 {x}
                 <wbr />
-              </div>
+              </React.Fragment>
             )
           })
 
