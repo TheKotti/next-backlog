@@ -79,18 +79,19 @@ export const GameTable = ({ games, isAdmin }: Props) => {
       {
         Header: 'Finished',
         accessor: 'timeSpent',
+        sortDescFirst: true,
         disableGlobalFilter: true,
         Cell: ({ value, row }) => {
           if (row.original.finished === 'Nope') return <>Did not finish {`(${value}h)`}</>
           if (row.original.finished === 'Yes') return <>Finished {`(${value}h)`}</>
 
           const wordArray = row.original.finished.split(/(\/)/)
-          const withWordBreaks = wordArray.map((x) => {
+          const withWordBreaks = wordArray.map((x, i) => {
             return (
-              <>
+              <div key={i}>
                 {x}
                 <wbr />
-              </>
+              </div>
             )
           })
 
@@ -241,7 +242,7 @@ export const GameTable = ({ games, isAdmin }: Props) => {
 
   const formatHeader = (column: ColumnInstance<object>) => {
     // CONDENCED
-    if (['streamed', 'timeSpent', 'stealth'].includes(column.id)) {
+    if (['streamed', 'stealth'].includes(column.id)) {
       return (
         <th
           {...column.getHeaderProps(() => ({
@@ -258,6 +259,29 @@ export const GameTable = ({ games, isAdmin }: Props) => {
         </th>
       )
     }
+
+    if (column.id === 'timeSpent') {
+      return (
+        <th
+          {...column.getHeaderProps(() => ({
+            style: {
+              fontStretch: 'condensed',
+              paddingLeft: '8px',
+              paddingRight: '8px',
+              textAlign: 'center',
+            },
+            ...column.getSortByToggleProps(),
+          }))}
+          key={column.id}
+        >
+          <span className='d-flex'>
+            {column.render('Header')}
+            <span>{column.isSorted ? (column.isSortedDesc ? ' 🔻' : ' 🔺') : ''}</span>
+          </span>
+        </th>
+      )
+    }
+
     return (
       <th {...column.getHeaderProps(column.getSortByToggleProps())} key={column.id}>
         <span className='d-flex'>
