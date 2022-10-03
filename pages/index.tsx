@@ -46,14 +46,8 @@ export default function Home({ games }: Props) {
             </div>
           </div>
 
-          {viewBacklog ? ( // TODO: Clean up this mess
-            playedGames.length === 0 ? (
-              <h2></h2>
-            ) : (
-              <BacklogTable games={backlogGames} isAdmin={false} />
-            )
-          ) : playedGames.length === 0 ? (
-            <h2></h2>
+          {viewBacklog ? (
+            <BacklogTable games={backlogGames} isAdmin={false} />
           ) : (
             <GameTable games={playedGames} isAdmin={false} />
           )}
