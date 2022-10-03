@@ -1,4 +1,3 @@
-/* eslint-disable react/jsx-key */
 import { useMemo, useState } from 'react'
 import Head from 'next/head'
 
@@ -7,6 +6,7 @@ import { GameTable } from '../components/GameTable'
 import { BacklogTable } from '../components/BacklogTable'
 import { connectToDatabase } from '../lib/mongo'
 import { StatsDialog } from '../components/StatsDialog'
+import { Icon } from '../components/Icon'
 
 type Props = {
   games: Game[]
@@ -35,8 +35,21 @@ export default function Home({ games }: Props) {
 
       <main>
         <div className={styles.container}>
+          <div className='d-flex justify-content-between'>
+            <h1>Kotti's bad takes on games</h1>
+
+            <div className='row gx-2'>
+              <Icon type='youtube' size={32} className='col' />
+              <Icon type='twitch' size={32} className='col' />
+              <Icon type='twitter' size={32} className='col' />
+              <Icon type='discord' size={32} className='col' />
+            </div>
+          </div>
+
+          <hr />
+
           <div className={`d-flex justify-content-between mb-3 ${styles.header}`}>
-            <h1>{viewBacklog ? 'Backlog' : 'Previously played'}</h1>
+            <h2>{viewBacklog ? 'Backlog' : 'Previously played'}</h2>
             <div>
               <StatsDialog games={games} />
 
