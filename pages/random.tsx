@@ -3,6 +3,7 @@ import { useEffect, useMemo, useState } from 'react'
 import Head from 'next/head'
 import { getSession } from 'next-auth/react'
 import router from 'next/router'
+import Link from 'next/link'
 
 import styles from '../styles/random.module.css'
 import { connectToDatabase } from '../lib/mongo'
@@ -67,6 +68,12 @@ export default function Home({ isAdmin, games = [] }: Props) {
           </div>
           <div className={styles.buttons}></div>
         </div>
+      </div>
+
+      <div className={styles.saveControls}>
+        <button>
+          <Link href='/admin'>Back</Link>
+        </button>
       </div>
     </div>
   )

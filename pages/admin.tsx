@@ -53,9 +53,9 @@ export default function Home({ isAdmin, userId }: Props) {
           </div>
 
           {viewBacklog ? (
-            <BacklogTable games={backlogGames} isAdmin={false} />
+            <BacklogTable games={backlogGames} isAdmin={isAdmin} />
           ) : (
-            <GameTable games={playedGames} isAdmin={false} />
+            <GameTable games={playedGames} isAdmin={isAdmin} />
           )}
         </div>
       </main>

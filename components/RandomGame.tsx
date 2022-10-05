@@ -9,7 +9,6 @@ type Props = {
 
 export default function RandomGame(props: Props) {
   const { game, vetoGame } = props
-  const [hidden, setHidden] = useState(false)
 
   return (
     <div className={styles.gameContainer}>

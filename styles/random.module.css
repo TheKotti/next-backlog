@@ -27,3 +27,14 @@
     font-size: 2rem;
     border-radius: 5px;
 }
+
+.saveControls {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+}
+
+.saveControls button {
+    background-color: transparent;
+    color:white;
+}
