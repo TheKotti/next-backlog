@@ -70,11 +70,12 @@ export async function getServerSideProps(ctx) {
 
   const session = await getSession(ctx)
   const isAdmin = process.env.ADMIN_USER_ID === session?.userId
+  const userId = (session as any)?.userId ?? null // userId doesn't exist in Session etc...
 
   return {
     props: {
       isAdmin,
-      userId: (session as any)?.userId ?? null, // userId doesn't exist in Session etc...
+      userId,
     },
   }
 }
