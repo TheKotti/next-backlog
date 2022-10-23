@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import { useSession, signIn, signOut } from 'next-auth/react'
+import { signIn, signOut } from 'next-auth/react'
 
 import axios from 'axios'
 import { toast } from 'react-toastify'
@@ -49,7 +49,7 @@ export default function Nav(props: Props) {
           )}
         </>
       ) : (
-        <button className='btn btn-light' onClick={() => signIn()}>
+        <button className='btn btn-light' onClick={() => signIn().then(() => refresh())}>
           Sign in
         </button>
       )}

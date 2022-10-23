@@ -73,7 +73,7 @@ export async function getServerSideProps(ctx) {
   return {
     props: {
       isAdmin,
-      userId: session?.userId,
+      userId: session?.userId ?? null,
     },
   }
 }

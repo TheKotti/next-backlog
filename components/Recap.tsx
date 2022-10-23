@@ -70,7 +70,7 @@ export const Recap = (props: Props) => {
         </div>
 
         <div className={styles.comment}>
-          <label>Comment</label>
+          <label>Comments</label>
           <textarea
             ref={textareaRef}
             value={game?.comment || ''}
