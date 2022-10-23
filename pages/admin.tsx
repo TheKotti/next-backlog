@@ -68,9 +68,9 @@ export async function getServerSideProps(ctx) {
   const { res } = ctx
   res.setHeader('Cache-Control', 'public, s-maxage=600, stale-while-revalidate=900')
 
-  const session = await getSession(ctx)
+  const session: any = await getSession(ctx)
   const isAdmin = process.env.ADMIN_USER_ID === session?.userId
-  const userId = (session as any)?.userId ?? null // userId doesn't exist in Session etc...
+  const userId = session?.userId ?? null
 
   return {
     props: {
