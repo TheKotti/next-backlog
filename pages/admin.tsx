@@ -9,6 +9,7 @@ import { GameTable } from '../components/GameTable'
 import { BacklogTable } from '../components/BacklogTable'
 import { useGamesList } from '../hooks/useGamesList'
 import { StatsDialog } from '../components/StatsDialog'
+import { Session } from 'next-auth'
 
 type Props = {
   isAdmin: boolean
@@ -67,7 +68,7 @@ export async function getServerSideProps(ctx) {
   const { res } = ctx
   res.setHeader('Cache-Control', 'public, s-maxage=600, stale-while-revalidate=900')
 
-  const session = await getSession(ctx)
+  const session: any = await getSession(ctx)
   const isAdmin = process.env.ADMIN_USER_ID === session?.userId
 
   return {
