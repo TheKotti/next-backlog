@@ -30,3 +30,8 @@ type GameOptions = {
   year: number
   url: string
 }
+
+type ExtendedSession = Session & {
+  expires: string
+  userId: string
+}

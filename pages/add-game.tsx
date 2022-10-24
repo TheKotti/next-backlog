@@ -179,7 +179,7 @@ export default function AddGame({ isAdmin }) {
 }
 
 export async function getServerSideProps(ctx) {
-  const session: any = await getSession(ctx)
+  const session: ExtendedSession = await getSession(ctx)
   const isAdmin = process.env.ADMIN_USER_ID === session?.userId
 
   return {

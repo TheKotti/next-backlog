@@ -2,7 +2,7 @@ import axios from 'axios'
 import { getSession } from 'next-auth/react'
 
 export default async function handler(req, res) {
-  const session: any = await getSession({ req })
+  const session: ExtendedSession = await getSession({ req })
 
   if (session?.userId !== process.env.ADMIN_USER_ID) {
     res.status(401).json({ error: 'Unauthorized' })

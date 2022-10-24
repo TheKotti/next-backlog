@@ -16,9 +16,9 @@ export default NextAuth({
   ],
   callbacks: {
     // TODO: Type this properly
-    async session({ session, token }: any) {
+    async session({ session, token }) {
       session.userId = token.sub
-      return session
+      return session as ExtendedSession
     },
     async jwt({ token, account }) {
       if (account) {
