@@ -17,7 +17,7 @@ export default NextAuth({
   callbacks: {
     // TODO: Type this properly
     async session({ session, token }) {
-      const extended = { ...session }
+      const extended = { ...session } as ExtendedSession
       extended.userId = token.sub
       return extended as ExtendedSession
     },
