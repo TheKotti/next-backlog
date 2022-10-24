@@ -66,7 +66,7 @@ async function getGame(req, res) {
 
 async function addGame(req, res) {
   try {
-    const session: ExtendedSession = await getSession({ req })
+    const session = (await getSession({ req })) as ExtendedSession
 
     if (session?.userId !== process.env.ADMIN_USER_ID) {
       res.status(401).json({ error: 'Unauthorized' })
@@ -164,7 +164,7 @@ async function addGame(req, res) {
 
 async function updateGame(req, res) {
   try {
-    const session: ExtendedSession = await getSession({ req })
+    const session = (await getSession({ req })) as ExtendedSession
 
     if (session?.userId !== process.env.ADMIN_USER_ID) {
       res.status(401).json({ error: 'Unauthorized' })

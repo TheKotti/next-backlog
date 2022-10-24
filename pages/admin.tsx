@@ -68,7 +68,7 @@ export async function getServerSideProps(ctx) {
   const { res } = ctx
   res.setHeader('Cache-Control', 'public, s-maxage=600, stale-while-revalidate=900')
 
-  const session: ExtendedSession = await getSession(ctx)
+  const session = (await getSession(ctx)) as ExtendedSession
   const isAdmin = process.env.ADMIN_USER_ID === session?.userId
   const userId = session?.userId ?? null
 
