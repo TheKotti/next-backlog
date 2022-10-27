@@ -1,6 +1,6 @@
 /* eslint-disable react/jsx-key */
 import { useMemo } from 'react'
-import { useGlobalFilter, usePagination, useSortBy, useTable } from 'react-table'
+import { Cell, Row, useGlobalFilter, usePagination, useSortBy, useTable } from 'react-table'
 import router from 'next/router'
 
 import { GlobalFilter } from './GlobalFilter'
@@ -22,6 +22,20 @@ export const BacklogTable = ({ games, isAdmin }: Props) => {
         Header: 'Blocked from polls by',
         accessor: 'notPollable',
       },
+      {
+        Header: 'Info',
+        accessor: 'igdbUrl',
+        disableGlobalFilter: true,
+        disableSortBy: true,
+        Cell: ({ value, row }) => {
+          console.log('value', value, row.original)
+          return (
+            <a href={value} target='_blank' rel='noreferrer' style={{ fontFamily: 'Noto Color Emoji' }}>
+              🔗
+            </a>
+          )
+        },
+      },
     ]
   }, [])
 
@@ -31,6 +45,7 @@ export const BacklogTable = ({ games, isAdmin }: Props) => {
         _id: x._id,
         title: x.title,
         notPollable: x.notPollable,
+        igdbUrl: x.igdbUrl,
       }
     })
   }, [games])
@@ -82,6 +97,40 @@ export const BacklogTable = ({ games, isAdmin }: Props) => {
     }
   }
 
+  // Surely you can improve this
+  const formatCell = (cell: Cell<object, any>, row: Row<object>) => {
+    // TITLE COLUMN
+    if (cell.column.id === 'title') {
+      return (
+        <td {...cell.getCellProps()} onClick={() => gameClick((row.original as any)._id)} key={cell.column.id + row.id}>
+          {cell.render('Cell')}
+        </td>
+      )
+    }
+
+    // CENTERED COLUMN
+    if (['igdbUrl'].includes(cell.column.id)) {
+      return (
+        <td
+          {...cell.getCellProps(() => ({
+            style: {
+              textAlign: 'center',
+            },
+          }))}
+          key={cell.column.id + row.id}
+        >
+          {cell.render('Cell')}
+        </td>
+      )
+    }
+
+    return (
+      <td {...cell.getCellProps()} key={cell.column.id + row.id}>
+        {cell.render('Cell')}
+      </td>
+    )
+  }
+
   return (
     <>
       <GlobalFilter globalFilter={globalFilter} setGlobalFilter={(e) => setGlobalFilter(e)} />
@@ -101,15 +150,7 @@ export const BacklogTable = ({ games, isAdmin }: Props) => {
             return (
               <tr {...row.getRowProps()}>
                 {row.cells.map((cell) => {
-                  //console.log(cell)
-                  if (cell.column.id === 'title') {
-                    return (
-                      <td {...cell.getCellProps()} onClick={() => gameClick((row.original as any)._id)}>
-                        {cell.render('Cell')}
-                      </td>
-                    )
-                  }
-                  return <td {...cell.getCellProps()}>{cell.render('Cell')}</td>
+                  return formatCell(cell, row)
                 })}
               </tr>
             )

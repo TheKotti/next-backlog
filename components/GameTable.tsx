@@ -33,7 +33,7 @@ const DateCell = ({ value, row }) => {
   return <span>{formattedDate}</span>
 }
 
-const dateSort = (rowA, rowB, id, desc) => {
+const dateSort = (rowA, rowB, id) => {
   // I am a hack
   if (rowA.original['finished'] === 'Happening') return 1
   if (rowB.original['finished'] === 'Happening') return -1
@@ -116,9 +116,22 @@ export const GameTable = ({ games, isAdmin }: Props) => {
         accessor: 'streamed',
         disableGlobalFilter: true,
         disableSortBy: true,
-        width: '500px',
         Cell: ({ value }) => {
           return <span style={{ fontFamily: 'Noto Color Emoji' }}>{value ? '✔️' : ''}</span>
+        },
+      },
+      {
+        Header: 'Info',
+        accessor: 'igdbUrl',
+        disableGlobalFilter: true,
+        disableSortBy: true,
+        Cell: ({ value, row }) => {
+          console.log('value', value, row.original)
+          return (
+            <a href={value} target='_blank' rel='noreferrer' style={{ fontFamily: 'Noto Color Emoji' }}>
+              🔗
+            </a>
+          )
         },
       },
     ]
@@ -138,6 +151,7 @@ export const GameTable = ({ games, isAdmin }: Props) => {
           streamed: x.streamed,
           timeSpent: x.timeSpent,
           stealth: x.stealth,
+          igdbUrl: x.igdbUrl,
         }
       })
   }, [games, stealthFilter])
@@ -218,7 +232,7 @@ export const GameTable = ({ games, isAdmin }: Props) => {
     }
 
     // CENTERED COLUMN
-    if (['streamed', 'finishedDate', 'timeSpent', 'stealth'].includes(cell.column.id)) {
+    if (['streamed', 'finishedDate', 'timeSpent', 'stealth', 'igdbUrl'].includes(cell.column.id)) {
       return (
         <td
           {...cell.getCellProps(() => ({
