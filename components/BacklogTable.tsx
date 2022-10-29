@@ -17,21 +17,56 @@ export const BacklogTable = ({ games, isAdmin }: Props) => {
       {
         Header: 'Game',
         accessor: 'title',
+        Cell: ({ value, row }) => {
+          return (
+            <div>
+              {value}
+              <a
+                href={row.original.igdbUrl}
+                target='_blank'
+                rel='noreferrer'
+                style={{ fontFamily: 'Noto Color Emoji' }}
+                className='d-inline-flex ms-1'
+              >
+                <svg
+                  xmlns='http://www.w3.org/2000/svg'
+                  width='12'
+                  height='12'
+                  fill='currentColor'
+                  className='bi bi-box-arrow-up-right'
+                  viewBox='0 0 16 16'
+                >
+                  <path d='M8.636 3.5a.5.5 0 0 0-.5-.5H1.5A1.5 1.5 0 0 0 0 4.5v10A1.5 1.5 0 0 0 1.5 16h10a1.5 1.5 0 0 0 1.5-1.5V7.864a.5.5 0 0 0-1 0V14.5a.5.5 0 0 1-.5.5h-10a.5.5 0 0 1-.5-.5v-10a.5.5 0 0 1 .5-.5h6.636a.5.5 0 0 0 .5-.5z' />
+                  <path d='M16 .5a.5.5 0 0 0-.5-.5h-5a.5.5 0 0 0 0 1h3.793L6.146 9.146a.5.5 0 1 0 .708.708L15 1.707V5.5a.5.5 0 0 0 1 0v-5z' />
+                </svg>
+              </a>
+            </div>
+          )
+        },
       },
       {
         Header: 'Blocked from polls by',
         accessor: 'notPollable',
       },
       {
-        Header: 'Info',
-        accessor: 'igdbUrl',
+        Header: 'Recap',
+        accessor: '_id',
         disableGlobalFilter: true,
         disableSortBy: true,
-        Cell: ({ value, row }) => {
-          console.log('value', value, row.original)
+        Cell: ({ value }) => {
           return (
-            <a href={value} target='_blank' rel='noreferrer' style={{ fontFamily: 'Noto Color Emoji' }}>
-              🔗
+            <a href={`/recap?id=${value}`} style={{ fontFamily: 'Noto Color Emoji' }}>
+              <svg
+                xmlns='http://www.w3.org/2000/svg'
+                width='16'
+                height='16'
+                fill='currentColor'
+                className='bi bi-box-arrow-up-right'
+                viewBox='0 0 16 16'
+              >
+                <path d='M8.636 3.5a.5.5 0 0 0-.5-.5H1.5A1.5 1.5 0 0 0 0 4.5v10A1.5 1.5 0 0 0 1.5 16h10a1.5 1.5 0 0 0 1.5-1.5V7.864a.5.5 0 0 0-1 0V14.5a.5.5 0 0 1-.5.5h-10a.5.5 0 0 1-.5-.5v-10a.5.5 0 0 1 .5-.5h6.636a.5.5 0 0 0 .5-.5z' />
+                <path d='M16 .5a.5.5 0 0 0-.5-.5h-5a.5.5 0 0 0 0 1h3.793L6.146 9.146a.5.5 0 1 0 .708.708L15 1.707V5.5a.5.5 0 0 0 1 0v-5z' />
+              </svg>
             </a>
           )
         },
@@ -50,7 +85,7 @@ export const BacklogTable = ({ games, isAdmin }: Props) => {
     })
   }, [games])
 
-  const hiddenColumns = useMemo(() => ['_id'], [])
+  const hiddenColumns = useMemo(() => (isAdmin ? [] : ['_id']), [isAdmin])
 
   const {
     getTableProps,
@@ -91,25 +126,19 @@ export const BacklogTable = ({ games, isAdmin }: Props) => {
 
   const { globalFilter } = state
 
-  const gameClick = (id) => {
-    if (isAdmin) {
-      router.push('/recap?id=' + id)
-    }
-  }
-
   // Surely you can improve this
   const formatCell = (cell: Cell<object, any>, row: Row<object>) => {
     // TITLE COLUMN
     if (cell.column.id === 'title') {
       return (
-        <td {...cell.getCellProps()} onClick={() => gameClick((row.original as any)._id)} key={cell.column.id + row.id}>
+        <td {...cell.getCellProps()} key={cell.column.id + row.id}>
           {cell.render('Cell')}
         </td>
       )
     }
 
     // CENTERED COLUMN
-    if (['igdbUrl'].includes(cell.column.id)) {
+    if (['_id'].includes(cell.column.id)) {
       return (
         <td
           {...cell.getCellProps(() => ({
@@ -139,6 +168,7 @@ export const BacklogTable = ({ games, isAdmin }: Props) => {
         <thead>
           <tr>
             {headers.map((column) => {
+              if (column.id === '_id' && !isAdmin) return
               return <th {...column.getHeaderProps(column.getSortByToggleProps())}>{column.render('Header')}</th>
             })}
           </tr>
