@@ -14,16 +14,7 @@ type Props = {
 }
 
 const CommentCell = ({ value }) => {
-  const [showFull, setShowFull] = useState(false)
-  const shortThreshold = 2000
-  const shortText = value.length > shortThreshold ? value.substring(0, shortThreshold - 3) + '...' : value
-  const displayedText = showFull ? value : shortText
-  return (
-    <span
-      onClick={() => setShowFull(!showFull)}
-      dangerouslySetInnerHTML={{ __html: displayedText.replace(/\n/g, '<br />') }}
-    ></span>
-  )
+  return <span dangerouslySetInnerHTML={{ __html: value.replace(/\n/g, '<br />') }}></span>
 }
 
 const DateCell = ({ value, row }) => {
