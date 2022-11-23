@@ -126,3 +126,7 @@
     background-color: transparent;
     color:white;
 }
+
+.saveControls a:hover {
+    color: inherit;
+}

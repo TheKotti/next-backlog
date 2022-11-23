@@ -3,6 +3,7 @@ import Link from 'next/link'
 
 import styles from '../styles/Recap.module.css'
 import { Rating } from './Rating'
+import { DetailsDialog } from './DetailsDialog'
 
 type Props = {
   game: Game
@@ -15,6 +16,13 @@ export const Recap = (props: Props) => {
 
   const textareaRef = useRef<HTMLTextAreaElement>(null)
   const [textSize, setTextSize] = useState<'large' | 'x-large' | 'xx-large'>('xx-large')
+
+  useEffect(() => {
+    if (game.streamed === false && game.finishedDate === null) {
+      setGame({ ...game, streamed: true })
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   useEffect(() => {
     const clientHeight = textareaRef.current?.clientHeight || 0
@@ -87,6 +95,8 @@ export const Recap = (props: Props) => {
         <button>
           <Link href='/admin'>Back</Link>
         </button>
+
+        <DetailsDialog game={game} setGame={setGame} />
 
         <button onClick={() => updateGame(game)}>Save</button>
       </div>
