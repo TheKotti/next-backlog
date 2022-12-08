@@ -1,6 +1,11 @@
 import { useState } from 'react'
 import { useAsyncDebounce } from 'react-table'
 
+/**
+ * Depracated, global filter seems to bug out when mixed with other filters
+ * @param param0
+ * @returns
+ */
 export const GlobalFilter = ({ globalFilter, setGlobalFilter }) => {
   const [value, setValue] = useState(globalFilter)
 

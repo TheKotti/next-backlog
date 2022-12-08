@@ -1,10 +1,9 @@
 /* eslint-disable react/jsx-key */
 import React, { useMemo, useState } from 'react'
 import dayjs from 'dayjs'
-import { Cell, ColumnInstance, Row, useGlobalFilter, usePagination, useSortBy, useTable } from 'react-table'
+import { Cell, ColumnInstance, Row, usePagination, useSortBy, useTable } from 'react-table'
 import router from 'next/router'
 
-import { GlobalFilter } from './GlobalFilter'
 import styles from '../styles/GameTable.module.css'
 import { ScoreIndicator } from './ScoreIndicator'
 
@@ -36,13 +35,13 @@ const dateSort = (rowA, rowB, id) => {
 
 export const GameTable = ({ games, isAdmin }: Props) => {
   const [stealthFilter, setStealthFilter] = useState(false)
+  const [titleFilter, setTitleFilter] = useState('')
 
   const columns = useMemo(() => {
     return [
       {
         Header: 'Date',
         accessor: 'finishedDate',
-        disableGlobalFilter: true,
         sortDescFirst: true,
         Cell: DateCell,
         sortType: dateSort,
@@ -80,7 +79,6 @@ export const GameTable = ({ games, isAdmin }: Props) => {
       {
         Header: 'Rating',
         accessor: 'rating',
-        disableGlobalFilter: true,
         sortDescFirst: true,
         Cell: ({ value }) => {
           return <ScoreIndicator rating={value} />
@@ -89,7 +87,6 @@ export const GameTable = ({ games, isAdmin }: Props) => {
       {
         Header: 'Comments',
         accessor: 'comment',
-        disableGlobalFilter: true,
         Cell: CommentCell,
         disableSortBy: true,
       },
@@ -97,7 +94,6 @@ export const GameTable = ({ games, isAdmin }: Props) => {
         Header: 'Finished',
         accessor: 'timeSpent',
         sortDescFirst: true,
-        disableGlobalFilter: true,
         Cell: ({ value, row }) => {
           if (row.original.finished === 'Nope') return <>Did not finish {`(${value}h)`}</>
           if (row.original.finished === 'Yes') return <>Finished {`(${value}h)`}</>
@@ -122,7 +118,6 @@ export const GameTable = ({ games, isAdmin }: Props) => {
       {
         Header: 'Sneaky',
         accessor: 'stealth',
-        disableGlobalFilter: true,
         disableSortBy: true,
         Cell: ({ value }) => {
           return <span style={{ fontFamily: 'Noto Color Emoji' }}>{value ? '✔️' : ''}</span>
@@ -131,7 +126,6 @@ export const GameTable = ({ games, isAdmin }: Props) => {
       {
         Header: 'Streamed',
         accessor: 'streamed',
-        disableGlobalFilter: true,
         disableSortBy: true,
         Cell: ({ value }) => {
           return <span style={{ fontFamily: 'Noto Color Emoji' }}>{value ? '✔️' : ''}</span>
@@ -140,7 +134,6 @@ export const GameTable = ({ games, isAdmin }: Props) => {
       {
         Header: 'Recap',
         accessor: '_id',
-        disableGlobalFilter: true,
         disableSortBy: true,
         Cell: ({ value }) => {
           return (
@@ -166,6 +159,7 @@ export const GameTable = ({ games, isAdmin }: Props) => {
   const data: Array<any> = useMemo(() => {
     return games
       .filter((x) => (stealthFilter && x.stealth) || !stealthFilter)
+      .filter((x) => (titleFilter && x.title.toLowerCase().includes(titleFilter.toLowerCase())) || titleFilter === '')
       .map((x) => {
         return {
           _id: x._id,
@@ -180,7 +174,7 @@ export const GameTable = ({ games, isAdmin }: Props) => {
           igdbUrl: x.igdbUrl,
         }
       })
-  }, [games, stealthFilter])
+  }, [games, stealthFilter, titleFilter])
 
   const hiddenColumns = useMemo(() => (isAdmin ? [] : ['_id']), [isAdmin])
 
@@ -190,7 +184,6 @@ export const GameTable = ({ games, isAdmin }: Props) => {
     headers,
     prepareRow,
     state,
-    setGlobalFilter,
     page,
     canPreviousPage,
     canNextPage,
@@ -218,12 +211,9 @@ export const GameTable = ({ games, isAdmin }: Props) => {
       autoResetSortBy: false,
       disableSortRemove: true,
     },
-    useGlobalFilter,
     useSortBy,
     usePagination
   )
-
-  const { globalFilter } = state
 
   // Surely you can improve this
   const formatCell = (cell: Cell<object, any>, row: Row<object>) => {
@@ -331,7 +321,12 @@ export const GameTable = ({ games, isAdmin }: Props) => {
   return (
     <>
       <div className={`d-flex align-items-center ${styles.filters}`}>
-        <GlobalFilter globalFilter={globalFilter} setGlobalFilter={(e) => setGlobalFilter(e)} />
+        <input
+          value={titleFilter}
+          onChange={(e) => setTitleFilter(e.target.value)}
+          className='form-control w-25'
+          placeholder='Search'
+        />
         <div className='form-check'>
           <input
             className='form-check-input'
