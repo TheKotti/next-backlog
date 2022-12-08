@@ -1,9 +1,7 @@
 /* eslint-disable react/jsx-key */
-import { useMemo } from 'react'
+import { useMemo, useState } from 'react'
 import { Cell, Row, useGlobalFilter, usePagination, useSortBy, useTable } from 'react-table'
-import router from 'next/router'
 
-import { GlobalFilter } from './GlobalFilter'
 import styles from '../styles/GameTable.module.css'
 
 type Props = {
@@ -12,6 +10,8 @@ type Props = {
 }
 
 export const BacklogTable = ({ games, isAdmin }: Props) => {
+  const [titleFilter, setTitleFilter] = useState('')
+
   const columns = useMemo(() => {
     return [
       {
@@ -75,15 +75,17 @@ export const BacklogTable = ({ games, isAdmin }: Props) => {
   }, [])
 
   const data: Array<any> = useMemo(() => {
-    return games.map((x) => {
-      return {
-        _id: x._id,
-        title: x.title,
-        notPollable: x.notPollable,
-        igdbUrl: x.igdbUrl,
-      }
-    })
-  }, [games])
+    return games
+      .filter((x) => (titleFilter && x.title.toLowerCase().includes(titleFilter.toLowerCase())) || titleFilter === '')
+      .map((x) => {
+        return {
+          _id: x._id,
+          title: x.title,
+          notPollable: x.notPollable,
+          igdbUrl: x.igdbUrl,
+        }
+      })
+  }, [games, titleFilter])
 
   const hiddenColumns = useMemo(() => (isAdmin ? [] : ['_id']), [isAdmin])
 
@@ -162,7 +164,12 @@ export const BacklogTable = ({ games, isAdmin }: Props) => {
 
   return (
     <>
-      <GlobalFilter globalFilter={globalFilter} setGlobalFilter={(e) => setGlobalFilter(e)} />
+      <input
+        value={titleFilter}
+        onChange={(e) => setTitleFilter(e.target.value)}
+        className='form-control w-25'
+        placeholder='Search'
+      />
 
       <table {...getTableProps} className={`w-100 ${styles.gameTable}`}>
         <thead>
