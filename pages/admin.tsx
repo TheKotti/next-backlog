@@ -9,7 +9,6 @@ import { GameTable } from '../components/GameTable'
 import { BacklogTable } from '../components/BacklogTable'
 import { useGamesList } from '../hooks/useGamesList'
 import { StatsDialog } from '../components/StatsDialog'
-import { Session } from 'next-auth'
 
 type Props = {
   isAdmin: boolean
@@ -19,7 +18,7 @@ type Props = {
 export default function Home({ isAdmin, userId }: Props) {
   const [viewBacklog, setViewBacklog] = useState(false)
 
-  const games = useGamesList()
+  const games = useGamesList(isAdmin)
 
   const playedGames = useMemo(
     () =>
