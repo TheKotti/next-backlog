@@ -2,7 +2,6 @@
 import React, { useMemo, useState } from 'react'
 import dayjs from 'dayjs'
 import { Cell, ColumnInstance, Row, usePagination, useSortBy, useTable } from 'react-table'
-import router from 'next/router'
 
 import styles from '../styles/GameTable.module.css'
 import { ScoreIndicator } from './ScoreIndicator'
@@ -183,7 +182,6 @@ export const GameTable = ({ games, isAdmin }: Props) => {
     getTableBodyProps,
     headers,
     prepareRow,
-    state,
     page,
     canPreviousPage,
     canNextPage,
