@@ -1,10 +1,11 @@
 /* eslint-disable react/jsx-key */
-import React, { useMemo, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import dayjs from 'dayjs'
 import { Cell, ColumnInstance, Row, usePagination, useSortBy, useTable } from 'react-table'
 
 import styles from '../styles/GameTable.module.css'
 import { ScoreIndicator } from './ScoreIndicator'
+import { useNextQueryParams } from '../hooks/useNextQueryParams'
 
 type Props = {
   games: Array<Game>
@@ -35,6 +36,32 @@ const dateSort = (rowA, rowB, id) => {
 export const GameTable = ({ games, isAdmin }: Props) => {
   const [stealthFilter, setStealthFilter] = useState(false)
   const [titleFilter, setTitleFilter] = useState('')
+  const { params, updateParams, paramsLoaded } = useNextQueryParams()
+
+  // On load set stuff from query parameters
+  useEffect(() => {
+    if (paramsLoaded) {
+      params.sneaky === 'true' && setStealthFilter(true)
+      params.title && setTitleFilter(params.title as string)
+      params.sortBy && setSortBy([{ id: params.sortBy as string, desc: params.sortDesc === 'true' ? true : false }])
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [paramsLoaded])
+
+  const handleStealthFilterChange = (checked) => {
+    setStealthFilter(checked)
+    if (checked) {
+      updateParams({ ...params, sneaky: checked })
+    } else {
+      delete params.sneaky
+      updateParams({ ...params })
+    }
+  }
+
+  const handleTitleFilterChange = (value) => {
+    setTitleFilter(value)
+    updateParams({ ...params, title: value })
+  }
 
   const columns = useMemo(() => {
     return [
@@ -191,7 +218,8 @@ export const GameTable = ({ games, isAdmin }: Props) => {
     nextPage,
     previousPage,
     setPageSize,
-    state: { pageIndex, pageSize },
+    setSortBy,
+    state: { pageIndex, pageSize, sortBy },
   } = useTable(
     {
       columns,
@@ -212,6 +240,13 @@ export const GameTable = ({ games, isAdmin }: Props) => {
     useSortBy,
     usePagination
   )
+
+  useEffect(() => {
+    if (paramsLoaded) {
+      updateParams({ ...params, sortBy: sortBy[0].id, sortDesc: sortBy[0].desc })
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [sortBy])
 
   // Surely you can improve this
   const formatCell = (cell: Cell<object, any>, row: Row<object>) => {
@@ -321,7 +356,7 @@ export const GameTable = ({ games, isAdmin }: Props) => {
       <div className={`d-flex align-items-center ${styles.filters}`}>
         <input
           value={titleFilter}
-          onChange={(e) => setTitleFilter(e.target.value)}
+          onChange={(e) => handleTitleFilterChange(e.target.value)}
           className='form-control w-25'
           placeholder='Search'
         />
@@ -330,7 +365,7 @@ export const GameTable = ({ games, isAdmin }: Props) => {
             className='form-check-input'
             type='checkbox'
             checked={stealthFilter}
-            onChange={(e) => setStealthFilter(e.target.checked)}
+            onChange={(e) => handleStealthFilterChange(e.target.checked)}
           />
           <label className='form-check-label'>Sneaky?</label>
         </div>

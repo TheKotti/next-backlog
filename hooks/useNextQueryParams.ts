@@ -4,7 +4,7 @@ import { useRouter } from 'next/router'
 export const useNextQueryParams = () => {
   const router = useRouter()
 
-  const params = router.query
+  const { query: params, isReady: paramsLoaded } = router
 
   const updateParams = useCallback(
     (newParams: object) => {
@@ -16,5 +16,5 @@ export const useNextQueryParams = () => {
     [router]
   )
 
-  return { params, updateParams }
+  return { params, updateParams, paramsLoaded }
 }
