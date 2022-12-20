@@ -21,3 +21,13 @@
     display: flex;
     gap: 16px;
 }
+
+.dark-input {
+    background-color: hsl(0, 0%, 20%) !important;
+    border-color: #808080 ;
+    color: #fff !important;
+}
+
+.dark-input::placeholder {
+    color: #808080;
+}

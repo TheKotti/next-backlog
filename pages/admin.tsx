@@ -45,11 +45,13 @@ export default function Home({ isAdmin, userId }: Props) {
           <div className={`d-flex justify-content-between mb-3 ${styles.header}`}>
             <h1>{viewBacklog ? 'Backlog' : 'Previously played'}</h1>
 
-            <StatsDialog games={games} />
+            <div>
+              <StatsDialog games={games} />
 
-            <button className='btn btn-primary' onClick={() => setViewBacklog(!viewBacklog)}>
-              {viewBacklog ? 'Show previously played' : 'Show backlog'}
-            </button>
+              <button className='btn btn-primary' onClick={() => setViewBacklog(!viewBacklog)}>
+                {viewBacklog ? 'Show previously played' : 'Show backlog'}
+              </button>
+            </div>
           </div>
 
           {viewBacklog ? (

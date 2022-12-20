@@ -357,12 +357,12 @@ export const GameTable = ({ games, isAdmin }: Props) => {
         <input
           value={titleFilter}
           onChange={(e) => handleTitleFilterChange(e.target.value)}
-          className='form-control w-25'
+          className={`form-control w-25 ${styles['dark-input']}`}
           placeholder='Search'
         />
         <div className='form-check'>
           <input
-            className='form-check-input'
+            className={`form-check-input ${styles['dark-input']}`}
             type='checkbox'
             checked={stealthFilter}
             onChange={(e) => handleStealthFilterChange(e.target.checked)}
@@ -396,19 +396,23 @@ export const GameTable = ({ games, isAdmin }: Props) => {
 
       <div className='pagination d-flex align-items-center gap-2'>
         <div className='btn-group'>
-          <button className='btn btn-light' onClick={() => gotoPage(0)} disabled={!canPreviousPage}>
+          <button className={`btn ${styles['dark-input']}`} onClick={() => gotoPage(0)} disabled={!canPreviousPage}>
             {'<<'}
           </button>
-          <button className='btn btn-light' onClick={() => previousPage()} disabled={!canPreviousPage}>
+          <button className={`btn ${styles['dark-input']}`} onClick={() => previousPage()} disabled={!canPreviousPage}>
             {'<'}
           </button>
         </div>
 
         <div className='btn-group'>
-          <button className='btn btn-light' onClick={() => nextPage()} disabled={!canNextPage}>
+          <button className={`btn ${styles['dark-input']}`} onClick={() => nextPage()} disabled={!canNextPage}>
             {'>'}
           </button>
-          <button className='btn btn-light' onClick={() => gotoPage(pageCount - 1)} disabled={!canNextPage}>
+          <button
+            className={`btn ${styles['dark-input']}`}
+            onClick={() => gotoPage(pageCount - 1)}
+            disabled={!canNextPage}
+          >
             {'>>'}
           </button>
         </div>
@@ -418,7 +422,7 @@ export const GameTable = ({ games, isAdmin }: Props) => {
         </span>
 
         <input
-          className='form-control'
+          className={`form-control ${styles['dark-input']}`}
           type='number'
           defaultValue={pageIndex + 1}
           onChange={(e) => {
@@ -429,13 +433,13 @@ export const GameTable = ({ games, isAdmin }: Props) => {
         />
 
         <div className='btn-group'>
-          <button className='btn btn-light' onClick={() => setPageSize(10)} disabled={pageSize === 10}>
+          <button className={`btn ${styles['dark-input']}`} onClick={() => setPageSize(10)} disabled={pageSize === 10}>
             {'Show 10'}
           </button>
-          <button className='btn btn-light' onClick={() => setPageSize(30)} disabled={pageSize === 30}>
+          <button className={`btn ${styles['dark-input']}`} onClick={() => setPageSize(30)} disabled={pageSize === 30}>
             {'Show 30'}
           </button>
-          <button className='btn btn-light' onClick={() => setPageSize(50)} disabled={pageSize === 50}>
+          <button className={`btn ${styles['dark-input']}`} onClick={() => setPageSize(50)} disabled={pageSize === 50}>
             {'Show 50'}
           </button>
         </div>

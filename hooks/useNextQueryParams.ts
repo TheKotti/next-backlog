@@ -10,7 +10,6 @@ export const useNextQueryParams = () => {
     (newParams: object) => {
       const updated = { ...(router.query as object), ...newParams }
       const params = new URLSearchParams(updated).toString()
-      console.log('params', params)
       router.push(`?${params}`, undefined, { shallow: true })
     },
     [router]

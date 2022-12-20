@@ -21,6 +21,7 @@
     max-height: 45%;
     max-width: 90%;
     object-fit: scale-down;
+    margin-bottom: 16px;
 }
 
 .gameMeta .webcam {
