@@ -33,6 +33,13 @@ const dateSort = (rowA, rowB, id) => {
   return a - b
 }
 
+const scoreSort = (rowA, rowB, id) => {
+  if (rowA.values[id] === rowB.values[id]) {
+    return (rowB.original['title'] as string).localeCompare(rowA.original['title'] as string)
+  }
+  return rowA.values[id] - rowB.values[id]
+}
+
 export const GameTable = ({ games, isAdmin }: Props) => {
   const [stealthFilter, setStealthFilter] = useState(false)
   const [titleFilter, setTitleFilter] = useState('')
@@ -109,6 +116,7 @@ export const GameTable = ({ games, isAdmin }: Props) => {
         Cell: ({ value }) => {
           return <ScoreIndicator rating={value} />
         },
+        sortType: scoreSort,
       },
       {
         Header: 'Comments',
