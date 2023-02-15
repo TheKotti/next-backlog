@@ -56,10 +56,12 @@ export default function AddGame({ isAdmin }) {
     })
 
     // TODO: Do a thing with this, when adding game do this search and add to IGDB data
-    // And do the same for everything already in the db
-    axios.post('api/hltb', { searchTerm: title }).then((resp) => {
+    // and do the same for everything already in the db.
+    // And try some shit with puppeteer-core and chrome-aws-lambda or something,
+    // this implementation doesn't work on Vercel
+    /* axios.post('api/hltb', { searchTerm: title }).then((resp) => {
       console.log('HLTB data', resp.data)
-    })
+    }) */
   }
 
   const addGameById = (id: number) => {
