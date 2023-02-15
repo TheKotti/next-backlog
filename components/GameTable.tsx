@@ -369,13 +369,15 @@ export const GameTable = ({ games, isAdmin }: Props) => {
           placeholder='Search'
         />
         <div className='form-check'>
-          <input
-            className={`form-check-input ${styles['dark-input']}`}
-            type='checkbox'
-            checked={stealthFilter}
-            onChange={(e) => handleStealthFilterChange(e.target.checked)}
-          />
-          <label className='form-check-label'>Sneaky?</label>
+          <label className='form-check-label'>
+            <input
+              className={`form-check-input ${styles['dark-input']}`}
+              type='checkbox'
+              checked={stealthFilter}
+              onChange={(e) => handleStealthFilterChange(e.target.checked)}
+            />
+            Sneaky?
+          </label>
         </div>
       </div>
 

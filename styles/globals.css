@@ -26,3 +26,7 @@ body * {
 .modal-header .btn-close {
   display: none;
 }
+
+.btn:hover {
+  border-color:#fff;
+}
