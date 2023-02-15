@@ -44,7 +44,7 @@ export default function AddGame({ isAdmin }) {
 
   const getGamesByTitle = (title: string) => {
     axios.post(`api/igdb/find-games`, { token: igdbToken, searchTerm: title }).then((response) => {
-      const modifiedOptions: GameOptions[] = response.data.map((x) => {
+      const modifiedOptions: GameOptions[] = response.data?.map((x) => {
         return {
           id: x.id,
           title: x.name,
@@ -53,6 +53,12 @@ export default function AddGame({ isAdmin }) {
         }
       })
       setOptions(modifiedOptions)
+    })
+
+    // TODO: Do a thing with this, when adding game do this search and add to IGDB data
+    // And do the same for everything already in the db
+    axios.post('api/hltb', { searchTerm: title }).then((resp) => {
+      console.log('HLTB data', resp.data)
     })
   }
 
