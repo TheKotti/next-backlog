@@ -20,7 +20,7 @@ export const BacklogTable = ({ games, isAdmin }: Props) => {
         Cell: ({ value, row }) => {
           return (
             <div>
-              {value}
+              {`${value}${row.original.releaseYear ? ' (' + row.original.releaseYear + ')' : ''}`}
               <a
                 href={row.original.igdbUrl}
                 target='_blank'
@@ -83,6 +83,7 @@ export const BacklogTable = ({ games, isAdmin }: Props) => {
           title: x.title,
           notPollable: x.notPollable,
           igdbUrl: x.igdbUrl,
+          releaseYear: x.releaseYear,
         }
       })
   }, [games, titleFilter])

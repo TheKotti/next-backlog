@@ -85,7 +85,7 @@ export const GameTable = ({ games, isAdmin }: Props) => {
         Cell: ({ value, row }) => {
           return (
             <div>
-              {value}
+              {`${value}${row.original.releaseYear ? ' (' + row.original.releaseYear + ')' : ''}`}
               <a
                 href={row.original.igdbUrl}
                 target='_blank'
@@ -206,6 +206,7 @@ export const GameTable = ({ games, isAdmin }: Props) => {
           timeSpent: x.timeSpent,
           stealth: x.stealth,
           igdbUrl: x.igdbUrl,
+          releaseYear: x.releaseYear,
         }
       })
   }, [games, stealthFilter, titleFilter])
