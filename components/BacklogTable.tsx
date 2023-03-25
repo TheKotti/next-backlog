@@ -21,7 +21,7 @@ export const BacklogTable = ({ games, isAdmin }: Props) => {
         Cell: TitleCell,
       },
       {
-        Header: 'Blocked from polls by',
+        Header: 'Blocked by',
         accessor: 'notPollable',
       },
       {
