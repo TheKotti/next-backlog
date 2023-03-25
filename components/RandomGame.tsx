@@ -1,5 +1,3 @@
-import { useState } from 'react'
-
 import styles from '../styles/RandomGame.module.css'
 
 type Props = {

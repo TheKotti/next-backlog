@@ -3,7 +3,8 @@ import { useMemo, useState } from 'react'
 import { Cell, Row, usePagination, useSortBy, useTable } from 'react-table'
 
 import styles from '../styles/GameTable.module.css'
-import { AdminCell, TitleCell } from './Cells'
+import { backlogTableColumns } from '../utils/columns'
+import { formatCell } from '../utils/utils'
 
 type Props = {
   games: Array<Game>
@@ -12,27 +13,6 @@ type Props = {
 
 export const BacklogTable = ({ games, isAdmin }: Props) => {
   const [titleFilter, setTitleFilter] = useState('')
-
-  const columns = useMemo(() => {
-    return [
-      {
-        Header: 'Game',
-        accessor: 'title',
-        Cell: TitleCell,
-      },
-      {
-        Header: 'Blocked by',
-        accessor: 'notPollable',
-      },
-      {
-        Header: 'Admin',
-        accessor: '_id',
-        disableGlobalFilter: true,
-        disableSortBy: true,
-        Cell: ({ value, row }) => AdminCell({ value, row, showNextButton: true }),
-      },
-    ]
-  }, [])
 
   const data: Array<any> = useMemo(() => {
     return games
@@ -68,7 +48,7 @@ export const BacklogTable = ({ games, isAdmin }: Props) => {
     state: { pageIndex, pageSize },
   } = useTable(
     {
-      columns,
+      columns: backlogTableColumns,
       data,
       initialState: {
         hiddenColumns,
@@ -84,40 +64,6 @@ export const BacklogTable = ({ games, isAdmin }: Props) => {
     useSortBy,
     usePagination
   )
-
-  // Surely you can improve this
-  const formatCell = (cell: Cell<object, any>, row: Row<object>) => {
-    // TITLE COLUMN
-    if (cell.column.id === 'title') {
-      return (
-        <td {...cell.getCellProps()} key={cell.column.id + row.id}>
-          {cell.render('Cell')}
-        </td>
-      )
-    }
-
-    // CENTERED COLUMN
-    if (['_id'].includes(cell.column.id)) {
-      return (
-        <td
-          {...cell.getCellProps(() => ({
-            style: {
-              textAlign: 'center',
-            },
-          }))}
-          key={cell.column.id + row.id}
-        >
-          {cell.render('Cell')}
-        </td>
-      )
-    }
-
-    return (
-      <td {...cell.getCellProps()} key={cell.column.id + row.id}>
-        {cell.render('Cell')}
-      </td>
-    )
-  }
 
   return (
     <>

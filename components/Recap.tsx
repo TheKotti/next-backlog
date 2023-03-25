@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import Link from 'next/link'
 
 import styles from '../styles/Recap.module.css'
@@ -33,8 +33,7 @@ export const Recap = (props: Props) => {
       if (textSize === 'xx-large') setTextSize('x-large')
       if (textSize === 'x-large') setTextSize('large')
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [game.comment])
+  }, [game.comment, textSize])
 
   return (
     <div className={styles.root}>

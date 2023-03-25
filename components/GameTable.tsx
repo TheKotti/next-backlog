@@ -1,13 +1,12 @@
 /* eslint-disable react/jsx-key */
 import React, { useEffect, useMemo, useState } from 'react'
 
-import { Cell, ColumnInstance, Row, usePagination, useSortBy, useTable } from 'react-table'
+import { usePagination, useSortBy, useTable } from 'react-table'
 
 import styles from '../styles/GameTable.module.css'
-import { ScoreIndicator } from './ScoreIndicator'
 import { useNextQueryParams } from '../hooks/useNextQueryParams'
-import { AdminCell, CheckmarkCell, CommentCell, DateCell, FinishedCell, TitleCell, VodCell } from './Cells'
-import { dateSort, scoreSort } from '../utils'
+import { formatCell, formatHeader } from '../utils/utils'
+import { gameTableColumns } from '../utils/columns'
 
 type Props = {
   games: Array<Game>
@@ -18,87 +17,6 @@ export const GameTable = ({ games, isAdmin }: Props) => {
   const [stealthFilter, setStealthFilter] = useState(false)
   const [titleFilter, setTitleFilter] = useState('')
   const { params, updateParams, paramsLoaded } = useNextQueryParams()
-
-  // On load set stuff from query parameters
-  useEffect(() => {
-    if (paramsLoaded) {
-      params.sneaky === 'true' && setStealthFilter(true)
-      params.title && setTitleFilter(params.title as string)
-      params.sortBy && setSortBy([{ id: params.sortBy as string, desc: params.sortDesc === 'true' ? true : false }])
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [paramsLoaded])
-
-  const handleStealthFilterChange = (checked) => {
-    setStealthFilter(checked)
-    if (checked) {
-      updateParams({ ...params, sneaky: checked })
-    } else {
-      delete params.sneaky
-      updateParams({ ...params })
-    }
-  }
-
-  const handleTitleFilterChange = (value) => {
-    setTitleFilter(value)
-    updateParams({ ...params, title: value })
-  }
-
-  const columns = useMemo(() => {
-    return [
-      {
-        Header: 'Date',
-        accessor: 'finishedDate',
-        sortDescFirst: true,
-        Cell: DateCell,
-        sortType: dateSort,
-      },
-      {
-        Header: 'Game',
-        accessor: 'title',
-        Cell: TitleCell,
-      },
-      {
-        Header: 'Rating',
-        accessor: 'rating',
-        sortDescFirst: true,
-        Cell: ({ value }) => {
-          return <ScoreIndicator rating={value} />
-        },
-        sortType: scoreSort,
-      },
-      {
-        Header: 'Comments',
-        accessor: 'comment',
-        Cell: CommentCell,
-        disableSortBy: true,
-      },
-      {
-        Header: 'Finished',
-        accessor: 'timeSpent',
-        sortDescFirst: true,
-        Cell: FinishedCell,
-      },
-      {
-        Header: 'Sneaky',
-        accessor: 'stealth',
-        disableSortBy: true,
-        Cell: CheckmarkCell,
-      },
-      {
-        Header: 'Vods',
-        accessor: 'streamed',
-        disableSortBy: true,
-        Cell: VodCell,
-      },
-      {
-        Header: 'Admin',
-        accessor: '_id',
-        disableSortBy: true,
-        Cell: ({ value, row }) => AdminCell({ value, row, showVodButton: true }),
-      },
-    ]
-  }, [])
 
   const data: Array<any> = useMemo(() => {
     return games
@@ -142,7 +60,7 @@ export const GameTable = ({ games, isAdmin }: Props) => {
     state: { pageIndex, pageSize, sortBy },
   } = useTable(
     {
-      columns,
+      columns: gameTableColumns,
       data,
       initialState: {
         hiddenColumns,
@@ -161,115 +79,37 @@ export const GameTable = ({ games, isAdmin }: Props) => {
     usePagination
   )
 
+  // On load set stuff from query parameters
+  useEffect(() => {
+    if (paramsLoaded) {
+      params.sneaky === 'true' && setStealthFilter(true)
+      params.title && setTitleFilter(params.title as string)
+      params.sortBy && setSortBy([{ id: params.sortBy as string, desc: params.sortDesc === 'true' ? true : false }])
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [paramsLoaded])
+
+  const handleStealthFilterChange = (checked) => {
+    setStealthFilter(checked)
+    if (checked) {
+      updateParams({ ...params, sneaky: checked })
+    } else {
+      delete params.sneaky
+      updateParams({ ...params })
+    }
+  }
+
+  const handleTitleFilterChange = (value) => {
+    setTitleFilter(value)
+    updateParams({ ...params, title: value })
+  }
+
   useEffect(() => {
     if (paramsLoaded) {
       updateParams({ ...params, sortBy: sortBy[0].id, sortDesc: sortBy[0].desc })
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [sortBy])
-
-  // Surely you can improve this
-  const formatCell = (cell: Cell<object, any>, row: Row<object>) => {
-    // TITLE COLUMN
-    if (cell.column.id === 'title') {
-      return (
-        <td {...cell.getCellProps()} key={cell.column.id + row.id}>
-          {cell.render('Cell')}
-        </td>
-      )
-    }
-
-    if (cell.column.id === 'rating') {
-      return (
-        <td
-          {...cell.getCellProps(() => ({
-            style: {
-              textAlign: 'center',
-            },
-          }))}
-          key={cell.column.id + row.id}
-        >
-          {cell.render('Cell')}
-        </td>
-      )
-    }
-
-    // CENTERED COLUMN
-    if (['streamed', 'finishedDate', 'timeSpent', 'stealth', '_id'].includes(cell.column.id)) {
-      return (
-        <td
-          {...cell.getCellProps(() => ({
-            style: {
-              textAlign: 'center',
-            },
-          }))}
-          key={cell.column.id + row.id}
-        >
-          {cell.render('Cell')}
-        </td>
-      )
-    }
-
-    return (
-      <td {...cell.getCellProps()} key={cell.column.id + row.id}>
-        {cell.render('Cell')}
-      </td>
-    )
-  }
-
-  const formatHeader = (column: ColumnInstance<object>) => {
-    if (column.id === '_id' && !isAdmin) return
-
-    // CONDENCED
-    if (['streamed', 'stealth'].includes(column.id)) {
-      return (
-        <th
-          {...column.getHeaderProps(() => ({
-            style: {
-              fontStretch: 'condensed',
-              paddingLeft: '8px',
-              paddingRight: '8px',
-              textAlign: 'center',
-            },
-          }))}
-          key={column.id}
-        >
-          {column.render('Header')}
-        </th>
-      )
-    }
-
-    if (column.id === 'timeSpent') {
-      return (
-        <th
-          {...column.getHeaderProps(() => ({
-            style: {
-              fontStretch: 'condensed',
-              paddingLeft: '8px',
-              paddingRight: '8px',
-              textAlign: 'center',
-            },
-            ...column.getSortByToggleProps(),
-          }))}
-          key={column.id}
-        >
-          <span className='d-flex'>
-            {column.render('Header')}
-            <span>{column.isSorted ? (column.isSortedDesc ? ' 🔻' : ' 🔺') : ''}</span>
-          </span>
-        </th>
-      )
-    }
-
-    return (
-      <th {...column.getHeaderProps(column.getSortByToggleProps())} key={column.id}>
-        <span className='d-flex'>
-          {column.render('Header')}
-          <span>{column.isSorted ? (column.isSortedDesc ? ' 🔻' : ' 🔺') : ''}</span>
-        </span>
-      </th>
-    )
-  }
 
   return (
     <>
@@ -297,7 +137,7 @@ export const GameTable = ({ games, isAdmin }: Props) => {
         <thead>
           <tr>
             {headers.map((column, i) => {
-              return formatHeader(column)
+              return formatHeader(column, isAdmin)
             })}
           </tr>
         </thead>
