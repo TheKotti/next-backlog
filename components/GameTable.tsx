@@ -86,7 +86,7 @@ export const GameTable = ({ games, isAdmin }: Props) => {
         Cell: CheckmarkCell,
       },
       {
-        Header: 'Streamed',
+        Header: 'Vods',
         accessor: 'streamed',
         disableSortBy: true,
         Cell: VodCell,

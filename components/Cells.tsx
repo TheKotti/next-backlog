@@ -29,7 +29,7 @@ export const VodCell = ({ value, row }) => {
     })
     return <div className={`${styles['vodCell']}`}>{links}</div>
   }
-  return <span style={{ fontFamily: 'Noto Color Emoji' }}>{value ? '✔️' : ''}</span>
+  return <span style={{ fontFamily: 'Noto Color Emoji' }}>{value ? 'Vods soon' : 'Not streamed'}</span>
 }
 
 export const TitleCell = ({ value, row }) => {
