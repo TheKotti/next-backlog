@@ -16,6 +16,7 @@ export const Recap = (props: Props) => {
 
   const textareaRef = useRef<HTMLTextAreaElement>(null)
   const [textSize, setTextSize] = useState<'large' | 'x-large' | 'xx-large'>('xx-large')
+  const [timeToBeat, setTimeToBeat] = useState(game?.timeSpent?.toString() || '')
 
   useEffect(() => {
     if (game.streamed === false && game.finishedDate === null) {
@@ -59,8 +60,9 @@ export const Recap = (props: Props) => {
             <label>Time spent</label>
             <textarea
               rows={1}
-              value={game?.timeSpent || ''}
-              onChange={(e) => setGame({ ...game, timeSpent: parseFloat(e.target.value) })}
+              value={timeToBeat || ''}
+              onChange={(e) => setTimeToBeat(e.target.value)}
+              onBlur={() => setGame({ ...game, timeSpent: parseFloat(timeToBeat) })}
               className='p-2'
             ></textarea>
           </div>
