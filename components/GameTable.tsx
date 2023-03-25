@@ -1,43 +1,17 @@
 /* eslint-disable react/jsx-key */
 import React, { useEffect, useMemo, useState } from 'react'
-import dayjs from 'dayjs'
+
 import { Cell, ColumnInstance, Row, usePagination, useSortBy, useTable } from 'react-table'
 
 import styles from '../styles/GameTable.module.css'
 import { ScoreIndicator } from './ScoreIndicator'
 import { useNextQueryParams } from '../hooks/useNextQueryParams'
+import { AdminCell, CheckmarkCell, CommentCell, DateCell, FinishedCell, TitleCell, VodCell } from './Cells'
+import { dateSort, scoreSort } from '../utils'
 
 type Props = {
   games: Array<Game>
   isAdmin: boolean
-}
-
-const CommentCell = ({ value }) => {
-  return <span dangerouslySetInnerHTML={{ __html: value.replace(/\n/g, '<br />') }}></span>
-}
-
-const DateCell = ({ value, row }) => {
-  if (row.original['finished'] === 'Happening') return <span>Ongoing or soon™</span>
-
-  const formattedDate = value ? dayjs(new Date(value)).format('DD MMM YYYY') : ''
-  return <span>{formattedDate}</span>
-}
-
-const dateSort = (rowA, rowB, id) => {
-  // I am a hack
-  if (rowA.original['finished'] === 'Happening') return 1
-  if (rowB.original['finished'] === 'Happening') return -1
-
-  const a = new Date(rowA.values[id]).getTime()
-  const b = new Date(rowB.values[id]).getTime()
-  return a - b
-}
-
-const scoreSort = (rowA, rowB, id) => {
-  if (rowA.values[id] === rowB.values[id]) {
-    return (rowB.original['title'] as string).localeCompare(rowA.original['title'] as string)
-  }
-  return rowA.values[id] - rowB.values[id]
 }
 
 export const GameTable = ({ games, isAdmin }: Props) => {
@@ -82,32 +56,7 @@ export const GameTable = ({ games, isAdmin }: Props) => {
       {
         Header: 'Game',
         accessor: 'title',
-        Cell: ({ value, row }) => {
-          return (
-            <div>
-              {`${value}${row.original.releaseYear ? ' (' + row.original.releaseYear + ')' : ''}`}
-              <a
-                href={row.original.igdbUrl}
-                target='_blank'
-                rel='noreferrer'
-                style={{ fontFamily: 'Noto Color Emoji' }}
-                className='d-inline-flex ms-1'
-              >
-                <svg
-                  xmlns='http://www.w3.org/2000/svg'
-                  width='12'
-                  height='12'
-                  fill='currentColor'
-                  className='bi bi-box-arrow-up-right'
-                  viewBox='0 0 16 16'
-                >
-                  <path d='M8.636 3.5a.5.5 0 0 0-.5-.5H1.5A1.5 1.5 0 0 0 0 4.5v10A1.5 1.5 0 0 0 1.5 16h10a1.5 1.5 0 0 0 1.5-1.5V7.864a.5.5 0 0 0-1 0V14.5a.5.5 0 0 1-.5.5h-10a.5.5 0 0 1-.5-.5v-10a.5.5 0 0 1 .5-.5h6.636a.5.5 0 0 0 .5-.5z' />
-                  <path d='M16 .5a.5.5 0 0 0-.5-.5h-5a.5.5 0 0 0 0 1h3.793L6.146 9.146a.5.5 0 1 0 .708.708L15 1.707V5.5a.5.5 0 0 0 1 0v-5z' />
-                </svg>
-              </a>
-            </div>
-          )
-        },
+        Cell: TitleCell,
       },
       {
         Header: 'Rating',
@@ -128,64 +77,25 @@ export const GameTable = ({ games, isAdmin }: Props) => {
         Header: 'Finished',
         accessor: 'timeSpent',
         sortDescFirst: true,
-        Cell: ({ value, row }) => {
-          if (row.original.finished === 'Nope') return <>Did not finish {`(${value}h)`}</>
-          if (row.original.finished === 'Yes') return <>Finished {`(${value}h)`}</>
-
-          const wordArray = row.original.finished.split(/(\/)/)
-          const withWordBreaks = wordArray.map((x, i) => {
-            return (
-              <React.Fragment key={i}>
-                {x}
-                <wbr />
-              </React.Fragment>
-            )
-          })
-
-          return value ? (
-            <>
-              {withWordBreaks} {`(${value}h)`}
-            </>
-          ) : null
-        },
+        Cell: FinishedCell,
       },
       {
         Header: 'Sneaky',
         accessor: 'stealth',
         disableSortBy: true,
-        Cell: ({ value }) => {
-          return <span style={{ fontFamily: 'Noto Color Emoji' }}>{value ? '✔️' : ''}</span>
-        },
+        Cell: CheckmarkCell,
       },
       {
         Header: 'Streamed',
         accessor: 'streamed',
         disableSortBy: true,
-        Cell: ({ value }) => {
-          return <span style={{ fontFamily: 'Noto Color Emoji' }}>{value ? '✔️' : ''}</span>
-        },
+        Cell: VodCell,
       },
       {
         Header: 'Recap',
         accessor: '_id',
         disableSortBy: true,
-        Cell: ({ value }) => {
-          return (
-            <a href={`/recap?id=${value}`} style={{ fontFamily: 'Noto Color Emoji' }}>
-              <svg
-                xmlns='http://www.w3.org/2000/svg'
-                width='16'
-                height='16'
-                fill='currentColor'
-                className='bi bi-box-arrow-up-right'
-                viewBox='0 0 16 16'
-              >
-                <path d='M8.636 3.5a.5.5 0 0 0-.5-.5H1.5A1.5 1.5 0 0 0 0 4.5v10A1.5 1.5 0 0 0 1.5 16h10a1.5 1.5 0 0 0 1.5-1.5V7.864a.5.5 0 0 0-1 0V14.5a.5.5 0 0 1-.5.5h-10a.5.5 0 0 1-.5-.5v-10a.5.5 0 0 1 .5-.5h6.636a.5.5 0 0 0 .5-.5z' />
-                <path d='M16 .5a.5.5 0 0 0-.5-.5h-5a.5.5 0 0 0 0 1h3.793L6.146 9.146a.5.5 0 1 0 .708.708L15 1.707V5.5a.5.5 0 0 0 1 0v-5z' />
-              </svg>
-            </a>
-          )
-        },
+        Cell: AdminCell,
       },
     ]
   }, [])
@@ -207,6 +117,7 @@ export const GameTable = ({ games, isAdmin }: Props) => {
           stealth: x.stealth,
           igdbUrl: x.igdbUrl,
           releaseYear: x.releaseYear,
+          vods: x.vods,
         }
       })
   }, [games, stealthFilter, titleFilter])

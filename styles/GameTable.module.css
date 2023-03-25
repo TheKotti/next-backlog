@@ -31,3 +31,15 @@
 .dark-input::placeholder {
     color: #808080;
 }
+
+.vodCell {
+    display: flex;
+    flex-direction: column;
+    text-decoration: underline;
+}
+
+.adminCell {
+    display: flex;
+    flex-direction: column;
+    text-decoration: underline;
+}

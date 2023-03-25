@@ -22,10 +22,6 @@ export default async function handler(req, res) {
     case 'PUT': {
       return updateGame(req, res)
     }
-
-    case 'DELETE': {
-      return deletePost(req, res)
-    }
   }
 }
 
@@ -33,9 +29,9 @@ async function getGames(req, res) {
   try {
     // connect to the database
     const { db } = await connectToDatabase()
-    // fetch the posts
+    // fetch the games
     const games = await db.collection('games').find({}).sort({ published: -1 }).toArray()
-    // return the posts
+    // return the games
     const parsedGames = JSON.parse(JSON.stringify(games))
     return res.json(parsedGames)
   } catch (error: any) {
@@ -53,7 +49,7 @@ async function getGame(req, res) {
     const { db } = await connectToDatabase()
     // fetch the posts
     const game = await db.collection('games').findOne({ _id: ObjectId(req.query.id) })
-    // return the posts
+    // return the games
     return res.json(game)
   } catch (error: any) {
     // return the error
@@ -177,7 +173,7 @@ async function updateGame(req, res) {
     // connect to the database
     let { db } = await connectToDatabase()
 
-    // update the published status of the post
+    // update the game data
     await db.collection('games').replaceOne(
       {
         _id: game._id,
@@ -197,28 +193,4 @@ async function updateGame(req, res) {
       success: false,
     })
   }
-}
-
-async function deletePost(req, res) {
-  /*   try {
-    // Connecting to the database
-    let { db } = await connectToDatabase()
-
-    // Deleting the post
-    await db.collection('games').deleteOne({
-      _id: new ObjectId(req.body),
-    })
-
-    // returning a message
-    return res.json({
-      message: 'Post deleted successfully',
-      success: true,
-    })
-  } catch (error: any) {
-    // returning an error
-    return res.json({
-      message: new Error(error).message,
-      success: false,
-    })
-  } */
 }
