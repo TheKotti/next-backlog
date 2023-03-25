@@ -4,10 +4,10 @@ const { connectToDatabase } = require('../../lib/mongo')
 const ObjectId = require('mongodb').ObjectId
 
 export default async function handler(req, res) {
-  return addVodsToGame(req, res)
+  return setUpcoming(req, res)
 }
 
-async function addVodsToGame(req, res) {
+async function setUpcoming(req, res) {
   try {
     const session = (await getSession({ req })) as ExtendedSession
 
@@ -16,13 +16,12 @@ async function addVodsToGame(req, res) {
     }
 
     const id = new ObjectId(req.body.id)
-    const vods = req.body.vods
 
     // connect to the database
     let { db } = await connectToDatabase()
 
-    // update the vod list of the post
-    await db.collection('games').updateOne({ _id: id }, { $set: { vods } })
+    // update the finished status
+    await db.collection('games').updateOne({ _id: id }, { $set: { finished: 'Happening', streamed: true } })
 
     // return a message
     return res.json({

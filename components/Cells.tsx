@@ -1,7 +1,10 @@
-import dayjs from 'dayjs'
 import React from 'react'
-import styles from '../styles/GameTable.module.css'
+import axios from 'axios'
+import dayjs from 'dayjs'
+import { toast } from 'react-toastify'
+
 import { VodDialog } from './VodDialog'
+import styles from '../styles/GameTable.module.css'
 
 export const CommentCell = ({ value }) => {
   return <span dangerouslySetInnerHTML={{ __html: value.replace(/\n/g, '<br />') }}></span>
@@ -29,7 +32,7 @@ export const VodCell = ({ value, row }) => {
     })
     return <div className={`${styles['vodCell']}`}>{links}</div>
   }
-  return <span>{value ? 'Vods soon' : ''}</span>
+  return <span style={{ color: 'red' }}>{value ? '' : 'Not streamed'}</span>
 }
 
 export const TitleCell = ({ value, row }) => {
@@ -80,12 +83,30 @@ export const FinishedCell = ({ value, row }) => {
   ) : null
 }
 
-export const AdminCell = ({ value, row }) => {
+export const AdminCell = ({ value, row, showVodButton = false, showNextButton = false }) => {
+  const setUpcoming = () => {
+    axios
+      .put('api/setUpcoming', { id: row.original._id })
+      .then((_res) => {
+        toast.success('Game set as upcoming 👌')
+      })
+      .catch((err) => {
+        toast.error('Save failed')
+        console.log('ERROR: ', err)
+      })
+  }
+
   return (
     <div className={`${styles['adminCell']}`}>
       <a href={`/recap?id=${value}`}>Recap</a>
 
-      <VodDialog game={row.original} />
+      {showVodButton && <VodDialog game={row.original} />}
+
+      {showNextButton && (
+        <a href='#' onClick={setUpcoming}>
+          Set upcoming
+        </a>
+      )}
     </div>
   )
 }
