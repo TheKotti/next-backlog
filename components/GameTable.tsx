@@ -92,7 +92,7 @@ export const GameTable = ({ games, isAdmin }: Props) => {
         Cell: VodCell,
       },
       {
-        Header: 'Recap',
+        Header: 'Admin',
         accessor: '_id',
         disableSortBy: true,
         Cell: ({ value, row }) => AdminCell({ value, row, showVodButton: true }),

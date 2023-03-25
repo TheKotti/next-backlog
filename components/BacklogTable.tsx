@@ -25,7 +25,7 @@ export const BacklogTable = ({ games, isAdmin }: Props) => {
         accessor: 'notPollable',
       },
       {
-        Header: 'Recap',
+        Header: 'Admin',
         accessor: '_id',
         disableGlobalFilter: true,
         disableSortBy: true,
