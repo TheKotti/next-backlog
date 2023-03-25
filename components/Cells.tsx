@@ -32,7 +32,7 @@ export const VodCell = ({ value, row }) => {
     })
     return <div className={`${styles['vodCell']}`}>{links}</div>
   }
-  return <span style={{ color: 'red' }}>{value ? '' : 'Not streamed'}</span>
+  return <span style={{ color: 'darkcyan' }}>{value ? 'No vods available' : 'Not streamed'}</span>
 }
 
 export const TitleCell = ({ value, row }) => {
