@@ -21,8 +21,7 @@
     "react-datepicker": "^4.7.0",
     "react-dom": "18.0.0",
     "react-table": "^7.7.0",
-    "react-toastify": "^9.0.8",
-    "react-youtube": "^10.1.0"
+    "react-toastify": "^9.0.8"
   },
   "devDependencies": {
     "@types/node": "17.0.23",
