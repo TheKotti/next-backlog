@@ -24,9 +24,11 @@ export default async function handler(req, res) {
     fields name, id, release_dates.y, url;`,
   })
     .then((response) => {
+      console.log('find-games success')
       res.send(response.data)
     })
     .catch((err) => {
+      console.log('find-games error', err)
       res.send(err)
     })
 }
