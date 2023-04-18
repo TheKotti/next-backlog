@@ -5,7 +5,7 @@ export default async function handler(req, res) {
   const session = (await getSession({ req })) as ExtendedSession
 
   if (session?.userId !== process.env.ADMIN_USER_ID) {
-    res.status(401).json({ error: 'Unauthorized' })
+    res.status(401).json({ errorType: 'findGamesSessionError', session, error: 'Unauthorized' })
   }
 
   const authToken = req.body.token
@@ -27,8 +27,7 @@ export default async function handler(req, res) {
       console.log('find-games success')
       res.send(response.data)
     })
-    .catch((err) => {
-      console.log('find-games error', err)
-      res.send(err)
+    .catch((error) => {
+      return res.status(500).json({ errorType: 'findGamesError', error })
     })
 }

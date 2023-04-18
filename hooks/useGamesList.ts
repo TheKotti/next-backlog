@@ -12,7 +12,7 @@ export const useGamesList = (isAdmin: boolean) => {
           setGames(x.data)
         })
         .catch((err) => {
-          console.log('err', err)
+          console.error('TTTTTTTTT', err)
         })
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps

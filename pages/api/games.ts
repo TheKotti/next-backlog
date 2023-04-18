@@ -26,6 +26,7 @@ export default async function handler(req, res) {
 }
 
 async function getGames(req, res) {
+  console.log('SENDING 501')
   try {
     // connect to the database
     const { db } = await connectToDatabase()
@@ -36,10 +37,8 @@ async function getGames(req, res) {
     return res.json(parsedGames)
   } catch (error: any) {
     // return the error
-    return res.json({
-      message: new Error(error).message,
-      success: false,
-    })
+    console.log('EEEEE', error)
+    return res.status(501).json({ errorType: 'getGamesError', error })
   }
 }
 
@@ -53,10 +52,7 @@ async function getGame(req, res) {
     return res.json(game)
   } catch (error: any) {
     // return the error
-    return res.json({
-      message: new Error(error).message,
-      success: false,
-    })
+    return res.status(500).json({ errorType: 'getOneGameError', error })
   }
 }
 
@@ -65,7 +61,7 @@ async function addGame(req, res) {
     const session = (await getSession({ req })) as ExtendedSession
 
     if (session?.userId !== process.env.ADMIN_USER_ID) {
-      res.status(401).json({ error: 'Unauthorized' })
+      res.status(401).json({ errorType: 'addGameSessionError', session, error: 'Unauthorized' })
     }
 
     const gameId = req.body.id
@@ -146,8 +142,8 @@ async function addGame(req, res) {
           success: true,
         })
       })
-      .catch((err) => {
-        res.send(err)
+      .catch((error) => {
+        return res.status(500).json({ errorType: 'addGameError', error })
       })
   } catch (error: any) {
     // return an error
@@ -163,7 +159,7 @@ async function updateGame(req, res) {
     const session = (await getSession({ req })) as ExtendedSession
 
     if (session?.userId !== process.env.ADMIN_USER_ID) {
-      res.status(401).json({ error: 'Unauthorized' })
+      res.status(401).json({ errorType: 'updateGameSessionError', session, error: 'Unauthorized' })
     }
 
     const game: Game = req.body.game
@@ -188,9 +184,6 @@ async function updateGame(req, res) {
     })
   } catch (error: any) {
     // return an error
-    return res.json({
-      message: new Error(error).message,
-      success: false,
-    })
+    return res.status(500).json({ errorType: 'updateGameError', error })
   }
 }
