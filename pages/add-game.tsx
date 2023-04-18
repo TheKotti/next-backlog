@@ -8,7 +8,7 @@ import { toast } from 'react-toastify'
 
 import Nav from '../components/Nav'
 
-export default function AddGame({ isAdmin }) {
+export default function AddGame({ isAdmin, username }) {
   const [igdbToken, setIgdbToken] = useState<string>('')
   const [searchTerm, setSearchTerm] = useState<string>('')
   const [options, setOptions] = useState<GameOptions[]>([])
@@ -97,7 +97,7 @@ export default function AddGame({ isAdmin }) {
 
   return (
     <div>
-      <Nav isAdmin={isAdmin} />
+      <Nav isAdmin={isAdmin} username={username} />
       <div className='App' style={{ display: 'flex', flexDirection: 'row' }}>
         <div className='App' style={{ display: 'flex', flexDirection: 'column' }}>
           <div>
@@ -189,10 +189,12 @@ export default function AddGame({ isAdmin }) {
 export async function getServerSideProps(ctx) {
   const session = (await getSession(ctx)) as ExtendedSession
   const isAdmin = process.env.ADMIN_USER_ID === session?.userId
+  const username = session?.user?.name ?? ''
 
   return {
     props: {
       isAdmin,
+      username,
     },
   }
 }

@@ -6,20 +6,24 @@ import { toast } from 'react-toastify'
 
 type Props = {
   isAdmin: boolean
-  userId?: string
+  username: string
 }
 
 export default function Nav(props: Props) {
-  const { isAdmin, userId } = props
+  const { isAdmin, username } = props
 
   const refresh = () => {
-    axios
-      .get(`/api/revalidate?secret=${userId}`)
-      .then(() => toast.success('Revalidated'))
-      .catch((err) => {
-        toast.error('REVALIDATION FAILED')
-        console.log('eee', err)
-      })
+    if (isAdmin) {
+      axios
+        .get(`/api/revalidate?secret=${process.env.ADMIN_USER_ID}`)
+        .then(() => toast.success('Revalidated'))
+        .catch((err) => {
+          toast.error('REVALIDATION FAILED')
+          console.log('eee', err)
+        })
+    } else {
+      console.log("YOU'RE NO ADMIN")
+    }
   }
 
   return (
@@ -27,7 +31,7 @@ export default function Nav(props: Props) {
       {isAdmin ? (
         <>
           <button className='btn btn-light' onClick={() => signOut()}>
-            Sign out
+            Sign out ({username})
           </button>
 
           <Link href='/admin'>
@@ -42,15 +46,13 @@ export default function Nav(props: Props) {
             <a>Random</a>
           </Link>
 
-          {userId && (
-            <button className='btn btn-light' onClick={() => refresh()}>
-              Refresh
-            </button>
-          )}
+          <button className='btn btn-light' onClick={() => refresh()}>
+            Refresh
+          </button>
         </>
       ) : (
         <button className='btn btn-light' onClick={() => signIn().then(() => refresh())}>
-          Sign in
+          Sign in as {username}
         </button>
       )}
     </nav>

@@ -12,10 +12,10 @@ import { StatsDialog } from '../components/StatsDialog'
 
 type Props = {
   isAdmin: boolean
-  userId: string
+  username: string
 }
 
-export default function Home({ isAdmin, userId }: Props) {
+export default function Home({ isAdmin, username }: Props) {
   const [viewBacklog, setViewBacklog] = useState(false)
 
   const games = useGamesList(isAdmin)
@@ -38,7 +38,7 @@ export default function Home({ isAdmin, userId }: Props) {
         <title>YAME! YAME!</title>
       </Head>
 
-      <Nav isAdmin={isAdmin} userId={userId} />
+      <Nav isAdmin={isAdmin} username={username} />
 
       <main>
         <div className={styles.container}>
@@ -70,13 +70,14 @@ export async function getServerSideProps(ctx) {
   res.setHeader('Cache-Control', 'public, s-maxage=600, stale-while-revalidate=900')
 
   const session = (await getSession(ctx)) as ExtendedSession
+  console.log('SESSION', session)
   const isAdmin = process.env.ADMIN_USER_ID === session?.userId
-  const userId = session?.userId ?? null
+  const username = session?.user?.name ?? ''
 
   return {
     props: {
       isAdmin,
-      userId,
+      username,
     },
   }
 }
