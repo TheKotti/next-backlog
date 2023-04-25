@@ -1,7 +1,7 @@
 import NextAuth from 'next-auth'
 import TwitchProvider from 'next-auth/providers/twitch'
 
-export default NextAuth({
+const authOptions = NextAuth({
   providers: [
     // Add the following redirect URL into the console http://<your-next-app-url>/api/auth/callback/twitch
     TwitchProvider({
@@ -30,3 +30,5 @@ export default NextAuth({
     },
   },
 })
+
+export default authOptions

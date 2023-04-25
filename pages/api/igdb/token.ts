@@ -4,6 +4,8 @@ import { getSession } from 'next-auth/react'
 export default async function handler(req, res) {
   const session = await getSession({ req })
 
+  console.log('TOKEN SESSION', session)
+
   if (session) {
     const url = `https://id.twitch.tv/oauth2/token?client_id=${process.env.TWITCH_CLIENT_ID}&client_secret=${process.env.TWITCH_CLIENT_SECRET}&grant_type=client_credentials`
 
