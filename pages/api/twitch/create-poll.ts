@@ -1,6 +1,8 @@
 import axios from 'axios'
 import { getToken } from 'next-auth/jwt'
-
+/**
+ * DEPRECATED AND BROKEN
+ */
 export default async function handler(req, res) {
   const token = await getToken({ req })
 

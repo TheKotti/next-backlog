@@ -1,8 +1,9 @@
 import axios from 'axios'
-import { getSession } from 'next-auth/react'
+import { Session, getServerSession } from 'next-auth'
+import authOptions from '../auth/[...nextauth]'
 
 export default async function handler(req, res) {
-  const session = await getSession({ req })
+  const session: Session | null = await getServerSession(req, res, authOptions)
 
   if (session) {
     const url = `https://id.twitch.tv/oauth2/token?client_id=${process.env.TWITCH_CLIENT_ID}&client_secret=${process.env.TWITCH_CLIENT_SECRET}&grant_type=client_credentials`

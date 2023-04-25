@@ -1,6 +1,7 @@
 export default async function handler(req, res) {
   // Check for secret to confirm this is a valid request
-  if (req.query.secret !== process.env.ADMIN_USER_ID) {
+  console.log(req.query, process.env.ADMIN_USER_NAME)
+  if (req.query.secret !== process.env.ADMIN_USER_NAME) {
     return res.status(401).json({ message: 'Invalid token' })
   }
 

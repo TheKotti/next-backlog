@@ -1,8 +1,9 @@
 import axios from 'axios'
-import { getSession } from 'next-auth/react'
+import { Session, getServerSession } from 'next-auth'
+import authOptions from '../auth/[...nextauth]'
 
 export default async function handler(req, res) {
-  const session = await getSession({ req })
+  const session: Session | null = await getServerSession(req, res, authOptions)
 
   if (session?.user?.name !== process.env.ADMIN_USER_NAME) {
     return res.status(401).json({ errorType: 'findGamesSessionError', error: 'Unauthorized' })

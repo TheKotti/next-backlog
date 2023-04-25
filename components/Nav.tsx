@@ -15,7 +15,7 @@ export default function Nav(props: Props) {
   const refresh = () => {
     if (isAdmin) {
       axios
-        .get(`/api/revalidate?secret=${process.env.ADMIN_USER_ID}`)
+        .get(`/api/revalidate?secret=${username}`)
         .then(() => toast.success('Revalidated'))
         .catch((err) => {
           toast.error('REVALIDATION FAILED')
