@@ -3,10 +3,9 @@ import { getSession } from 'next-auth/react'
 
 export default async function handler(req, res) {
   const session = await getSession({ req })
-  console.log('FINGAMES SESSION', session)
 
-  if (session?.userId !== process.env.ADMIN_USER_ID) {
-    res.status(401).json({ errorType: 'findGamesSessionError', error: 'Unauthorized' })
+  if (session?.user?.name !== process.env.ADMIN_USER_NAME) {
+    return res.status(401).json({ errorType: 'findGamesSessionError', error: 'Unauthorized' })
   }
 
   const authToken = req.body.token

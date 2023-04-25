@@ -82,8 +82,8 @@ export default function Home({ isAdmin, games = [] }: Props) {
 export async function getServerSideProps(ctx) {
   const { res } = ctx
   res.setHeader('Cache-Control', 'public, s-maxage=600, stale-while-revalidate=0')
-  const session = (await getSession(ctx)) as ExtendedSession
-  const isAdmin = process.env.ADMIN_USER_ID === session?.userId
+  const session = await getSession(ctx)
+  const isAdmin = process.env.ADMIN_USER_NAME === session?.user?.name
   const { db } = await connectToDatabase()
   const games = await db.collection('games').find({ finishedDate: null, notPollable: '' }).toArray()
 

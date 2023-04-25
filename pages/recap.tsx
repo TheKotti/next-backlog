@@ -64,8 +64,8 @@ export default function Home({ isAdmin }) {
 }
 
 export async function getServerSideProps(ctx) {
-  const session = (await getSession(ctx)) as ExtendedSession
-  const isAdmin = process.env.ADMIN_USER_ID === session?.userId
+  const session = await getSession(ctx)
+  const isAdmin = process.env.ADMIN_USER_NAME === session?.user?.name
 
   return {
     props: {

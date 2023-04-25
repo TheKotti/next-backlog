@@ -26,7 +26,6 @@ export default async function handler(req, res) {
 }
 
 async function getGames(req, res) {
-  console.log('SENDING 501')
   try {
     // connect to the database
     const { db } = await connectToDatabase()
@@ -58,9 +57,9 @@ async function getGame(req, res) {
 
 async function addGame(req, res) {
   try {
-    const session = (await getSession({ req })) as ExtendedSession
+    const session = await getSession({ req })
 
-    if (session?.userId !== process.env.ADMIN_USER_ID) {
+    if (session?.user?.name !== process.env.ADMIN_USER_NAME) {
       res.status(401).json({ errorType: 'addGameSessionError', session, error: 'Unauthorized' })
     }
 
@@ -156,9 +155,9 @@ async function addGame(req, res) {
 
 async function updateGame(req, res) {
   try {
-    const session = (await getSession({ req })) as ExtendedSession
+    const session = await getSession({ req })
 
-    if (session?.userId !== process.env.ADMIN_USER_ID) {
+    if (session?.user?.name !== process.env.ADMIN_USER_NAME) {
       res.status(401).json({ errorType: 'updateGameSessionError', session, error: 'Unauthorized' })
     }
 

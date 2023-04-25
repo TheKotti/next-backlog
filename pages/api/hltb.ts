@@ -2,9 +2,9 @@ import { getSession } from 'next-auth/react'
 import puppeteer from 'puppeteer'
 
 export default async function handler(req, res) {
-  const session = (await getSession({ req })) as ExtendedSession
+  const session = await getSession({ req })
 
-  if (session?.userId !== process.env.ADMIN_USER_ID) {
+  if (session?.user?.name !== process.env.ADMIN_USER_NAME) {
     res.status(401).json({ error: 'Unauthorized' })
   }
 

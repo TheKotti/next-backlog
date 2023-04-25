@@ -30,16 +30,3 @@ type GameOptions = {
   year: number
   url: string
 }
-
-type ExtendedSession = {
-  [x: string]: unknown
-  user?:
-    | {
-        name?: string | null | undefined
-        email?: string | null | undefined
-        image?: string | null | undefined
-      }
-    | undefined
-  expires: string
-  userId?: string
-}

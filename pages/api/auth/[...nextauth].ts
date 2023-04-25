@@ -15,12 +15,6 @@ const authOptions = NextAuth({
     }),
   ],
   callbacks: {
-    // TODO: Type this properly
-    async session({ session, token }) {
-      const extended = { ...session } as ExtendedSession
-      extended.userId = token.sub
-      return extended as ExtendedSession
-    },
     async jwt({ token, account }) {
       if (account) {
         token.access_token = account?.access_token
