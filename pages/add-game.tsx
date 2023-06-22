@@ -14,15 +14,6 @@ export default function AddGame({ isAdmin, username }) {
   const [options, setOptions] = useState<GameOptions[]>([])
 
   const [notPollable, setNotPollable] = useState<string>('')
-  const [comment, setComment] = useState<string>('')
-  const [finished, setFinished] = useState<string>('')
-  const [rating, setRating] = useState<number>()
-  const [stealth, setStealth] = useState<boolean>(false)
-  const [tss, setTss] = useState<boolean>(false)
-  const [streamed, setStreamed] = useState<boolean>(false)
-  const [platform, setPlatform] = useState<string>('')
-  const [timeSpent, setTimeSpent] = useState<number>()
-  const [finishedDate, setFinishedDate] = useState<Date | null>(null)
 
   useEffect(() => {
     if (!isAdmin) {
@@ -69,15 +60,15 @@ export default function AddGame({ isAdmin, username }) {
       .post(`api/games`, {
         token: igdbToken,
         notPollable,
-        comment,
-        finished,
-        rating,
-        stealth,
-        tss,
-        streamed,
-        platform,
-        timeSpent,
-        finishedDate,
+        comment: '',
+        finished: '',
+        rating: null,
+        stealth: false,
+        tss: false,
+        streamed: false,
+        platform: '',
+        timeSpent: null,
+        finishedDate: null,
         id,
       })
       .then((res) => {
@@ -98,87 +89,35 @@ export default function AddGame({ isAdmin, username }) {
   return (
     <div>
       <Nav isAdmin={isAdmin} username={username} />
-      <div className='App' style={{ display: 'flex', flexDirection: 'row' }}>
-        <div className='App' style={{ display: 'flex', flexDirection: 'column' }}>
-          <div>
-            <div>
-              <label>Ban from polls</label>
-              <input value={notPollable} onChange={(e) => setNotPollable(e.target.value)} />
-            </div>
-          </div>
 
-          <div>
-            <label>Comment</label>
-            <textarea value={comment || ''} onChange={(e) => setComment(e.target.value)}></textarea>
-          </div>
-
-          <div>
-            <label>Finished</label>
-            <input value={finished || ''} onChange={(e) => setFinished(e.target.value)}></input>
-          </div>
-
-          <div>
-            <label>Finished date</label>
-            <DatePicker selected={finishedDate} onChange={(date: Date) => setFinishedDate(date)} />
-          </div>
-
-          <div>
-            <label>Platform</label>
-            <input value={platform || ''} onChange={(e) => setPlatform(e.target.value)}></input>
-          </div>
-
-          <div>
-            <label>Rating</label>
-            <input
-              type='number'
-              min={1}
-              max={10}
-              value={rating || ''}
-              onChange={(e) => setRating(parseInt(e.target.value))}
-            ></input>
-          </div>
-
-          <div>
-            <label>Stealth?</label>
-            <input type='checkbox' checked={!!stealth} onChange={(e) => setStealth(e.target.checked)}></input>
-          </div>
-
-          <div>
-            <label>TSS?</label>
-            <input type='checkbox' checked={!!tss} onChange={(e) => setTss(e.target.checked)}></input>
-          </div>
-
-          <div>
-            <label>Streamed?</label>
-            <input type='checkbox' checked={!!streamed} onChange={(e) => setStreamed(e.target.checked)}></input>
-          </div>
-
-          <div>
-            <label>Time spent</label>
-            <input
-              type='number'
-              step={0.5}
-              value={timeSpent || ''}
-              onChange={(e) => setTimeSpent(parseFloat(e.target.value))}
-            ></input>
-          </div>
-        </div>
-
+      <div style={{ display: 'flex', justifyContent: 'center' }}>
         <div>
-          <div>
+          <div style={{ marginTop: '2em' }}>
             <div>
               <input value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} />
-              <button onClick={() => getGamesByTitle(searchTerm)}>get gaem</button>
+              <button onClick={() => getGamesByTitle(searchTerm)}>Search gaems</button>
             </div>
 
             {options.map((x, i) => {
               return (
                 <div key={i}>
-                  <a href={x.url} target='_blank' rel='noreferrer'>{`${x.title} (${x.year})`}</a>
+                  <a
+                    href={x.url}
+                    target='_blank'
+                    rel='noreferrer'
+                    style={{ marginRight: '0.5em' }}
+                  >{`${x.title} (${x.year})`}</a>
                   <button onClick={() => addGameById(x.id)}>Add to db</button>
                 </div>
               )
             })}
+          </div>
+
+          <div style={{ display: 'flex', flexDirection: 'column' }}>
+            <div>
+              <label style={{ marginRight: '0.5em', marginTop: '2em' }}>Ban from polls</label>
+              <input value={notPollable} onChange={(e) => setNotPollable(e.target.value)} />
+            </div>
           </div>
         </div>
       </div>

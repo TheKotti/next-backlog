@@ -33,7 +33,7 @@ export const StatsDialog = (props: Props) => {
         value: averageRating.toFixed(2),
       },
       {
-        key: 'Average time spent',
+        key: 'Average time per game',
         value: `${averageTime.toFixed(2)} hours`,
       },
       {
