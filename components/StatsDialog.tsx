@@ -1,5 +1,40 @@
 import React, { useMemo, useState } from 'react'
 import { Modal } from 'react-bootstrap'
+import { Bar } from 'react-chartjs-2'
+import {
+  Chart as ChartJS,
+  CategoryScale,
+  LinearScale,
+  BarElement,
+  Title,
+  Tooltip,
+  ChartOptions,
+  ChartData,
+} from 'chart.js'
+
+ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip)
+
+const chartOptions: ChartOptions<'bar'> = {
+  responsive: true,
+  scales: {
+    x: {
+      ticks: { color: '#FFF' },
+    },
+    y: {
+      ticks: { color: '#FFF' },
+    },
+  },
+  plugins: {
+    legend: {
+      display: false,
+    },
+    title: {
+      display: true,
+      text: 'Rating distribution',
+      color: '#FFF',
+    },
+  },
+}
 
 type Props = {
   games: Game[]
@@ -67,6 +102,30 @@ export const StatsDialog = (props: Props) => {
     ]
   }, [games])
 
+  const ratingCountsData = useMemo(() => {
+    const ratingCounts = { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0, 7: 0, 8: 0, 9: 0, 10: 0 }
+
+    if (games.length) {
+      games.forEach((game) => {
+        if (game.rating) {
+          ratingCounts[game.rating]++
+        }
+      })
+    }
+
+    const data: ChartData<'bar'> = {
+      labels: Object.keys(ratingCounts),
+      datasets: [
+        {
+          data: Object.values(ratingCounts),
+          backgroundColor: 'rgba(255, 99, 132, 0.5)',
+        },
+      ],
+    }
+
+    return data
+  }, [games])
+
   return (
     <>
       <button className='btn btn-primary' onClick={() => setShow(true)}>
@@ -89,7 +148,12 @@ export const StatsDialog = (props: Props) => {
               })}
             </tbody>
           </table>
+
+          <hr />
+
+          <Bar data={ratingCountsData} options={chartOptions} />
         </Modal.Body>
+
         <Modal.Footer>
           <button className='btn btn-light' onClick={() => setShow(false)}>
             Close
