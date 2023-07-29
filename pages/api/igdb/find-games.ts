@@ -22,7 +22,8 @@ export default async function handler(req, res) {
     },
     data: `
     search "${searchTerm}";
-    fields name, id, release_dates.y, url;`,
+    fields name, id, release_dates.y, url;
+    limit 20;`,
   })
     .then((response) => {
       console.log('find-games success')
