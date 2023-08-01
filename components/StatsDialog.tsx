@@ -60,7 +60,6 @@ export const StatsDialog = (props: Props) => {
     const finishedGames = games.filter((x) => x.finished && x.finished !== 'Nope').length
     const droppedGames = games.filter((x) => x.finished && x.finished === 'Nope').length
     const backlogLength = games.filter((x) => !x.finishedDate).length
-    const pollOptions = games.filter((x) => !x.notPollable && !x.finishedDate).length
 
     return [
       {
@@ -94,10 +93,6 @@ export const StatsDialog = (props: Props) => {
       {
         key: 'Games in backlog',
         value: backlogLength,
-      },
-      {
-        key: 'Possible poll options',
-        value: pollOptions,
       },
     ]
   }, [games])
