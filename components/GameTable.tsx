@@ -15,6 +15,7 @@ type Props = {
 
 export const GameTable = ({ games, isAdmin }: Props) => {
   const [stealthFilter, setStealthFilter] = useState(false)
+  const [showCovers, setShowCovers] = useState(false)
   const [titleFilter, setTitleFilter] = useState('')
   const { params, updateParams, paramsLoaded } = useNextQueryParams()
 
@@ -60,7 +61,7 @@ export const GameTable = ({ games, isAdmin }: Props) => {
     state: { pageIndex, pageSize, sortBy },
   } = useTable(
     {
-      columns: gameTableColumns,
+      columns: gameTableColumns as any, // This doesn't like the custom prop, casting as any will do for now
       data,
       initialState: {
         hiddenColumns,
@@ -120,6 +121,7 @@ export const GameTable = ({ games, isAdmin }: Props) => {
           className={`form-control w-25 ${styles['dark-input']}`}
           placeholder='Search'
         />
+
         <div className='form-check'>
           <label className='form-check-label'>
             <input
@@ -129,6 +131,18 @@ export const GameTable = ({ games, isAdmin }: Props) => {
               onChange={(e) => handleStealthFilterChange(e.target.checked)}
             />
             Sneaky?
+          </label>
+        </div>
+
+        <div className='form-check'>
+          <label className='form-check-label'>
+            <input
+              className={`form-check-input ${styles['dark-input']}`}
+              type='checkbox'
+              checked={showCovers}
+              onChange={(e) => setShowCovers(e.target.checked)}
+            />
+            Show covers
           </label>
         </div>
       </div>
@@ -148,7 +162,7 @@ export const GameTable = ({ games, isAdmin }: Props) => {
             return (
               <tr {...row.getRowProps()} key={i}>
                 {row.cells.map((cell) => {
-                  return formatCell(cell, row)
+                  return formatCell(cell, row, { showCovers })
                 })}
               </tr>
             )

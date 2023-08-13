@@ -1,4 +1,3 @@
-import { ClassAttributes, TdHTMLAttributes } from 'react'
 import { Cell, ColumnInstance, Row } from 'react-table'
 
 /*********************************************************************
@@ -29,13 +28,14 @@ const COLUMN_IDS = {
   CENTERED: ['streamed', 'finishedDate', 'timeSpent', 'stealth', '_id', 'rating'],
 }
 
-export const formatCell = (cell: Cell<object, any>, row: Row<object>) => {
+export const formatCell = (cell: Cell<object, any>, row: Row<object>, props?: any) => {
   const { column } = cell
   const columnId = column.id
+  const showCovers = props?.showCovers
 
   switch (true) {
-    case COLUMN_IDS.TITLE.includes('columnId'):
-      return renderCellWithProps(cell, { key: columnId + row.id })
+    case COLUMN_IDS.TITLE.includes(columnId):
+      return renderCellWithProps(cell, { key: columnId + row.id }, { showCovers })
 
     case COLUMN_IDS.CENTERED.includes(columnId):
       return renderCellWithProps(cell, {
@@ -48,10 +48,10 @@ export const formatCell = (cell: Cell<object, any>, row: Row<object>) => {
   }
 }
 
-const renderCellWithProps = (cell: Cell<object, any>, props: object) => {
+const renderCellWithProps = (cell: Cell<object, any>, attrs: object, props?: object) => {
   return (
-    <td {...cell.getCellProps()} {...props}>
-      {cell.render('Cell')}
+    <td {...cell.getCellProps()} {...attrs}>
+      {cell.render('Cell', props)}
     </td>
   )
 }

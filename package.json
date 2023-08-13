@@ -9,9 +9,12 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@cloudinary/react": "^1.11.2",
+    "@cloudinary/url-gen": "^1.11.1",
     "axios": "^0.26.1",
     "bootstrap": "^5.2.0",
     "chart.js": "^4.3.0",
+    "cloudinary": "^1.40.0",
     "dayjs": "^1.11.1",
     "mongodb": "^4.5.0",
     "next": "12.1.4",

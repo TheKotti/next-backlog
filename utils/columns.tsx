@@ -13,7 +13,7 @@ export const gameTableColumns = [
   {
     Header: 'Game',
     accessor: 'title',
-    Cell: TitleCell,
+    Cell: ({ value, row, showCovers }) => TitleCell({ value, row, showCovers }),
   },
   {
     Header: 'Rating',

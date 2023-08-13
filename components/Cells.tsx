@@ -5,6 +5,7 @@ import { toast } from 'react-toastify'
 
 import { VodDialog } from './VodDialog'
 import styles from '../styles/GameTable.module.css'
+import Img from './Img'
 
 export const CommentCell = ({ value }) => {
   return <span dangerouslySetInnerHTML={{ __html: value.replace(/\n/g, '<br />') }}></span>
@@ -35,7 +36,10 @@ export const VodCell = ({ value, row }) => {
   return <span style={{ color: 'darkcyan' }}>{value ? 'No vods available' : 'Not streamed'}</span>
 }
 
-export const TitleCell = ({ value, row }) => {
+export const TitleCell = ({ value, row, showCovers }) => {
+  if (showCovers) {
+    return <Img id={row.original.igdbId} />
+  }
   return (
     <div>
       {`${value}${row.original.releaseYear ? ' (' + row.original.releaseYear + ')' : ''}`}
