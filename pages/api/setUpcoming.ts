@@ -1,4 +1,4 @@
-import { Session, getServerSession } from 'next-auth'
+import getServerSession, { Session } from 'next-auth'
 import authOptions from './auth/[...nextauth]'
 
 const { connectToDatabase } = require('../../lib/mongo')
