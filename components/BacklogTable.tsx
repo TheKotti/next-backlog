@@ -48,7 +48,7 @@ export const BacklogTable = ({ games, isAdmin }: Props) => {
     state: { pageIndex, pageSize },
   } = useTable(
     {
-      columns: backlogTableColumns,
+      columns: backlogTableColumns as any, // TODO: Impletement cover art things here, and to randomizer
       data,
       initialState: {
         hiddenColumns,
