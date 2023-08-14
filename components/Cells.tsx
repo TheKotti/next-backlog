@@ -5,7 +5,7 @@ import { toast } from 'react-toastify'
 
 import { VodDialog } from './VodDialog'
 import styles from '../styles/GameTable.module.css'
-import Img from './Img'
+import CoverImage from './CoverImage'
 
 export const CommentCell = ({ value }) => {
   return <span dangerouslySetInnerHTML={{ __html: value.replace(/\n/g, '<br />') }}></span>
@@ -38,7 +38,7 @@ export const VodCell = ({ value, row }) => {
 
 export const TitleCell = ({ value, row, showCovers }) => {
   if (showCovers) {
-    return <Img id={row.original.igdbId} />
+    return <CoverImage id={row.original.coverImageId} />
   }
   return (
     <div>

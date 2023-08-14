@@ -1,9 +1,16 @@
 import axios from 'axios'
 import { Session, getServerSession } from 'next-auth'
 import authOptions from './auth/[...nextauth]'
+import { v2 as cloudinary } from 'cloudinary'
 
 const { connectToDatabase } = require('../../lib/mongo')
 const ObjectId = require('mongodb').ObjectId
+
+cloudinary.config({
+  cloud_name: process.env.NEXT_PUBLIC_IMG_CLOUD_NAME,
+  api_key: process.env.IMG_API_KEY,
+  api_secret: process.env.IMG_API_SECRET,
+})
 
 export default async function handler(req, res) {
   if (!req.body && !req.query.id) {
@@ -134,8 +141,18 @@ async function addGame(req, res) {
         }
         // connect to the database
         let { db } = await connectToDatabase()
-        // add the post
+        // add the game
         await db.collection('games').insertOne(game)
+
+        // Add cover image
+        cloudinary.uploader.upload(
+          `https://images.igdb.com/igdb/image/upload/t_cover_big/${fetchedGame.cover.image_id}.png`,
+          { public_id: fetchedGame.cover.image_id, folder: 'covers', format: 'jpg' },
+          function (error, result) {
+            console.error('cover image error', error)
+          }
+        )
+
         // return a message
         res.json({
           message: 'Game added successfully',

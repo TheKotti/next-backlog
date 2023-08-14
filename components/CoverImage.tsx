@@ -12,10 +12,10 @@ type Props = {
   id: string
 }
 
-const Img = ({ id }: Props) => {
-  const myImage = cld.image(id).resize(fill().width(150))
+const CoverImage = ({ id }: Props) => {
+  const myImage = cld.image(`covers/${id}`).resize(fill().width(150))
 
   return <AdvancedImage cldImg={myImage} />
 }
 
-export default Img
+export default CoverImage
