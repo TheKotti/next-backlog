@@ -1,0 +1,31 @@
+.imageContainer {
+    position: relative;
+}
+
+.overlay {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 100%;
+    width: 100%;
+    opacity: 0;
+    transition: .25s ease;
+    background-color: #000000cc;
+}
+
+.imageContainer:hover .overlay {
+    opacity: 1;
+}
+
+.titleText {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: white;
+    font-size: 16px;
+    font-weight: bold;
+    text-align: center;
+}

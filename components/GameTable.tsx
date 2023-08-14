@@ -15,7 +15,7 @@ type Props = {
 
 export const GameTable = ({ games, isAdmin }: Props) => {
   const [stealthFilter, setStealthFilter] = useState(false)
-  const [showCovers, setShowCovers] = useState(false)
+  const [showCovers, setShowCovers] = useState(true)
   const [titleFilter, setTitleFilter] = useState('')
   const { params, updateParams, paramsLoaded } = useNextQueryParams()
 
