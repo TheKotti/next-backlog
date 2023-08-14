@@ -2,7 +2,6 @@ import axios from 'axios'
 import { getSession } from 'next-auth/react'
 import router from 'next/router'
 import { useEffect, useState } from 'react'
-import DatePicker from 'react-datepicker'
 import 'react-datepicker/dist/react-datepicker.css'
 import { toast } from 'react-toastify'
 
