@@ -11,6 +11,7 @@
   "dependencies": {
     "@cloudinary/react": "^1.11.2",
     "@cloudinary/url-gen": "^1.11.1",
+    "@vercel/analytics": "^1.0.2",
     "axios": "^0.26.1",
     "bootstrap": "^5.2.0",
     "chart.js": "^4.3.0",
