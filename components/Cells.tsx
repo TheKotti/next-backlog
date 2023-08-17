@@ -38,7 +38,7 @@ export const VodCell = ({ value, row }) => {
 
 export const TitleCell = ({ value, row, showCovers }) => {
   if (showCovers) {
-    return <CoverImage originalRow={row.original} />
+    return <CoverImage game={row.original as Game} />
   }
   return (
     <div>

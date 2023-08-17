@@ -1,5 +1,6 @@
 .imageContainer {
     position: relative;
+    width: fit-content;
 }
 
 .overlay {
@@ -25,7 +26,7 @@
     left: 50%;
     transform: translate(-50%, -50%);
     color: white;
-    font-size: 16px;
+    font-size: 14px;
     font-weight: bold;
     text-align: center;
 }

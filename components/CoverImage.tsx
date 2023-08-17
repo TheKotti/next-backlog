@@ -11,20 +11,20 @@ const cld = new Cloudinary({
 })
 
 type Props = {
-  originalRow: any
+  game: Game
 }
 
-const CoverImage = ({ originalRow }: Props) => {
-  const myImage = cld.image(`covers/${originalRow.coverImageId}`).resize(fill().width(150))
+const CoverImage = ({ game }: Props) => {
+  const myImage = cld.image(`covers/${game.coverImageId}`).resize(fill().width(150))
 
-  const title = `${originalRow.title}${originalRow.releaseYear ? ' (' + originalRow.releaseYear + ')' : ''}`
+  const title = `${game.title}${game.releaseYear ? ' (' + game.releaseYear + ')' : ''}`
 
   return (
     <div className={styles.imageContainer}>
       <AdvancedImage cldImg={myImage} />
 
       <div className={styles.overlay}>
-        <a href={originalRow.igdbUrl} target='_blank' rel='noreferrer'>
+        <a href={game.igdbUrl} target='_blank' rel='noreferrer'>
           <div className={styles.titleText}>{title}</div>
         </a>
       </div>
