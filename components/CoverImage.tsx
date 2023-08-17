@@ -15,7 +15,7 @@ type Props = {
 }
 
 const CoverImage = ({ game }: Props) => {
-  const myImage = cld.image(`covers/${game.coverImageId}`).resize(fill().width(150))
+  const myImage = cld.image(`covers/${game.coverImageId}`).resize(fill().width(150).height(200))
 
   const title = `${game.title}${game.releaseYear ? ' (' + game.releaseYear + ')' : ''}`
 

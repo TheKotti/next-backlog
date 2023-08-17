@@ -43,13 +43,18 @@ export default function Goty({ games }: Props) {
             <h2>{'Best games by year'}</h2>
           </div>
 
-          <div style={{ display: 'flex', flexWrap: 'wrap' }}>
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '2em' }}>
             {Object.keys(games)
               .reverse()
               .map((x) => {
-                return games[x].map((y) => {
-                  return <CoverImage key={y.igdbId} game={y} />
-                })
+                return (
+                  <div key={x}>
+                    <h3>{x}</h3>
+                    {games[x].map((y) => {
+                      return <CoverImage key={y.igdbId} game={y} />
+                    })}
+                  </div>
+                )
               })}
           </div>
         </div>
@@ -92,6 +97,10 @@ export async function getStaticProps(ctx) {
     }
 
     bestByYear[key] = Array.from(idMap.values())
+
+    if (!bestByYear[key].length) {
+      delete bestByYear[key]
+    }
   })
 
   return {
