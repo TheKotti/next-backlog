@@ -6,7 +6,7 @@ import { SessionProvider } from 'next-auth/react'
 import { ToastContainer } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 
-function MyApp({ Component, pageProps: { session, ...pageProps } }: AppProps) {
+function MyApp({ Component, pageProps: { session, ...pageProps } }: any) {
   return (
     <SessionProvider>
       <Component {...pageProps} />
