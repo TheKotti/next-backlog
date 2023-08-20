@@ -18,8 +18,6 @@ type Props = {
 export default function Home({ isAdmin, username }: Props) {
   const [viewBacklog, setViewBacklog] = useState(false)
 
-  console.log('PROPS', isAdmin, username)
-
   const games = useGamesList(isAdmin)
 
   const playedGames = useMemo(
