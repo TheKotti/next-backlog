@@ -19,7 +19,6 @@ export default function Nav(props: Props) {
         .then(() => toast.success('Revalidated'))
         .catch((err) => {
           toast.error('REVALIDATION FAILED')
-          console.log('eee', err)
         })
     } else {
       console.log("YOU'RE NO ADMIN")
