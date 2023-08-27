@@ -7,9 +7,14 @@ import { VodDialog } from './VodDialog'
 import styles from '../styles/GameTable.module.css'
 import CoverImage from './CoverImage'
 
-export const CommentCell = ({ value }) => {
+export const CommentCell = ({ value, row }) => {
+  const valueWithStealth = row.original.stealth
+    ? value + `\n- Sneaky <span class=${styles['color-icon']}>✔️</span>`
+    : value
   return (
-    <span dangerouslySetInnerHTML={{ __html: value.replace(/\n/g, `<div class="${styles['br-div']}"></div>`) }}></span>
+    <span
+      dangerouslySetInnerHTML={{ __html: valueWithStealth.replace(/\n/g, `<div class="${styles['br-div']}"></div>`) }}
+    ></span>
   )
 }
 
@@ -21,7 +26,7 @@ export const DateCell = ({ value, row }) => {
 }
 
 export const CheckmarkCell = ({ value }) => {
-  return <span style={{ fontFamily: 'Noto Color Emoji' }}>{value ? '✔️' : ''}</span>
+  return <span className={styles['color-icon']}>{value ? '✔️' : ''}</span>
 }
 
 export const VodCell = ({ value, row }) => {

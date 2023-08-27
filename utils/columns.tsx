@@ -27,7 +27,7 @@ export const gameTableColumns = [
   {
     Header: 'Comments',
     accessor: 'comment',
-    Cell: CommentCell,
+    Cell: ({ value, row }) => CommentCell({ value, row }),
     disableSortBy: true,
   },
   {
@@ -35,12 +35,6 @@ export const gameTableColumns = [
     accessor: 'timeSpent',
     sortDescFirst: true,
     Cell: FinishedCell,
-  },
-  {
-    Header: 'Sneaky',
-    accessor: 'stealth',
-    disableSortBy: true,
-    Cell: CheckmarkCell,
   },
   {
     Header: 'Vods',
