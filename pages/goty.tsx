@@ -48,11 +48,15 @@ export default function Goty({ games }: Props) {
               .reverse()
               .map((x) => {
                 return (
-                  <div key={x}>
-                    <h3>{x}</h3>
-                    {games[x].map((y) => {
-                      return <CoverImage key={y.igdbId} game={y} />
-                    })}
+                  <div key={x} style={{ border: '1px solid white', padding: '1em' }}>
+                    <h3 className='text-center' style={{ textDecoration: 'underline' }}>
+                      {x}
+                    </h3>
+                    <div style={{ display: 'flex', gap: '2em' }}>
+                      {games[x].map((y) => {
+                        return <CoverImage key={y.igdbId} game={y} />
+                      })}
+                    </div>
                   </div>
                 )
               })}
