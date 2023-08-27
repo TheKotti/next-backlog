@@ -8,7 +8,9 @@ import styles from '../styles/GameTable.module.css'
 import CoverImage from './CoverImage'
 
 export const CommentCell = ({ value }) => {
-  return <span dangerouslySetInnerHTML={{ __html: value.replace(/\n/g, '<br />') }}></span>
+  return (
+    <span dangerouslySetInnerHTML={{ __html: value.replace(/\n/g, `<div class="${styles['br-div']}"></div>`) }}></span>
+  )
 }
 
 export const DateCell = ({ value, row }) => {

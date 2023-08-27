@@ -43,3 +43,7 @@
     flex-direction: column;
     text-decoration: underline;
 }
+
+.br-div {
+    height: 0.75em;
+}
