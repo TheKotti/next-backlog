@@ -17,7 +17,7 @@ export const GameTable = ({ games, isAdmin }: Props) => {
   const [stealthFilter, setStealthFilter] = useState(false)
   const [showCovers, setShowCovers] = useState(true)
   const [titleFilter, setTitleFilter] = useState('')
-  const { params, updateParams, paramsLoaded } = useNextQueryParams()
+  const { params, updateParams, paramsLoaded } = useNextQueryParams({ sortBy: 'finishedDate', sortDesc: true })
 
   const data: Array<any> = useMemo(() => {
     return games
