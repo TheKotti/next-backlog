@@ -3,6 +3,7 @@ import { fill } from '@cloudinary/url-gen/actions/resize'
 import { Cloudinary } from '@cloudinary/url-gen'
 
 import styles from '../styles/CoverImage.module.css'
+import { ScoreIndicator } from './ScoreIndicator'
 
 const cld = new Cloudinary({
   cloud: {
@@ -12,9 +13,10 @@ const cld = new Cloudinary({
 
 type Props = {
   game: Game
+  showScore?: boolean
 }
 
-const CoverImage = ({ game }: Props) => {
+const CoverImage = ({ game, showScore }: Props) => {
   const myImage = cld.image(`covers/${game.coverImageId}`).resize(fill().width(150).height(200))
 
   const title = `${game.title}${game.releaseYear ? ' (' + game.releaseYear + ')' : ''}`
@@ -26,6 +28,11 @@ const CoverImage = ({ game }: Props) => {
       <div className={styles.overlay}>
         <a href={game.igdbUrl} target='_blank' rel='noreferrer'>
           <div className={styles.titleText}>{title}</div>
+          {showScore && (
+            <div className={styles.scoreIndicator}>
+              <ScoreIndicator rating={game.rating} />
+            </div>
+          )}
         </a>
       </div>
     </div>

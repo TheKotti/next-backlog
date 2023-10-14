@@ -43,18 +43,22 @@ export default function Goty({ games }: Props) {
             <h2>{'Best games by year'}</h2>
           </div>
 
+          {/* For the love of an Old One's arse, stop using inline CSS */}
           <div style={{ display: 'flex', flexWrap: 'wrap', gap: '2em' }}>
             {Object.keys(games)
               .reverse()
               .map((x) => {
                 return (
-                  <div key={x} style={{ border: '1px solid white', padding: '1em' }}>
-                    <h3 className='text-center' style={{ textDecoration: 'underline' }}>
+                  <div
+                    key={x}
+                    style={{ border: '1px solid white', padding: '1em', backgroundColor: 'rgba(255, 255, 255, 0.1)' }}
+                  >
+                    <h3 className='text-center' style={{ textDecoration: 'underline', color: 'white' }}>
                       {x}
                     </h3>
-                    <div style={{ display: 'flex', gap: '2em' }}>
+                    <div style={{ display: 'flex', gap: '4em' }}>
                       {games[x].map((y) => {
-                        return <CoverImage key={y.igdbId} game={y} />
+                        return <CoverImage key={y.igdbId} game={y} showScore />
                       })}
                     </div>
                   </div>
