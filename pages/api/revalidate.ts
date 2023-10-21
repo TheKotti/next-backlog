@@ -5,7 +5,8 @@ export default async function handler(req, res) {
   }
 
   try {
-    const asd = await res.revalidate('/')
+    await res.revalidate('/')
+    await res.revalidate('/goty')
     return res.json({ revalidated: true })
   } catch (err) {
     console.log('REVALIDATION ERROR', err)

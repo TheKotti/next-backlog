@@ -60,6 +60,7 @@ export const StatsDialog = (props: Props) => {
     const finishedGames = games.filter((x) => x.finished && x.finished !== 'Nope').length
     const droppedGames = games.filter((x) => x.finished && x.finished === 'Nope').length
     const backlogLength = games.filter((x) => !x.finishedDate).length
+    const playedGamesLength = games.filter((x) => x.finishedDate).length
 
     return [
       {
@@ -76,19 +77,19 @@ export const StatsDialog = (props: Props) => {
       },
       {
         key: 'Streamed games',
-        value: streamedGames,
+        value: `${streamedGames} / ${playedGamesLength} (${Math.floor((streamedGames / playedGamesLength) * 100)}%)`,
       },
       {
         key: 'Finished games',
-        value: finishedGames,
+        value: `${finishedGames} / ${playedGamesLength} (${Math.floor((finishedGames / playedGamesLength) * 100)}%)`,
       },
       {
         key: 'Dropped games',
-        value: droppedGames,
+        value: `${droppedGames} / ${playedGamesLength} (${Math.floor((droppedGames / playedGamesLength) * 100)}%)`,
       },
       {
         key: 'Sneaky games',
-        value: sneakyGames,
+        value: `${sneakyGames} / ${playedGamesLength} (${Math.floor((sneakyGames / playedGamesLength) * 100)}%)`,
       },
       {
         key: 'Games in backlog',
