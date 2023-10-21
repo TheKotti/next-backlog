@@ -27,7 +27,7 @@ const CoverImage = ({ game, showScore }: Props) => {
 
       <div className={styles.overlay}>
         <a href={game.igdbUrl} target='_blank' rel='noreferrer'>
-          <div className={styles.titleText}>{title}</div>
+          <div className={`${styles.titleText} ${showScore && styles.raiseText}`}>{title}</div>
           {showScore && (
             <div className={styles.scoreIndicator}>
               <ScoreIndicator rating={game.rating} />
