@@ -45,7 +45,7 @@ export default function Home({ games }: Props) {
               <a href='https://www.twitch.tv/thekotti' target='_blank' rel='noreferrer' className='col'>
                 <Icon type='twitch' size={32} />
               </a>
-              <a href='https://twitter.com/TheKotti' target='_blank' rel='noreferrer' className='col'>
+              <a href='https://bsky.app/profile/thekotti.bsky.social' target='_blank' rel='noreferrer' className='col'>
                 <Icon type='twitter' size={32} />
               </a>
               <a href='https://discord.gg/thekotti' target='_blank' rel='noreferrer' className='col'>
