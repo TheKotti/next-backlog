@@ -31,7 +31,15 @@ export const CheckmarkCell = ({ value }) => {
 
 export const VodCell = ({ value, row }) => {
   if (row.original.vods) {
-    const links = row.original.vods.map((vod, index) => {
+    const links = row.original.vods.map((vod: string, index: number) => {
+      if (vod.includes(';')) {
+        const [link, title] = vod.split(';')
+        return (
+          <a key={link} href={link}>
+            {title}
+          </a>
+        )
+      }
       return (
         <a key={vod} href={vod}>
           Part {index + 1}
