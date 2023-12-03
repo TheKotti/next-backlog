@@ -35,7 +35,7 @@ export const VodCell = ({ value, row }) => {
       if (vod.includes(';')) {
         const [link, title] = vod.split(';')
         return (
-          <a key={link} href={link}>
+          <a key={link} href={link} className='mt-2'>
             {title}
           </a>
         )
