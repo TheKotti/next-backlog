@@ -68,7 +68,7 @@ export const StatsDialog = (props: Props) => {
         value: averageRating.toFixed(2),
       },
       {
-        key: 'Average time per game',
+        key: 'Average game length',
         value: `${averageTime.toFixed(2)} hours`,
       },
       {
@@ -77,19 +77,19 @@ export const StatsDialog = (props: Props) => {
       },
       {
         key: 'Streamed games',
-        value: `${streamedGames} / ${playedGamesLength} (${Math.floor((streamedGames / playedGamesLength) * 100)}%)`,
-      },
-      {
-        key: 'Finished games',
-        value: `${finishedGames} / ${playedGamesLength} (${Math.floor((finishedGames / playedGamesLength) * 100)}%)`,
-      },
-      {
-        key: 'Dropped games',
-        value: `${droppedGames} / ${playedGamesLength} (${Math.floor((droppedGames / playedGamesLength) * 100)}%)`,
+        value: `${streamedGames}`,
       },
       {
         key: 'Sneaky games',
-        value: `${sneakyGames} / ${playedGamesLength} (${Math.floor((sneakyGames / playedGamesLength) * 100)}%)`,
+        value: `${sneakyGames}`,
+      },
+      {
+        key: 'Finishing rate',
+        value: `${Math.floor((finishedGames / playedGamesLength) * 100)}%`,
+      },
+      {
+        key: 'Played games',
+        value: playedGamesLength,
       },
       {
         key: 'Games in backlog',
