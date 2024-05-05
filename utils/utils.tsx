@@ -1,5 +1,28 @@
 import { Cell, ColumnInstance, Row } from 'react-table'
 
+export const getHltbString = (game: Game) => {
+  const main = game.hltbMain || 0
+  const extra = game.hltbExtra || 0
+  const completionist = game.hltbCompletionist || 0
+
+  if (!main) {
+    return '-'
+  }
+  if (main === extra || completionist) {
+    return `${main}h`
+  }
+  if (extra > 0) {
+    return `${main}-${extra}h`
+  }
+  if (completionist > 0) {
+    return `${main}-${completionist}h`
+  }
+  if (extra === 0 && completionist === 0) {
+    return `${main}h`
+  }
+  return '-'
+}
+
 /*********************************************************************
  * SORTING FUNCTIONS
  *********************************************************************/

@@ -1,6 +1,6 @@
 /* eslint-disable react/jsx-key */
 import { useMemo, useState } from 'react'
-import { Cell, Row, usePagination, useSortBy, useTable } from 'react-table'
+import { usePagination, useSortBy, useTable } from 'react-table'
 
 import styles from '../styles/GameTable.module.css'
 import { backlogTableColumns } from '../utils/columns'

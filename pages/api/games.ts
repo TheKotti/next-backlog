@@ -2,6 +2,7 @@ import axios from 'axios'
 import { Session, getServerSession } from 'next-auth'
 import authOptions from './auth/[...nextauth]'
 import { v2 as cloudinary } from 'cloudinary'
+import { HowLongToBeatService } from 'howlongtobeat'
 
 const { connectToDatabase } = require('../../lib/mongo')
 const ObjectId = require('mongodb').ObjectId
@@ -11,6 +12,8 @@ cloudinary.config({
   api_key: process.env.IMG_API_KEY,
   api_secret: process.env.IMG_API_SECRET,
 })
+
+let hltbService = new HowLongToBeatService()
 
 export default async function handler(req, res) {
   if (!req.body && !req.query.id) {
@@ -119,6 +122,9 @@ async function addGame(req, res) {
           ? Math.min(...fetchedGame.release_dates.map((x) => x.y).filter((x) => x))
           : null
 
+        const hltbResponse = await hltbService.search(fetchedGame.name)
+        const hltbItem = hltbResponse.filter((x) => x.similarity === 1).sort((a, b) => Number(a.id) - Number(b.id))?.[0]
+
         const game: Game = {
           title: fetchedGame.name,
           igdbId: fetchedGame.id,
@@ -138,7 +144,11 @@ async function addGame(req, res) {
           platform,
           streamed,
           vods: null,
+          hltbMain: hltbItem?.gameplayMain,
+          hltbExtra: hltbItem?.gameplayMainExtra,
+          hltbCompletionist: hltbItem?.gameplayCompletionist,
         }
+
         // connect to the database
         let { db } = await connectToDatabase()
         // add the game

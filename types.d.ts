@@ -18,6 +18,9 @@ type Game = {
   tss: boolean | null
   streamed: boolean | null
   vods: Array<string> | null
+  hltbMain: number | null
+  hltbExtra: number | null
+  hltbCompletionist: number | null
 }
 
 type RandomGame = Game & {
