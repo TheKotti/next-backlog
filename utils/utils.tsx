@@ -8,17 +8,17 @@ export const getHltbString = (game: Game) => {
   if (!main) {
     return '-'
   }
-  if (main === extra || completionist) {
-    return `${main}h`
+  if (main === extra || main === completionist) {
+    return `${main} h`
   }
   if (extra > 0) {
-    return `${main}-${extra}h`
+    return `${main}-${extra} h`
   }
   if (completionist > 0) {
-    return `${main}-${completionist}h`
+    return `${main}-${completionist} h`
   }
   if (extra === 0 && completionist === 0) {
-    return `${main}h`
+    return `${main} h`
   }
   return '-'
 }

@@ -16,6 +16,10 @@ cloudinary.config({
 let hltbService = new HowLongToBeatService()
 
 export default async function handler(req, res) {
+  if (req.body.hltb) {
+    return setHltb(req, res)
+  }
+
   if (!req.body && !req.query.id) {
     return getGames(req, res)
   }
@@ -202,6 +206,45 @@ async function updateGame(req, res) {
         _id: game._id,
       },
       game
+    )
+
+    // return a message
+    return res.json({
+      message: 'Game updated successfully',
+      success: true,
+    })
+  } catch (error: any) {
+    // return an error
+    return res.status(500).json({ errorType: 'updateGameError', error })
+  }
+}
+
+async function setHltb(req, res) {
+  try {
+    const session: Session | null = await getServerSession(req, res, authOptions)
+
+    if (session?.user?.name !== process.env.ADMIN_USER_NAME) {
+      res.status(401).json({ errorType: 'updateGameSessionError', session, error: 'Unauthorized' })
+    }
+
+    const hltbResponse = await hltbService.search(req.body.title)
+    const hltbItem = hltbResponse.filter((x) => x.similarity === 1).sort((a, b) => Number(a.id) - Number(b.id))?.[0]
+
+    // connect to the database
+    let { db } = await connectToDatabase()
+
+    // update the game data
+    await db.collection('games').updateOne(
+      {
+        _id: new ObjectId(req.body.id),
+      },
+      {
+        $set: {
+          hltbMain: hltbItem?.gameplayMain,
+          hltbExtra: hltbItem?.gameplayMainExtra,
+          hltbCompletionist: hltbItem?.gameplayCompletionist,
+        },
+      }
     )
 
     // return a message

@@ -1,4 +1,4 @@
-import { AdminCell, CheckmarkCell, CommentCell, DateCell, FinishedCell, TitleCell, VodCell } from '../components/Cells'
+import { AdminCell, CommentCell, DateCell, FinishedCell, TitleCell, VodCell } from '../components/Cells'
 import { ScoreIndicator } from '../components/ScoreIndicator'
 import { dateSort, scoreSort } from './utils'
 
@@ -59,6 +59,10 @@ export const backlogTableColumns = [
   {
     Header: 'Blocked by',
     accessor: 'notPollable',
+  },
+  {
+    Header: 'Howlongtobeat',
+    accessor: 'hltbString',
   },
   {
     Header: 'Admin',

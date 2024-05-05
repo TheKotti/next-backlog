@@ -4,7 +4,7 @@ import { usePagination, useSortBy, useTable } from 'react-table'
 
 import styles from '../styles/GameTable.module.css'
 import { backlogTableColumns } from '../utils/columns'
-import { formatCell } from '../utils/utils'
+import { formatCell, getHltbString } from '../utils/utils'
 
 type Props = {
   games: Array<Game>
@@ -24,6 +24,7 @@ export const BacklogTable = ({ games, isAdmin }: Props) => {
           notPollable: x.notPollable,
           igdbUrl: x.igdbUrl,
           releaseYear: x.releaseYear,
+          hltbString: getHltbString(x),
         }
       })
   }, [games, titleFilter])
