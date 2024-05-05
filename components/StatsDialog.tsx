@@ -51,6 +51,7 @@ export const StatsDialog = (props: Props) => {
     // This filter crap shouldn't be necessary but fuck it
     const ratings = games.map((x) => x.rating).filter((x): x is number => x !== null)
     const times = games.map((x) => x.timeSpent).filter((x): x is number => x !== null)
+    const backlog = games.filter((x) => !x.finishedDate)
 
     const averageRating = ratings.reduce((a, b) => a + b, 0) / ratings.length
     const totalTime = times.reduce((a, b) => a + b, 0)
@@ -59,8 +60,12 @@ export const StatsDialog = (props: Props) => {
     const streamedGames = games.filter((x) => x.streamed).length
     const finishedGames = games.filter((x) => x.finished && x.finished !== 'Nope').length
     const droppedGames = games.filter((x) => x.finished && x.finished === 'Nope').length
-    const backlogLength = games.filter((x) => !x.finishedDate).length
+    const backlogLength = backlog.length
     const playedGamesLength = games.filter((x) => x.finishedDate).length
+    const backlogTime = backlog
+      .map((x) => x.hltbMain)
+      .filter((x) => x)
+      .reduce((a, b) => (a || 0) + (b || 0), 0)
 
     return [
       {
@@ -94,6 +99,10 @@ export const StatsDialog = (props: Props) => {
       {
         key: 'Games in backlog',
         value: backlogLength,
+      },
+      {
+        key: 'Backlog time estimate',
+        value: `${backlogTime} hours`,
       },
     ]
   }, [games])
