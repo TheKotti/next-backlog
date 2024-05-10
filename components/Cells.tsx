@@ -41,7 +41,7 @@ export const VodCell = ({ value, row }) => {
         )
       }
       return (
-        <a key={vod} href={vod}>
+        <a key={vod} href={vod} style={{ whiteSpace: 'nowrap' }}>
           Part {index + 1}
         </a>
       )
