@@ -58,10 +58,10 @@ export const StatsDialog = (props: Props) => {
     const averageTime = totalTime / times.length
     const sneakyGames = games.filter((x) => x.stealth).length
     const streamedGames = games.filter((x) => x.streamed).length
-    const finishedGames = games.filter((x) => x.finished && x.finished !== 'Nope').length
+    const finishedGames = games.filter((x) => x.finished && x.finished !== 'Nope' && x.finished !== 'Happening').length
     const droppedGames = games.filter((x) => x.finished && x.finished === 'Nope').length
     const backlogLength = backlog.length
-    const playedGamesLength = games.filter((x) => x.finishedDate).length
+    const playedGamesLength = games.filter((x) => x.finishedDate && x.finished !== 'Happening').length
     const backlogTime = backlog
       .map((x) => x.hltbMain)
       .filter((x) => x)
