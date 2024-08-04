@@ -2,7 +2,7 @@ import axios from 'axios'
 import { Session, getServerSession } from 'next-auth'
 import authOptions from './auth/[...nextauth]'
 import { v2 as cloudinary } from 'cloudinary'
-import { HowLongToBeatService } from 'howlongtobeat'
+import { HowLongToBeatEntry, HowLongToBeatService } from 'howlongtobeat'
 
 const { connectToDatabase } = require('../../lib/mongo')
 const ObjectId = require('mongodb').ObjectId
@@ -107,27 +107,33 @@ async function addGame(req, res) {
         if (getGameResponse.data.length < 1) {
           res.status(404).json({ error: 'Not found' })
         }
-
+        
         const fetchedGame = getGameResponse.data[0]
-
+        
         const keywords: Array<string> = []
-
+        
         if (fetchedGame.genres) {
           const genres = fetchedGame.genres.map((x) => x.name)
           keywords.push(...genres)
         }
-
+        
         if (fetchedGame.themes) {
           const themes = fetchedGame.themes.map((x) => x.name)
           keywords.push(...themes)
         }
         const developers = fetchedGame.involved_companies?.filter((x) => x.developer)?.map((x) => x.company.name) || []
         const releaseYear = fetchedGame.release_dates
-          ? Math.min(...fetchedGame.release_dates.map((x) => x.y).filter((x) => x))
-          : null
+        ? Math.min(...fetchedGame.release_dates.map((x) => x.y).filter((x) => x))
+        : null
+        
+        let hltbResponse: HowLongToBeatEntry[] = []
+        hltbService.search(fetchedGame.name).then(x => {
+          hltbResponse = x
+        }).catch(err => {
+          console.error('HLTB ERROR', err)
+        })
 
-        const hltbResponse = await hltbService.search(fetchedGame.name)
-        const hltbItem = hltbResponse.filter((x) => x.similarity === 1).sort((a, b) => Number(a.id) - Number(b.id))?.[0]
+        const hltbItem = hltbResponse?.filter((x) => x.similarity === 1).sort((a, b) => Number(a.id) - Number(b.id))?.[0]
 
         const game: Game = {
           title: fetchedGame.name,
