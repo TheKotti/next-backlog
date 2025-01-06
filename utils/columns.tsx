@@ -57,10 +57,6 @@ export const backlogTableColumns = [
     Cell: TitleCell,
   },
   {
-    Header: 'Blocked by',
-    accessor: 'notPollable',
-  },
-  {
     Header: 'Howlongtobeat',
     accessor: 'hltbString',
   },
