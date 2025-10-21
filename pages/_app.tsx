@@ -1,5 +1,6 @@
 import 'bootstrap/dist/css/bootstrap.css'
 import '../styles/globals.css'
+import "../styles/react-datepicker.css"
 import type { AppProps } from 'next/app'
 import { Analytics } from '@vercel/analytics/react'
 import { SessionProvider } from 'next-auth/react'
