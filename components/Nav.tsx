@@ -34,15 +34,15 @@ export default function Nav(props: Props) {
           </button>
 
           <Link href='/admin'>
-            <a>Home</a>
+            Home
           </Link>
 
           <Link href='/add-game'>
-            <a>Add game</a>
+            Add game
           </Link>
 
           <Link href='/random'>
-            <a>Random</a>
+            Random
           </Link>
 
           <button className='btn btn-light' onClick={() => refresh()}>
