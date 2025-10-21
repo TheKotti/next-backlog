@@ -1,70 +1,53 @@
+import { ColumnDef } from '@tanstack/react-table'
 import { AdminCell, CommentCell, DateCell, FinishedCell, TitleCell, VodCell } from '../components/Cells'
 import { ScoreIndicator } from '../components/ScoreIndicator'
 import { dateSort, scoreSort } from './utils'
 
-export const gameTableColumns = [
+export const gameTableColumns: ColumnDef<Game>[] = [
   {
-    Header: 'Date',
-    accessor: 'finishedDate',
+    header: 'Date',
+    accessorKey: 'finishedDate',
     sortDescFirst: true,
-    Cell: DateCell,
-    sortType: dateSort,
+    cell: ({ getValue, row }) => DateCell({ getValue, row }),
+    sortingFn: dateSort,
   },
   {
-    Header: 'Game',
-    accessor: 'title',
-    Cell: ({ value, row, showCovers }) => TitleCell({ value, row, showCovers }),
+    header: 'Game',
+    accessorKey: 'title',
+    cell: ({ getValue, row }) => TitleCell({ getValue, row, showCovers: true }),
   },
   {
-    Header: 'Rating',
-    accessor: 'rating',
+    header: 'Rating',
+    accessorKey: 'rating',
     sortDescFirst: true,
-    Cell: ({ value }) => {
-      return <ScoreIndicator rating={value} />
+    cell: ({ getValue }) => {
+      var value = getValue()
+      return <ScoreIndicator rating={value as (number | null)} />
     },
-    sortType: scoreSort,
+    sortingFn: scoreSort,
   },
   {
-    Header: 'Comments',
-    accessor: 'comment',
-    Cell: ({ value, row }) => CommentCell({ value, row }),
-    disableSortBy: true,
+    header: 'Comments',
+    accessorKey: 'comment',
+    cell: ({ getValue, row }) => CommentCell({ getValue, row }),
+    enableSorting: false,
   },
   {
-    Header: 'Finished',
-    accessor: 'timeSpent',
+    header: 'Finished',
+    accessorKey: 'timeSpent',
     sortDescFirst: true,
-    Cell: FinishedCell,
+    cell: FinishedCell,
   },
   {
-    Header: 'Vods',
-    accessor: 'streamed',
-    disableSortBy: true,
-    Cell: VodCell,
+    header: 'Vods',
+    accessorKey: 'streamed',
+    enableSorting: false,
+    cell: VodCell,
   },
   {
-    Header: 'Admin',
-    accessor: '_id',
-    disableSortBy: true,
-    Cell: ({ value, row }) => AdminCell({ value, row, showVodButton: true }),
-  },
-]
-
-export const backlogTableColumns = [
-  {
-    Header: 'Game',
-    accessor: 'title',
-    Cell: TitleCell,
-  },
-  {
-    Header: 'Howlongtobeat',
-    accessor: 'hltbString',
-  },
-  {
-    Header: 'Admin',
-    accessor: '_id',
-    disableGlobalFilter: true,
-    disableSortBy: true,
-    Cell: ({ value, row }) => AdminCell({ value, row, showNextButton: true }),
+    header: 'Admin',
+    accessorKey: '_id',
+    enableSorting: false,
+    cell: ({ getValue, row }) => AdminCell({ getValue, row, showVodButton: true }),
   },
 ]

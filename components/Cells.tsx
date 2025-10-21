@@ -7,10 +7,10 @@ import { VodDialog } from './VodDialog'
 import styles from '../styles/GameTable.module.css'
 import CoverImage from './CoverImage'
 
-export const CommentCell = ({ value, row }) => {
+export const CommentCell = ({ getValue, row }) => {
   const valueWithStealth = row.original.stealth
-    ? value + `\n- Sneaky <span class=${styles['color-icon']}>✔️</span>`
-    : value
+    ? getValue() + `\n- Sneaky <span class=${styles['color-icon']}>✔️</span>`
+    : getValue()
   return (
     <span
       dangerouslySetInnerHTML={{ __html: valueWithStealth.replace(/\n/g, `<div class="${styles['br-div']}"></div>`) }}
@@ -18,18 +18,22 @@ export const CommentCell = ({ value, row }) => {
   )
 }
 
-export const DateCell = ({ value, row }) => {
-  if (row.original['finished'] === 'Happening') return <span>Ongoing or soon™</span>
+export const DateCell = ({ getValue, row }) => {
+  let dateValue = ""
+  if (row.original['finished'] === 'Happening') {
+    dateValue = "Ongoing or soon™"
+  } else {
+    dateValue = getValue() ? dayjs(new Date(getValue())).format('DD MMM YYYY') : ''
+  }
 
-  const formattedDate = value ? dayjs(new Date(value)).format('DD MMM YYYY') : ''
-  return <span>{formattedDate}</span>
+  return <span className='d-flex w-100 text-center'>{dateValue}</span>
 }
 
-export const CheckmarkCell = ({ value }) => {
-  return <span className={styles['color-icon']}>{value ? '✔️' : ''}</span>
+export const CheckmarkCell = ({ getValue }) => {
+  return <span className={styles['color-icon']}>{getValue() ? '✔️' : ''}</span>
 }
 
-export const VodCell = ({ value, row }) => {
+export const VodCell = ({ getValue, row }) => {
   if (row.original.vods) {
     const links = row.original.vods.map((vod: string, index: number) => {
       if (vod.includes(';')) {
@@ -41,23 +45,33 @@ export const VodCell = ({ value, row }) => {
         )
       }
       return (
-        <a key={vod} href={vod} style={{ whiteSpace: 'nowrap' }}>
+        <a key={vod} href={vod} className='text-nowrap'>
           Part {index + 1}
         </a>
       )
     })
-    return <div className={`${styles['vodCell']}`}>{links}</div>
+    return (
+      <u>
+        <div className='d-flex flex-column text-center'>
+          {links}
+        </div>
+      </u>
+    )
   }
-  return <span style={{ color: 'darkcyan' }}>{value ? 'No vods available' : 'Not streamed'}</span>
+  return (
+    <span className='d-flex text-info text-opacity-75 text-center'>
+      {getValue() ? 'No vods available' : 'Not streamed'}
+    </span>
+  )
 }
 
-export const TitleCell = ({ value, row, showCovers }) => {
+export const TitleCell = ({ getValue, row, showCovers }) => {
   if (showCovers) {
     return <CoverImage game={row.original as Game} />
   }
   return (
     <div>
-      {`${value}${row.original.releaseYear ? ' (' + row.original.releaseYear + ')' : ''}`}
+      {`${getValue()}${row.original.releaseYear ? ' (' + row.original.releaseYear + ')' : ''}`}
       <a
         href={row.original.igdbUrl}
         target='_blank'
@@ -81,28 +95,32 @@ export const TitleCell = ({ value, row, showCovers }) => {
   )
 }
 
-export const FinishedCell = ({ value, row }) => {
-  if (row.original.finished === 'Nope') return <>Did not finish {`(${value}h)`}</>
-  if (row.original.finished === 'Yes') return <>Finished {`(${value}h)`}</>
+export const FinishedCell = ({ getValue, row }) => {
+  let timeSpent = getValue()
 
-  const wordArray = row.original.finished.split(/(\/)/)
-  const withWordBreaks = wordArray.map((x, i) => {
-    return (
-      <React.Fragment key={i}>
-        {x}
-        <wbr />
-      </React.Fragment>
-    )
-  })
+  let finishValue = "";
+  if (row.original.finished === 'Nope') {
+    finishValue = `Did not finish`
+  } else if (row.original.finished === 'Yes') {
+    finishValue = `Finished`
+  } else {
+    const wordArray = row.original.finished.split(/(\/)/)
+    finishValue = wordArray.map((x, i) => {
+      return (
+        <React.Fragment key={i}>
+          {x}
+          <wbr />
+        </React.Fragment>
+      )
+    })
+  }
 
-  return value ? (
-    <>
-      {withWordBreaks} {`(${value}h)`}
-    </>
+  return timeSpent ? (
+    <>{finishValue}&nbsp;{`(${timeSpent}h)`}</>
   ) : null
 }
 
-export const AdminCell = ({ value, row, showVodButton = false, showNextButton = false }) => {
+export const AdminCell = ({ getValue, row, showVodButton = false, showNextButton = false }) => {
   const setUpcoming = () => {
     axios
       .put('api/setUpcoming', { id: row.original._id })
@@ -117,7 +135,7 @@ export const AdminCell = ({ value, row, showVodButton = false, showNextButton = 
 
   return (
     <div className={`${styles['adminCell']}`}>
-      <a href={`/recap?id=${value}`}>Recap</a>
+      <a href={`/recap?id=${getValue()}`}>Recap</a>
 
       {showVodButton && <VodDialog game={row.original} />}
 

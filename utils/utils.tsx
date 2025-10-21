@@ -1,4 +1,4 @@
-import { Cell, ColumnInstance, Row } from 'react-table'
+import { Cell, Row } from '@tanstack/react-table'
 
 export const getHltbString = (game: Game) => {
   const main = game.hltbMain || 0
@@ -26,21 +26,21 @@ export const getHltbString = (game: Game) => {
 /*********************************************************************
  * SORTING FUNCTIONS
  *********************************************************************/
-export const dateSort = (rowA, rowB, id) => {
-  // I am a hack
+export const dateSort = (rowA, rowB) => {
   if (rowA.original['finished'] === 'Happening') return 1
   if (rowB.original['finished'] === 'Happening') return -1
 
-  const a = new Date(rowA.values[id]).getTime()
-  const b = new Date(rowB.values[id]).getTime()
+  const a = new Date(rowA.original['finishedDate']).getTime()
+  const b = new Date(rowB.original['finishedDate']).getTime()
   return a - b
 }
 
-export const scoreSort = (rowA, rowB, id) => {
-  if (rowA.values[id] === rowB.values[id]) {
+export const scoreSort = (rowA, rowB) => {
+  if (rowA.original['rating'] === rowB.original['rating']) {
     return (rowB.original['title'] as string).localeCompare(rowA.original['title'] as string)
   }
-  return rowA.values[id] - rowB.values[id]
+
+  return rowA.original['rating'] - rowB.original['rating']
 }
 
 /*********************************************************************
@@ -73,8 +73,7 @@ export const formatCell = (cell: Cell<object, any>, row: Row<object>, props?: an
 
 const renderCellWithProps = (cell: Cell<object, any>, attrs: object, props?: object) => {
   return (
-    <td {...cell.getCellProps()} {...attrs}>
-      {cell.render('Cell', props)}
+    <td {...attrs}>
     </td>
   )
 }
@@ -87,7 +86,7 @@ const COLUMN_HEADER_IDS = {
   TIME_SPENT: ['timeSpent'],
 }
 
-export const formatHeader = (column: ColumnInstance<object>, isAdmin: boolean) => {
+export const formatHeader = (column: any, isAdmin: boolean) => {
   if (column.id === '_id' && !isAdmin) return
 
   switch (true) {
