@@ -1,7 +1,6 @@
 import React, { useState } from 'react'
 import { Modal } from 'react-bootstrap'
 import DatePicker from 'react-datepicker'
-import 'react-datepicker/dist/react-datepicker.css'
 import dayjs from 'dayjs'
 
 type Props = {
@@ -24,7 +23,7 @@ export const DetailsDialog = (props: Props) => {
           <div>
             <DatePicker
               selected={game.finishedDate ? dayjs(game.finishedDate).toDate() : null}
-              onChange={(date: Date) => setGame({ ...game, finishedDate: date.toISOString() })}
+              onChange={(date) => setGame({ ...game, finishedDate: (date?.toISOString() || null) })}
               placeholderText='Finished date'
               isClearable
             />
