@@ -73,7 +73,7 @@ export const formatCell = (cell: Cell<object, any>, row: Row<object>, props?: an
 
 const renderCellWithProps = (cell: Cell<object, any>, attrs: object, props?: object) => {
   return (
-    <td {...cell.getCellProps()} {...attrs}>
+    <td  {...cell.getCellProps()} {...attrs} key={attrs['key']}>
       {cell.render('Cell', props)}
     </td>
   )

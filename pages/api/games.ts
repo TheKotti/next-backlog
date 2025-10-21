@@ -61,7 +61,7 @@ async function getGame(req, res) {
     // connect to the database
     const { db } = await connectToDatabase()
     // fetch the posts
-    const game = await db.collection('games').findOne({ _id: ObjectId(req.query.id) })
+    const game = await db.collection('games').findOne({ _id: new ObjectId(req.query.id) })
     // return the games
     return res.json(game)
   } catch (error: any) {
@@ -107,25 +107,25 @@ async function addGame(req, res) {
         if (getGameResponse.data.length < 1) {
           res.status(404).json({ error: 'Not found' })
         }
-        
+
         const fetchedGame = getGameResponse.data[0]
-        
+
         const keywords: Array<string> = []
-        
+
         if (fetchedGame.genres) {
           const genres = fetchedGame.genres.map((x) => x.name)
           keywords.push(...genres)
         }
-        
+
         if (fetchedGame.themes) {
           const themes = fetchedGame.themes.map((x) => x.name)
           keywords.push(...themes)
         }
         const developers = fetchedGame.involved_companies?.filter((x) => x.developer)?.map((x) => x.company.name) || []
         const releaseYear = fetchedGame.release_dates
-        ? Math.min(...fetchedGame.release_dates.map((x) => x.y).filter((x) => x))
-        : null
-        
+          ? Math.min(...fetchedGame.release_dates.map((x) => x.y).filter((x) => x))
+          : null
+
         let hltbResponse: HowLongToBeatEntry[] = []
         hltbService.search(fetchedGame.name).then(x => {
           hltbResponse = x
