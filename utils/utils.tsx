@@ -43,6 +43,16 @@ export const scoreSort = (rowA, rowB, id) => {
   return rowA.values[id] - rowB.values[id]
 }
 
+export const titleSort = (rowA, rowB, id) => {
+  const rowAValue: string = rowA.values[id]
+  const rowBValue: string = rowB.values[id]
+
+  const rowAFormatted = rowAValue.startsWith("The ") ? rowAValue.substring(4) : rowAValue
+  const rowBFormatted = rowBValue.startsWith("The ") ? rowBValue.substring(4) : rowBValue
+
+  return rowBFormatted.localeCompare(rowAFormatted)
+}
+
 /*********************************************************************
  * COLUMN FORMATTING
  *********************************************************************/

@@ -55,9 +55,12 @@ export const TitleCell = ({ value, row, showCovers }) => {
   if (showCovers) {
     return <CoverImage game={row.original as Game} />
   }
+
+  const formattedTitle = value.startsWith("The ") ? value.substring(4) + ", The" : value
+
   return (
     <div>
-      {`${value}${row.original.releaseYear ? ' (' + row.original.releaseYear + ')' : ''}`}
+      {`${formattedTitle}${row.original.releaseYear ? ' (' + row.original.releaseYear + ')' : ''}`}
       <a
         href={row.original.igdbUrl}
         target='_blank'

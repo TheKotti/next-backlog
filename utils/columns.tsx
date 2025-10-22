@@ -1,6 +1,6 @@
 import { AdminCell, CommentCell, DateCell, FinishedCell, TitleCell, VodCell } from '../components/Cells'
 import { ScoreIndicator } from '../components/ScoreIndicator'
-import { dateSort, scoreSort } from './utils'
+import { dateSort, scoreSort, titleSort } from './utils'
 
 export const gameTableColumns = [
   {
@@ -14,6 +14,8 @@ export const gameTableColumns = [
     Header: 'Game',
     accessor: 'title',
     Cell: ({ value, row, showCovers }) => TitleCell({ value, row, showCovers }),
+    sortType: titleSort,
+    sortDescFirst: true
   },
   {
     Header: 'Rating',
@@ -55,6 +57,8 @@ export const backlogTableColumns = [
     Header: 'Game',
     accessor: 'title',
     Cell: TitleCell,
+    sortType: titleSort,
+    sortDescFirst: true
   },
   {
     Header: 'Howlongtobeat',
