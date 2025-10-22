@@ -56,7 +56,7 @@ export const BacklogTable = ({ games, isAdmin }: Props) => {
         sortBy: [
           {
             id: 'title',
-            desc: false,
+            desc: true,
           },
         ],
         pageSize: 10,
@@ -80,7 +80,8 @@ export const BacklogTable = ({ games, isAdmin }: Props) => {
           <tr>
             {headers.map((column) => {
               if (column.id === '_id' && !isAdmin) return
-              return <th {...column.getHeaderProps(column.getSortByToggleProps())}>{column.render('Header')}</th>
+              const headerProps = column.getHeaderProps(column.getSortByToggleProps())
+              return <th {...headerProps} key={headerProps.key}>{column.render('Header')}</th>
             })}
           </tr>
         </thead>
@@ -88,8 +89,9 @@ export const BacklogTable = ({ games, isAdmin }: Props) => {
         <tbody {...getTableBodyProps()}>
           {page.map((row) => {
             prepareRow(row)
+            const rowProps = row.getRowProps()
             return (
-              <tr {...row.getRowProps()}>
+              <tr {...rowProps} key={rowProps.key}>
                 {row.cells.map((cell) => {
                   return formatCell(cell, row)
                 })}
