@@ -5,12 +5,12 @@
     margin: 16px 0;
 }
 
-.gameTable td  {
+.gameTable td {
     border: 1px solid;
     padding: 8px;
 }
 
-.gameTable th  {
+.gameTable th {
     border: 1px solid;
     padding: 16px;
     font-size: 1.1em;
@@ -24,7 +24,7 @@
 
 .dark-input {
     background-color: hsl(0, 0%, 20%) !important;
-    border-color: #808080 ;
+    border-color: #808080;
     color: #fff !important;
 }
 

@@ -1,37 +1,31 @@
 import Link from 'next/link'
-import { signIn, signOut } from 'next-auth/react'
-
-import axios from 'axios'
 import { toast } from 'react-toastify'
+import { SignIn, SignOut } from './AuthComponents'
+import { auth } from 'app/auth'
 
-type Props = {
-  isAdmin: boolean
-  username: string
+async function revalidate() {
+  const authState = await auth()
+  const username = authState?.user?.name ?? ""
+
+  fetch(`/api/revalidate?secret=${username}`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    }
+  }).then(() => toast.success('Revalidated'))
 }
 
-export default function Nav(props: Props) {
-  const { isAdmin, username } = props
 
-  const refresh = () => {
-    if (isAdmin) {
-      axios
-        .get(`/api/revalidate?secret=${username}`)
-        .then(() => toast.success('Revalidated'))
-        .catch((err) => {
-          toast.error('REVALIDATION FAILED')
-        })
-    } else {
-      console.log("YOU'RE NO ADMIN")
-    }
-  }
+export default async function Nav() {
+  const authState = await auth()
+  const username = authState?.user?.name ?? ""
+  const isAdmin = process.env.ADMIN_USER_NAME === username
 
   return (
     <nav className='w-100 py-3 border-bottom d-flex justify-content-evenly align-items-center'>
       {isAdmin ? (
         <>
-          <button className='btn btn-light' onClick={() => signOut()}>
-            Sign out ({username})
-          </button>
+          <SignOut />
 
           <Link href='/admin'>
             Home
@@ -45,14 +39,17 @@ export default function Nav(props: Props) {
             Random
           </Link>
 
-          <button className='btn btn-light' onClick={() => refresh()}>
+          <button
+            className='btn btn-light'
+            onClick={async () => {
+              "use server"
+              await revalidate()
+            }}>
             Refresh
           </button>
         </>
       ) : (
-        <button className='btn btn-light' onClick={() => signIn().then(() => refresh())}>
-          Sign in as {username}
-        </button>
+        <SignIn />
       )}
     </nav>
   )
