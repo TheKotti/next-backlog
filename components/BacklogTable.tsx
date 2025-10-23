@@ -1,3 +1,5 @@
+'use client'
+
 /* eslint-disable react/jsx-key */
 import { useMemo, useState } from 'react'
 import { usePagination, useSortBy, useTable } from 'react-table'

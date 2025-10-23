@@ -16,17 +16,3 @@ a {
 * {
   box-sizing: border-box;
 }
-
-/* Bootstrap overrides */
-body * {
-  --bs-modal-bg: rgb(0, 46, 2);
-  --bs-modal-color: #fff;
-}
-
-.modal-header .btn-close {
-  display: none;
-}
-
-.btn:hover {
-  border-color:#fff;
-}

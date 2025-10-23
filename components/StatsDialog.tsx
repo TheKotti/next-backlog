@@ -1,3 +1,5 @@
+'use client'
+
 import React, { useMemo, useState } from 'react'
 import { Modal } from 'react-bootstrap'
 import { Bar } from 'react-chartjs-2'

@@ -1,10 +1,11 @@
+'use client'
+
 /* eslint-disable react/jsx-key */
 import React, { useEffect, useMemo, useState } from 'react'
 
 import { usePagination, useSortBy, useTable } from 'react-table'
 
 import styles from '../styles/GameTable.module.css'
-import { useNextQueryParams } from '../hooks/useNextQueryParams'
 import { formatCell, formatHeader } from '../utils/utils'
 import { gameTableColumns } from '../utils/columns'
 
@@ -17,11 +18,6 @@ export const GameTable = ({ games, isAdmin }: Props) => {
   const [stealthFilter, setStealthFilter] = useState(false)
   const [showCovers, setShowCovers] = useState(true)
   const [titleFilter, setTitleFilter] = useState('')
-  const { params, updateParams, paramsLoaded } = useNextQueryParams({
-    sortBy: 'finishedDate',
-    sortDesc: true,
-    title: '',
-  })
 
   const data: Array<any> = useMemo(() => {
     return games
@@ -85,37 +81,13 @@ export const GameTable = ({ games, isAdmin }: Props) => {
     usePagination
   )
 
-  // On load set stuff from query parameters
-  useEffect(() => {
-    if (paramsLoaded) {
-      params.sneaky === 'true' && setStealthFilter(true)
-      params.title && setTitleFilter(params.title as string)
-      params.sortBy && setSortBy([{ id: params.sortBy as string, desc: params.sortDesc === 'true' ? true : false }])
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [paramsLoaded])
-
   const handleStealthFilterChange = (checked) => {
     setStealthFilter(checked)
-    if (checked) {
-      updateParams({ ...params, sneaky: checked })
-    } else {
-      delete params.sneaky
-      updateParams({ ...params })
-    }
   }
 
   const handleTitleFilterChange = (value) => {
     setTitleFilter(value)
-    updateParams({ ...params, title: value })
   }
-
-  useEffect(() => {
-    if (paramsLoaded) {
-      updateParams({ ...params, sortBy: sortBy[0].id, sortDesc: sortBy[0].desc })
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [sortBy])
 
   return (
     <>
