@@ -1,27 +1,47 @@
-import { useCallback } from 'react'
-import { useRouter } from 'next/router'
+import { useCallback, useRef, useEffect } from 'react'
+import { useSearchParams } from 'next/navigation'
 import { forOwn } from 'lodash'
 
-export const useNextQueryParams = (defaultValues: object) => {
-  const router = useRouter()
+export const useNextQueryParams = (defaultValues: Record<string, any>) => {
+    const initialParams = useSearchParams()
 
-  const { query: params, isReady: paramsLoaded } = router
+    const defaultsRef = useRef<Record<string, any>>(defaultValues)
+    useEffect(() => {
+        defaultsRef.current = defaultValues
+    }, [defaultValues])
 
-  const updateParams = useCallback(
-    (newParams: object) => {
-      const updated = { ...(router.query as object), ...newParams }
+    const initialObj: Record<string, string> = {}
+    if (initialParams) {
+        initialParams.forEach((value, key) => {
+            initialObj[key] = value
+        })
+    }
+    const currentRef = useRef<Record<string, string>>(initialObj)
 
-      forOwn(updated, (value, key) => {
-        if (defaultValues[key] === value) {
-          delete updated[key]
-        }
-      })
+    const updateParams = useCallback((newParams: Record<string, any>) => {
+        const merged: Record<string, any> = { ...currentRef.current, ...newParams }
 
-      const params = new URLSearchParams(updated).toString()
-      router.push(params ? `?${params}` : '', undefined, { shallow: true })
-    },
-    [defaultValues, router]
-  )
+        forOwn(merged, (value, key) => {
+            if (defaultsRef.current && defaultsRef.current[key] === value) {
+                delete merged[key]
+            }
+        })
 
-  return { params, updateParams, paramsLoaded }
+        forOwn(merged, (value, key) => {
+            if (value === undefined || value === null) delete merged[key]
+        })
+
+        const entries: Record<string, string> = {}
+        Object.keys(merged).forEach(k => {
+            entries[k] = String(merged[k])
+        })
+
+        currentRef.current = entries
+
+        const params = new URLSearchParams(entries).toString()
+        const newUrl = params ? `?${params}` : `${window.location.pathname}${window.location.hash || ''}`
+        window.history.replaceState(null, '', newUrl)
+    }, [])
+
+    return { initialParams, updateParams }
 }

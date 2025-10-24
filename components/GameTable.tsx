@@ -1,6 +1,5 @@
 'use client'
 
-/* eslint-disable react/jsx-key */
 import React, { useEffect, useMemo, useState } from 'react'
 
 import { usePagination, useSortBy, useTable } from 'react-table'
@@ -8,6 +7,7 @@ import { usePagination, useSortBy, useTable } from 'react-table'
 import styles from '../styles/GameTable.module.css'
 import { formatCell, formatHeader } from '../utils/utils'
 import { gameTableColumns } from '../utils/columns'
+import { useNextQueryParams } from 'hooks/useNextQueryParams'
 
 type Props = {
   games: Array<Game>
@@ -15,11 +15,18 @@ type Props = {
 }
 
 export const GameTable = ({ games, isAdmin }: Props) => {
-  const [stealthFilter, setStealthFilter] = useState(false)
-  const [showCovers, setShowCovers] = useState(true)
-  const [titleFilter, setTitleFilter] = useState('')
+  const { initialParams, updateParams } = useNextQueryParams({
+    sortBy: 'finishedDate',
+    sortDesc: true,
+    title: '',
+    sneaky: false
+  })
 
-  const data: Array<any> = useMemo(() => {
+  const [stealthFilter, setStealthFilter] = useState(initialParams.get('sneaky') == 'true')
+  const [showCovers, setShowCovers] = useState(true)
+  const [titleFilter, setTitleFilter] = useState(initialParams.get('title') ?? '')
+
+  const data: Array<Partial<Game>> = useMemo(() => {
     return games
       .filter((x) => (stealthFilter && x.stealth) || !stealthFilter)
       .filter((x) => (titleFilter && x.title.toLowerCase().includes(titleFilter.toLowerCase())) || titleFilter === '')
@@ -58,18 +65,17 @@ export const GameTable = ({ games, isAdmin }: Props) => {
     nextPage,
     previousPage,
     setPageSize,
-    setSortBy,
     state: { pageIndex, pageSize, sortBy },
   } = useTable(
     {
-      columns: gameTableColumns as any, // This doesn't like the custom prop, casting as any will do for now
+      columns: gameTableColumns, // This doesn't like the custom prop, casting as any will do for now
       data,
       initialState: {
         hiddenColumns,
         sortBy: [
           {
-            id: 'finishedDate',
-            desc: true,
+            id:  initialParams.get('sortBy') ?? 'finishedDate',
+            desc: initialParams.get('sortDesc') == 'false' ? false : true,
           },
         ],
         pageSize: 10,
@@ -81,13 +87,20 @@ export const GameTable = ({ games, isAdmin }: Props) => {
     usePagination
   )
 
-  const handleStealthFilterChange = (checked) => {
-    setStealthFilter(checked)
-  }
-
   const handleTitleFilterChange = (value) => {
     setTitleFilter(value)
+    updateParams({ title: value })
   }
+
+  const handleStealthFilterChange = (checked) => {
+    setStealthFilter(checked)
+    updateParams({ sneaky: checked })
+  }
+
+  useEffect(() => {
+      updateParams({ sortBy: sortBy[0].id, sortDesc: sortBy[0].desc })
+      console.log('sortBy useEffect', sortBy)
+  }, [sortBy, updateParams])
 
   return (
     <>
@@ -127,7 +140,7 @@ export const GameTable = ({ games, isAdmin }: Props) => {
       <table {...getTableProps()} className={`w-100 ${styles.gameTable}`}>
         <thead>
           <tr>
-            {headers.map((column, i) => {
+            {headers.map((column) => {
               return formatHeader(column, isAdmin)
             })}
           </tr>

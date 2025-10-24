@@ -1,9 +1,8 @@
 import { Suspense } from 'react'
-import Head from 'next/head'
+import type { Metadata } from 'next'
 
 import styles from '../styles/Home.module.css'
 import { GameTable } from '../components/GameTable'
-import { BacklogTable } from '../components/BacklogTable'
 import { StatsDialog } from '../components/StatsDialog'
 import { Icon } from '../components/Icon'
 import { connectToDatabase } from 'lib/mongo'
@@ -28,6 +27,10 @@ async function getFinishedGames(): Promise<Game[]> {
   return simpleGames
 }
 
+export const metadata: Metadata = {
+  title: 'Played games | YAME! YAME!'
+}
+
 export default async function Home() {
 
   const games = await getFinishedGames()
@@ -35,16 +38,10 @@ export default async function Home() {
   const backlogGames = useMemo(() => games.filter((x) => !x.finishedDate && x.finished !== 'Happening'), [games])
  */
   return (
-
-    <div>
-      <Head>
-        <title>YAME! YAME!</title>
-      </Head>
-
       <main>
         <div className={styles.container}>
           <div className='d-flex justify-content-between'>
-            <h1>Kotti's bad takes on games</h1>
+            <h1>Kotti&apos;s bad takes on games</h1>
 
             <div className='row gx-3'>
               <a href='https://www.youtube.com/thekotti' target='_blank' rel='noreferrer' className='col'>
@@ -79,6 +76,5 @@ export default async function Home() {
 
         </div>
       </main>
-    </div>
   )
 }
