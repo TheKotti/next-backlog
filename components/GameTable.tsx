@@ -8,20 +8,16 @@ import styles from '../styles/GameTable.module.css'
 import { formatCell, formatHeader } from '../utils/utils'
 import { gameTableColumns } from '../utils/columns'
 import { useNextQueryParams } from 'hooks/useNextQueryParams'
+import { ReadonlyURLSearchParams } from 'next/navigation'
 
 type Props = {
   games: Array<Game>
   isAdmin: boolean
+  updateParams: (newParams: Record<string, any>) => void
+  initialParams: ReadonlyURLSearchParams
 }
 
-export const GameTable = ({ games, isAdmin }: Props) => {
-  const { initialParams, updateParams } = useNextQueryParams({
-    sortBy: 'finishedDate',
-    sortDesc: true,
-    title: '',
-    sneaky: false
-  })
-
+export const GameTable = ({ games, updateParams, initialParams, isAdmin }: Props) => {
   const [stealthFilter, setStealthFilter] = useState(initialParams.get('sneaky') == 'true')
   const [showCovers, setShowCovers] = useState(true)
   const [titleFilter, setTitleFilter] = useState(initialParams.get('title') ?? '')
@@ -99,7 +95,6 @@ export const GameTable = ({ games, isAdmin }: Props) => {
 
   useEffect(() => {
       updateParams({ sortBy: sortBy[0].id, sortDesc: sortBy[0].desc })
-      console.log('sortBy useEffect', sortBy)
   }, [sortBy, updateParams])
 
   return (
