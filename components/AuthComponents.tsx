@@ -11,7 +11,7 @@ export function SignIn({
                 await signIn(provider)
             }}
         >
-            <button {...props}>Sign In</button>
+            <button className='btn btn-light' {...props}>Sign In</button>
         </form>
     )
 }
@@ -25,7 +25,7 @@ export function SignOut(props) {
             }}
             className="w-full"
         >
-            <button variant="ghost" className="w-full p-0" {...props}>
+            <button className='btn btn-light' {...props}>
                 Sign Out
             </button>
         </form>

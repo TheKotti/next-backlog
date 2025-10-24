@@ -38,8 +38,7 @@ export default async function Home() {
   const backlogGames = useMemo(() => games.filter((x) => !x.finishedDate && x.finished !== 'Happening'), [games])
  */
   return (
-      <main>
-        <div className={styles.container}>
+      <main className={styles.container}>
           <div className='d-flex justify-content-between'>
             <h1>Kotti&apos;s bad takes on games</h1>
 
@@ -73,8 +72,6 @@ export default async function Home() {
           <Suspense>
             <GameTable games={games} isAdmin={false} />
           </Suspense>
-
-        </div>
       </main>
   )
 }

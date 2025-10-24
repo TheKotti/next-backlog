@@ -22,13 +22,13 @@ export default async function Nav() {
   const isAdmin = process.env.ADMIN_USER_NAME === username
 
   return (
-    <nav className='w-100 py-3 border-bottom d-flex justify-content-evenly align-items-center'>
+    <nav className='w-100 pb-3 mb-3 border-bottom d-flex justify-content-between align-items-center'>
       {isAdmin ? (
         <>
           <SignOut />
 
           <Link href='/admin'>
-            Home
+            Game list
           </Link>
 
           <Link href='/add-game'>
