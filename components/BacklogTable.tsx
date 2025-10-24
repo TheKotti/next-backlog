@@ -6,7 +6,7 @@ import { usePagination, useSortBy, useTable } from 'react-table'
 
 import styles from '../styles/GameTable.module.css'
 import { backlogTableColumns } from '../utils/columns'
-import { formatCell, getHltbString } from '../utils/utils'
+import { formatCell, formatHeader, getHltbString } from '../utils/utils'
 import { ReadonlyURLSearchParams } from 'next/navigation'
 
 type Props = {
@@ -66,6 +66,7 @@ export const BacklogTable = ({ games, updateParams, initialParams, isAdmin }: Pr
         ],
         pageSize: 10,
       },
+      disableSortRemove: true,
     },
     useSortBy,
     usePagination
@@ -90,8 +91,7 @@ export const BacklogTable = ({ games, updateParams, initialParams, isAdmin }: Pr
           <tr>
             {headers.map((column) => {
               if (column.id === '_id' && !isAdmin) return
-              const headerProps = column.getHeaderProps(column.getSortByToggleProps())
-              return <th {...headerProps} key={headerProps.key}>{column.render('Header')}</th>
+              return formatHeader(column, isAdmin)
             })}
           </tr>
         </thead>
