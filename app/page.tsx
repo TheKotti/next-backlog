@@ -6,15 +6,12 @@ import { GameTable } from '../components/GameTable'
 import { StatsDialog } from '../components/StatsDialog'
 import { Icon } from '../components/Icon'
 import { connectToDatabase } from 'lib/mongo'
+import { Tables } from 'components/Tables'
 
-async function getFinishedGames(): Promise<Game[]> {
+async function getGames(): Promise<Game[]> {
   const { db } = await connectToDatabase()
   const res: Game[] = await db.collection('games')
-    .find({
-      $or: [
-        { finishedDate: { $exists: true, $ne: null } },
-        { finished: "Happening" }]
-    })
+    .find()
     .toArray()
   const games = res.map((x) => {
     // Hacky shit because I fucked up the initial date insertions
@@ -32,11 +29,8 @@ export const metadata: Metadata = {
 }
 
 export default async function Home() {
-
-  const games = await getFinishedGames()
-  /* 
-  const backlogGames = useMemo(() => games.filter((x) => !x.finishedDate && x.finished !== 'Happening'), [games])
- */
+  const games = await getGames()
+  
   return (
       <main className={styles.container}>
           <div className='d-flex justify-content-between'>
@@ -60,18 +54,7 @@ export default async function Home() {
 
           <hr />
 
-          <div className={`d-flex justify-content-between mb-3 ${styles.header}`}>
-            <h2>{'Previously played'}</h2>
-            <div>
-              <Suspense>
-                <StatsDialog games={JSON.parse(JSON.stringify(games))} />
-              </Suspense>
-            </div>
-          </div>
-
-          <Suspense>
-            <GameTable games={games} isAdmin={false} />
-          </Suspense>
+          <Tables games={games} isAdmin={false} />
       </main>
   )
 }

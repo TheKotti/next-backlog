@@ -7,15 +7,18 @@ import { usePagination, useSortBy, useTable } from 'react-table'
 import styles from '../styles/GameTable.module.css'
 import { backlogTableColumns } from '../utils/columns'
 import { formatCell, getHltbString } from '../utils/utils'
+import { ReadonlyURLSearchParams } from 'next/navigation'
 
 type Props = {
   games: Array<Game>
   isAdmin: boolean
+  updateParams: (newParams: Record<string, any>) => void
+  initialParams: ReadonlyURLSearchParams
 }
 
-export const BacklogTable = ({ games, isAdmin }: Props) => {
-  const [titleFilter, setTitleFilter] = useState('')
-
+export const BacklogTable = ({ games, updateParams, initialParams, isAdmin }: Props) => {
+  const [titleFilter, setTitleFilter] = useState(initialParams.get('title') ?? '')
+  
   const data: Array<any> = useMemo(() => {
     return games
       .filter((x) => (titleFilter && x.title.toLowerCase().includes(titleFilter.toLowerCase())) || titleFilter === '')
@@ -68,11 +71,16 @@ export const BacklogTable = ({ games, isAdmin }: Props) => {
     usePagination
   )
 
+  const handleTitleFilterChange = (value) => {
+    setTitleFilter(value)
+    updateParams({ title: value })
+  }
+
   return (
     <>
       <input
         value={titleFilter}
-        onChange={(e) => setTitleFilter(e.target.value)}
+        onChange={(e) => handleTitleFilterChange(e.target.value)}
         className={`form-control w-25 ${styles['dark-input']}`}
         placeholder='Search'
       />
