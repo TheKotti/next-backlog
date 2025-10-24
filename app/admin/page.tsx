@@ -1,10 +1,9 @@
-import { auth, signIn } from "app/auth"
-import { SignIn, SignOut } from "components/AuthComponents"
+import { auth } from "app/auth"
+import type { Metadata } from 'next'
 import { GameTable } from "components/GameTable"
 import Nav from "components/Nav"
 import { connectToDatabase } from "lib/mongo"
-import { getSession } from "next-auth/react"
-import { Suspense } from "react"
+import styles from 'styles/Home.module.css'
 
 async function getGames() {
     const authState = await auth()
@@ -29,6 +28,10 @@ async function getGames() {
     return []
 }
 
+export const metadata: Metadata = {
+  title: 'Admin panel | YAME! YAME!'
+}
+
 export default async function Admin() {
     const authState = await auth()
     const username = authState?.user?.name ?? ""
@@ -39,10 +42,10 @@ export default async function Admin() {
     console.log('authState', games)
 
     return (
-        <>
+        <main className={styles.container}>
             <Nav />
             {isAdmin ? <GameTable games={games} isAdmin /> : null}
 
-        </>
+        </main>
     )
 }
