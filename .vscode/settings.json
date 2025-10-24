@@ -1,0 +1,8 @@
+{
+    "editor.formatOnSave": true,
+    "eslint.format.enable": true,
+    "eslint.useFlatConfig": true,
+    "eslint.options": {
+        "overrideConfigFile": "./eslint.config.mjs"
+    }
+}
