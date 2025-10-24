@@ -17,7 +17,7 @@ type Props = {
     isAdmin: boolean
 }
 
-export const Tables = ({ games }: Props) => {
+export const Tables = ({ games, isAdmin }: Props) => {
     const { initialParams, updateParams } = useNextQueryParams({
         sortBy: 'finishedDate',
         sortDesc: true,
@@ -63,14 +63,14 @@ export const Tables = ({ games }: Props) => {
                     games={backlogGames} 
                     updateParams={updateParams}
                     initialParams={initialParams} 
-                    isAdmin={false} 
+                    isAdmin={isAdmin} 
                 />
             ) : (
                 <GameTable 
                     games={playedGames} 
                     updateParams={updateParams}
                     initialParams={initialParams} 
-                    isAdmin={false} 
+                    isAdmin={isAdmin} 
                 />
             )}
         </>
