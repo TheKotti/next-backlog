@@ -5,6 +5,7 @@ import Nav from "components/Nav"
 import { connectToDatabase } from "lib/mongo"
 import styles from 'styles/Home.module.css'
 import { Tables } from "components/Tables"
+import NavWrapper from "components/NavWrapper"
 
 async function getGames() {
     const authState = await auth()
@@ -42,7 +43,7 @@ export default async function Admin() {
 
     return (
         <main className={styles.container}>
-            <Nav />
+            <NavWrapper />
             {isAdmin ? <Tables games={games} isAdmin={isAdmin} /> : null}
 
         </main>
