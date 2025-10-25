@@ -1,8 +1,9 @@
+import { Column } from 'react-table'
 import { AdminCell, CommentCell, DateCell, FinishedCell, TitleCell, VodCell } from '../components/Cells'
 import { ScoreIndicator } from '../components/ScoreIndicator'
 import { dateSort, scoreSort, titleSort } from './utils'
 
-export const gameTableColumns = [
+export const gameTableColumns: Column<Partial<Game>>[] = [
   {
     Header: 'Date',
     accessor: 'finishedDate',
@@ -22,7 +23,7 @@ export const gameTableColumns = [
     accessor: 'rating',
     sortDescFirst: true,
     Cell: ({ value }) => {
-      return <ScoreIndicator rating={value} />
+      return <ScoreIndicator rating={(value as number | null)} />
     },
     sortType: scoreSort,
   },
@@ -52,11 +53,11 @@ export const gameTableColumns = [
   },
 ]
 
-export const backlogTableColumns = [
+export const backlogTableColumns: Column<Partial<Game & {hltbString: string}> >[] = [
   {
     Header: 'Game',
     accessor: 'title',
-    Cell: TitleCell,
+    Cell: ({ value, row }) => TitleCell({ value, row, showCovers: false }),
     sortType: titleSort,
     sortDescFirst: true
   },

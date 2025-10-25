@@ -1,26 +1,30 @@
+'use client'
+
 import Link from 'next/link'
 import { toast } from 'react-toastify'
-import { SignIn, SignOut } from './AuthComponents'
-import { auth } from 'app/auth'
+import { RevalidateButton, SignIn, SignOut } from './AuthComponents'
+import { useEffect, useState } from 'react'
 
-async function revalidate() {
-  const authState = await auth()
-  const username = authState?.user?.name ?? ""
-
-  fetch(`/api/revalidate?secret=${username}`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
+async function revalidate(username: string) {
+  try {
+    const response = await fetch(`/api/revalidate?secret=${username}`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      }
+    })
+    
+    if (!response.ok) {
+      throw new Error('Failed to revalidate')
     }
-  }).then(() => toast.success('Revalidated'))
+    
+    toast.success('Cache refreshed successfully')
+  } catch (error) {
+    toast.error('Failed to refresh cache')
+  }
 }
 
-
-export default async function Nav() {
-  const authState = await auth()
-  const username = authState?.user?.name ?? ""
-  const isAdmin = process.env.ADMIN_USER_NAME === username
-
+export default function Nav({ username, isAdmin }: { username: string, isAdmin: boolean }) {
   return (
     <nav className='w-100 pb-3 mb-3 border-bottom d-flex justify-content-between align-items-center'>
       {isAdmin ? (
@@ -39,14 +43,7 @@ export default async function Nav() {
             Random
           </Link>
 
-          <button
-            className='btn btn-light'
-            onClick={async () => {
-              "use server"
-              await revalidate()
-            }}>
-            Refresh
-          </button>
+          <RevalidateButton />
         </>
       ) : (
         <SignIn />
