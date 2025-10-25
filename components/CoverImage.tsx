@@ -19,7 +19,9 @@ type Props = {
 const CoverImage = ({ game, showScore }: Props) => {
   const myImage = cld.image(`covers/${game.coverImageId}`).resize(fill().width(150).height(200))
 
-  const title = `${game.title}${game.releaseYear ? ' (' + game.releaseYear + ')' : ''}`
+  const formattedTitle = game.title.startsWith("The ") ? game.title.substring(4) + ", The" : game.title
+
+  const title = `${formattedTitle}${game.releaseYear ? ' (' + game.releaseYear + ')' : ''}`
 
   return (
     <div className={styles.imageContainer}>
