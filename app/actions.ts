@@ -20,6 +20,34 @@ export async function revalidateAction() {
     }
 }
 
+export async function updateGameAction(formData: FormData) {
+    try {
+        const authState = await auth()
+        const username = authState?.user?.name ?? ""
+        const isAdmin = process.env.ADMIN_USER_NAME === username
+        if (isAdmin) {
+            const id = String(formData.get('id'))
+            const gameText = String(formData.get('game'))
+
+            const mongoId = new ObjectId(id)
+            const game = JSON.parse(gameText)
+
+            // Update data
+            const { db } = await connectToDatabase()
+            await db.collection('games')
+                .replaceOne(
+                    { _id: mongoId },
+                    { ...game, _id: mongoId }
+                )
+
+            return true
+        }
+    } catch (error) {
+        console.log('Error in update game action:', error)
+        return false
+    }
+}
+
 export async function updateVodsAction(formData: FormData) {
     try {
         const authState = await auth()
