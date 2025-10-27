@@ -85,8 +85,9 @@ export const TitleCell = ({ value, row, showCovers }) => {
 }
 
 export const FinishedCell = ({ value, row }) => {
-  if (row.original.finished === 'Nope') return <>Did not finish {`(${value}h)`}</>
-  if (row.original.finished === 'Yes') return <>Finished {`(${value}h)`}</>
+  const timeString = `${value}h ${row.original.additionalTimeSpent ? `+ ${row.original.additionalTimeSpent}h` : ''}`.trim()
+  if (row.original.finished === 'Nope') return <>Did not finish {`(${timeString})`}</>
+  if (row.original.finished === 'Yes') return <>Finished {`(${timeString})`}</>
 
   const wordArray = row.original.finished.split(/(\/)/)
   const withWordBreaks = wordArray.map((x, i) => {
@@ -100,7 +101,7 @@ export const FinishedCell = ({ value, row }) => {
 
   return value ? (
     <>
-      {withWordBreaks} {`(${value}h)`}
+      {withWordBreaks} {`(${timeString})`}
     </>
   ) : null
 }

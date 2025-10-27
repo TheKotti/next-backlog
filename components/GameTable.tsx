@@ -9,6 +9,7 @@ import { formatCell, formatHeader } from '../utils/utils'
 import { gameTableColumns } from '../utils/columns'
 import { useNextQueryParams } from 'hooks/useNextQueryParams'
 import { ReadonlyURLSearchParams } from 'next/navigation'
+import { add } from 'lodash'
 
 type Props = {
   games: Array<Game>
@@ -36,6 +37,8 @@ export const GameTable = ({ games, updateParams, initialParams, isAdmin }: Props
           comment: x.comment,
           streamed: x.streamed,
           timeSpent: x.timeSpent,
+          additionalTimeSpent: x.additionalTimeSpent,
+          tags: x.tags,
           stealth: x.stealth,
           igdbUrl: x.igdbUrl,
           releaseYear: x.releaseYear,
@@ -70,7 +73,7 @@ export const GameTable = ({ games, updateParams, initialParams, isAdmin }: Props
         hiddenColumns,
         sortBy: [
           {
-            id:  initialParams.get('sortBy') ?? 'finishedDate',
+            id: initialParams.get('sortBy') ?? 'finishedDate',
             desc: initialParams.get('sortDesc') == 'false' ? false : true,
           },
         ],
@@ -94,7 +97,7 @@ export const GameTable = ({ games, updateParams, initialParams, isAdmin }: Props
   }
 
   useEffect(() => {
-      updateParams({ sortBy: sortBy[0].id, sortDesc: sortBy[0].desc })
+    updateParams({ sortBy: sortBy[0].id, sortDesc: sortBy[0].desc })
   }, [sortBy, updateParams])
 
   return (
