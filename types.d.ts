@@ -21,6 +21,8 @@ type Game = {
   hltbMain: number | null
   hltbExtra: number | null
   hltbCompletionist: number | null
+  tags: Array<string> | null
+  additionalTimeSpent: number | null
 }
 
 type RandomGame = Game & {

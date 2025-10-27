@@ -1,39 +1,68 @@
+'use client'
+
 import { useEffect, useRef, useState } from 'react'
 import Link from 'next/link'
 
 import styles from '../styles/Recap.module.css'
 import { Rating } from './Rating'
 import { DetailsDialog } from './DetailsDialog'
+import { useTextareaScaling } from 'hooks/useTextareaScaling'
+import { updateGameAction } from 'app/actions'
+import { toast } from 'react-toastify'
 
 type Props = {
-  game: Game
-  setGame: (game: Game) => void
-  updateGame: (game: Game) => void
+  fetchedGame: Game
 }
 
-export const Recap = (props: Props) => {
-  const { game, setGame, updateGame } = props
+const formatTimeToBeat = (time?: number | null, additionalTime?: number | null) => {
+  if (additionalTime) {
+    return `${time}+${additionalTime}`
+  }
+  return time?.toString() || ''
+}
 
+export const Recap = ({ fetchedGame }: Props) => {
   const textareaRef = useRef<HTMLTextAreaElement>(null)
-  const [textSize, setTextSize] = useState<'large' | 'x-large' | 'xx-large'>('xx-large')
-  const [timeToBeat, setTimeToBeat] = useState(game?.timeSpent?.toString() || '')
+  const finishedRef = useRef<HTMLTextAreaElement>(null)
+  const tagsRef = useRef<HTMLTextAreaElement>(null)
+  const [game, setGame] = useState<Game>(fetchedGame)
+  const [timeToBeat, setTimeToBeat] = useState(formatTimeToBeat(fetchedGame.timeSpent, fetchedGame.additionalTimeSpent))
 
-  useEffect(() => {
-    if (game.streamed === false && game.finishedDate === null) {
-      setGame({ ...game, streamed: true })
+  useTextareaScaling(textareaRef, game?.comment || '')
+  useTextareaScaling(finishedRef, game?.finished || '')
+  useTextareaScaling(tagsRef, game?.tags?.join(', ') || '')
+
+  const updateGame = async () => {
+    const formData = new FormData()
+    formData.append('id', game._id!)
+    formData.append('game', JSON.stringify(game))
+    var res = await updateGameAction(formData)
+    if (res) {
+      toast.success('Game updated')
+    } else {
+      toast.error('Failed to update game')
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+  }
 
-  useEffect(() => {
-    const clientHeight = textareaRef.current?.clientHeight || 0
-    const scrollHeight = textareaRef.current?.scrollHeight || 0
+  const handleTagChange = (value: string) => {
+    const tags = value.split(',').map((tag) => tag.trim().toLowerCase())
+    setGame({ ...game, tags })
+  }
 
-    if (scrollHeight > clientHeight) {
-      if (textSize === 'xx-large') setTextSize('x-large')
-      if (textSize === 'x-large') setTextSize('large')
-    }
-  }, [game.comment, textSize])
+  const handleTimeChange = (value: string) => {
+    const [timeString, additionalTimeString] = value.split('+')
+    const time = timeString ? parseInt(timeString) : null
+    const additionalTime = additionalTimeString ? parseInt(additionalTimeString) : null
+
+    console.log('asdasd', time, additionalTime)
+
+    setGame({
+      ...game,
+      timeSpent: time,
+      additionalTimeSpent: additionalTime,
+    })
+    setTimeToBeat(value)
+  }
 
   return (
     <div className={styles.root}>
@@ -44,13 +73,23 @@ export const Recap = (props: Props) => {
       </div>
 
       <div className={styles.gameForm}>
-        <div className={`d-flex justify-content-between align-items-end ${styles.topRow}`}>
+        <div className={`${styles.topRow}`}>
           <div className={styles.formFinished}>
             <label>Finished</label>
             <textarea
-              rows={1}
+              ref={finishedRef}
               value={game?.finished || ''}
               onChange={(e) => setGame({ ...game, finished: e.target.value })}
+              className='p-2'
+            ></textarea>
+          </div>
+
+          <div className={styles.formTags}>
+            <label>Tags</label>
+            <textarea
+              ref={tagsRef}
+              value={game?.tags || ''}
+              onChange={(e) => handleTagChange(e.target.value)}
               className='p-2'
             ></textarea>
           </div>
@@ -58,23 +97,10 @@ export const Recap = (props: Props) => {
           <div className={styles.formTimeSpent}>
             <label>Time spent</label>
             <textarea
-              rows={1}
               value={timeToBeat || ''}
-              onChange={(e) => setTimeToBeat(e.target.value)}
-              onBlur={() => setGame({ ...game, timeSpent: parseFloat(timeToBeat) })}
+              onChange={(e) => handleTimeChange(e.target.value)}
               className='p-2'
             ></textarea>
-          </div>
-
-          <div className={styles.feltSneaky}>
-            <label>Felt sneaky</label>
-            <div className={`${styles.checkbox}`} onClick={() => setGame({ ...game, stealth: !game.stealth })}>
-              {!!game?.stealth ? (
-                <div className={`d-flex align-items-center justify-content-center ${styles.checked}`} />
-              ) : (
-                <div className={styles.unchecked} />
-              )}
-            </div>
           </div>
         </div>
 
@@ -85,7 +111,6 @@ export const Recap = (props: Props) => {
             value={game?.comment || ''}
             onChange={(e) => setGame({ ...game, comment: e.target.value })}
             className='p-2'
-            style={{ fontSize: textSize }}
           ></textarea>
         </div>
 
@@ -99,7 +124,7 @@ export const Recap = (props: Props) => {
 
         <DetailsDialog game={game} setGame={setGame} />
 
-        <button onClick={() => updateGame(game)}>Save</button>
+        <button onClick={() => updateGame()}>Save</button>
       </div>
     </div>
   )

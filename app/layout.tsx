@@ -3,6 +3,7 @@ import { ToastContainer } from "react-toastify";
 import SessionProvider from "utils/SessionProvider";
 // These styles apply to every route in the application
 import 'bootstrap/dist/css/bootstrap.css';
+import "react-datepicker/dist/react-datepicker.css";
 import './global.css'
 
 export default async function RootLayout({
