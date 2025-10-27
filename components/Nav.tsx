@@ -2,25 +2,15 @@
 
 import Link from 'next/link'
 import { toast } from 'react-toastify'
-import { RevalidateButton, SignIn, SignOut } from './AuthComponents'
-import { useEffect, useState } from 'react'
+import { SignIn, SignOut } from './AuthComponents'
+import { revalidateAction } from 'app/actions'
 
-async function revalidate(username: string) {
-  try {
-    const response = await fetch(`/api/revalidate?secret=${username}`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      }
-    })
-    
-    if (!response.ok) {
-      throw new Error('Failed to revalidate')
-    }
-    
-    toast.success('Cache refreshed successfully')
-  } catch (error) {
-    toast.error('Failed to refresh cache')
+async function revalidate() {
+  var res = await revalidateAction()
+  if (res) {
+    toast.success('Revalidated')
+  } else {
+    toast.error('Revalidation failed')
   }
 }
 
@@ -43,7 +33,12 @@ export default function Nav({ username, isAdmin }: { username: string, isAdmin: 
             Random
           </Link>
 
-          <RevalidateButton />
+          <button
+            className='btn btn-light'
+            onClick={() => revalidate()}
+          >
+            Revalidate
+          </button>
         </>
       ) : (
         <SignIn />

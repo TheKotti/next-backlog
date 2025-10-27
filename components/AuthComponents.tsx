@@ -24,25 +24,3 @@ export function SignOut(props: any) {
         </form>
     )
 }
-
-export function RevalidateButton({ ...props }: any) {
-    const handleClick = async () => {
-        try {
-            await handleRevalidate()
-            toast.success('Revalidated')
-        } catch (error: any) {
-            toast.error('Revalidation failed')
-            console.error(error)
-        }
-    }
-
-    return (
-        <button
-            className='btn btn-light'
-            onClick={handleClick}
-            {...props}
-        >
-            Refresh
-        </button>
-    )
-}
