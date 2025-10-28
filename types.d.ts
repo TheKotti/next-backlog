@@ -9,13 +9,13 @@ type Game = {
   igdbId: number
   igdbUrl: string
   keywords: Array<string>
-  notPollable: string | null
+  notPollable: string | null // delete
   platform: string | null
   rating: number | null
   releaseYear: number | null
-  stealth: boolean | null
+  stealth: boolean | null // migrate to tags
   timeSpent: number | null
-  tss: boolean | null
+  tss: boolean | null // delete
   streamed: boolean | null
   vods: Array<string> | null
   hltbMain: number | null
@@ -23,6 +23,7 @@ type Game = {
   hltbCompletionist: number | null
   tags: Array<string> | null
   additionalTimeSpent: number | null
+  addedDate: string | null // not nullable after db update
 }
 
 type RandomGame = Game & {

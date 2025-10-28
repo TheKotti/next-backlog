@@ -1,15 +1,12 @@
 'use client'
 
 import React, { useEffect, useMemo, useState } from 'react'
-
 import { usePagination, useSortBy, useTable } from 'react-table'
-
+import Select from 'react-select'
 import styles from '../styles/GameTable.module.css'
 import { formatCell, formatHeader } from '../utils/utils'
 import { gameTableColumns } from '../utils/columns'
-import { useNextQueryParams } from 'hooks/useNextQueryParams'
 import { ReadonlyURLSearchParams } from 'next/navigation'
-import { add } from 'lodash'
 
 type Props = {
   games: Array<Game>
@@ -19,13 +16,13 @@ type Props = {
 }
 
 export const GameTable = ({ games, updateParams, initialParams, isAdmin }: Props) => {
-  const [stealthFilter, setStealthFilter] = useState(initialParams.get('sneaky') == 'true')
   const [showCovers, setShowCovers] = useState(true)
   const [titleFilter, setTitleFilter] = useState(initialParams.get('title') ?? '')
+  const [tagFilter, setTagFilter] = useState(initialParams.get('tag') ?? null)
 
   const data: Array<Partial<Game>> = useMemo(() => {
     return games
-      .filter((x) => (stealthFilter && x.stealth) || !stealthFilter)
+      .filter((x) => (tagFilter && x.tags?.includes(tagFilter)) || !tagFilter)
       .filter((x) => (titleFilter && x.title.toLowerCase().includes(titleFilter.toLowerCase())) || titleFilter === '')
       .map((x) => {
         return {
@@ -46,7 +43,7 @@ export const GameTable = ({ games, updateParams, initialParams, isAdmin }: Props
           coverImageId: x.coverImageId,
         }
       })
-  }, [games, stealthFilter, titleFilter])
+  }, [games, tagFilter, titleFilter])
 
   const hiddenColumns = useMemo(() => (isAdmin ? [] : ['_id']), [isAdmin])
 
@@ -86,14 +83,29 @@ export const GameTable = ({ games, updateParams, initialParams, isAdmin }: Props
     usePagination
   )
 
+  const tagSelectOptions = useMemo(() => {
+    const tags: string[] = []
+
+    games.forEach(g => {
+      g.tags?.forEach(t => tags.push(t))
+    })
+    let uniqueTags = [...new Set(tags)].sort();
+
+    var tagOptions = uniqueTags.map(t => {
+      return { value: t, label: t }
+    })
+
+    return tagOptions
+  }, [games])
+
   const handleTitleFilterChange = (value) => {
     setTitleFilter(value)
     updateParams({ title: value })
   }
 
-  const handleStealthFilterChange = (checked) => {
-    setStealthFilter(checked)
-    updateParams({ sneaky: checked })
+  const handleTagFilterChange = (value) => {
+    setTagFilter(value)
+    updateParams({ tag: value })
   }
 
   useEffect(() => {
@@ -110,17 +122,12 @@ export const GameTable = ({ games, updateParams, initialParams, isAdmin }: Props
           placeholder='Search'
         />
 
-        <div className='form-check'>
-          <label className='form-check-label'>
-            <input
-              className={`form-check-input ${styles['dark-input']}`}
-              type='checkbox'
-              checked={stealthFilter}
-              onChange={(e) => handleStealthFilterChange(e.target.checked)}
-            />
-            Sneaky?
-          </label>
-        </div>
+        <Select
+          value={tagSelectOptions.find(x => x.value == tagFilter)}
+          options={tagSelectOptions}
+          onChange={e => handleTagFilterChange(e?.value)}
+          isClearable
+        />
 
         <div className='form-check'>
           <label className='form-check-label'>
