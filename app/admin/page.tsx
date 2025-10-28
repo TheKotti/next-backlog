@@ -1,7 +1,5 @@
 import { auth } from "app/auth"
 import type { Metadata } from 'next'
-import { GameTable } from "components/GameTable"
-import Nav from "components/Nav"
 import { connectToDatabase } from "lib/mongo"
 import styles from 'styles/Home.module.css'
 import { Tables } from "components/Tables"
@@ -31,7 +29,7 @@ async function getGames() {
 }
 
 export const metadata: Metadata = {
-  title: 'Admin panel | YAME! YAME!'
+    title: 'Admin panel | YAME! YAME!'
 }
 
 export default async function Admin() {
