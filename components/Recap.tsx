@@ -55,8 +55,6 @@ export const Recap = ({ fetchedGame }: Props) => {
     const time = timeString ? parseInt(timeString) : null
     const additionalTime = additionalTimeString ? parseInt(additionalTimeString) : null
 
-    console.log('asdasd', time, additionalTime)
-
     setGame({
       ...game,
       timeSpent: time,

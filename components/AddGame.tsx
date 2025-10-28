@@ -10,7 +10,6 @@ async function addGame(id: number, authToken: string) {
     formData.append('gameId', id.toString())
     formData.append('authToken', authToken)
     const res = await addNewGameAction(formData)
-    console.log('weqweqweqwe', res)
     if (res) {
         toast.success('Game added ')
     } else {
@@ -49,7 +48,6 @@ const AddGame = () => {
     const handleSearch = async () => {
         const res = await searchIgdb(searchTerm, token)
         setOptions(res || [])
-        console.log(res)
     }
 
     return (

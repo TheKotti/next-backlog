@@ -23,10 +23,6 @@ type Game = {
   addedDate: string | null // not nullable after db update
 }
 
-type RandomGame = Game & {
-  selected?: number
-}
-
 type GameOptions = {
   id: number
   name: string
