@@ -51,3 +51,12 @@
 .color-icon {
     font-family: 'Noto Color Emoji';
 }
+
+.tag {
+    border-radius: 16px;
+    border: 1px solid;
+    padding: 2px 6px;
+    margin-right: 4px;
+    display: inline-block;
+    text-transform: capitalize;
+}
