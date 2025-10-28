@@ -14,7 +14,7 @@ export const CommentCell = ({ value, row }) => {
   return (
     <>
       {tags && tags.length > 0 && (
-        <div className='pb-2'>
+        <div className='pb-2 d-flex gap-2'>
           {tags.map((tag) => <Tag value={tag} key={tag}></Tag>)}
         </div>
       )}

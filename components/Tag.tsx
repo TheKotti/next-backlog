@@ -9,7 +9,8 @@ export const Tag = ({ value }: { value: string }) => {
         <span
             style={{
                 backgroundColor: `#${hex}`,
-                color: `${contrastColor}`,
+                color: `${contrastColor.text}`,
+                borderColor: `${contrastColor.border}`,
 
             }}
             className={`${styles['tag']}`}
@@ -22,7 +23,7 @@ const getContrastColor = (hexColor: string) => {
     const rgbColor = hexToRgb(hexColor)
 
     if (!rgbColor) {
-        return '#000000' // default to black if conversion fails
+        return { text: '#000000', border: 'grey' } // default to black if conversion fails
     }
 
     const original = [rgbColor.r, rgbColor.g, rgbColor.b];
@@ -43,9 +44,9 @@ const getContrastColor = (hexColor: string) => {
 
     // Actual limit is 0.179, but lower value works better in practice
     if (luminance > 0.1) {
-        return '#000000'
+        return { text: '#000000', border: 'grey' }
     } else {
-        return '#FFFFFF'
+        return { text: '#FFFFFF', border: '#FFFFFF' }
     }
 }
 

@@ -1,12 +1,7 @@
 'use client'
 
-import React, { useEffect, useMemo, useState } from 'react'
-
-import { usePagination, useSortBy, useTable } from 'react-table'
-
+import React, { useMemo, useState } from 'react'
 import styles from '../styles/GameTable.module.css'
-import { formatCell, formatHeader } from '../utils/utils'
-import { gameTableColumns } from '../utils/columns'
 import { useNextQueryParams } from 'hooks/useNextQueryParams'
 import { StatsDialog } from './StatsDialog'
 import { BacklogTable } from './BacklogTable'
@@ -22,9 +17,9 @@ export const Tables = ({ games, isAdmin }: Props) => {
         sortBy: 'finishedDate',
         sortDesc: true,
         title: '',
-        sneaky: false,
-        showBacklog: false
-      })
+        showBacklog: false,
+        tag: null
+    })
 
     const [viewBacklog, setViewBacklog] = useState(initialParams.get('showBacklog') == 'true')
 
@@ -59,18 +54,18 @@ export const Tables = ({ games, isAdmin }: Props) => {
             </div>
 
             {viewBacklog ? (
-                <BacklogTable 
-                    games={backlogGames} 
+                <BacklogTable
+                    games={backlogGames}
                     updateParams={updateParams}
-                    initialParams={initialParams} 
-                    isAdmin={isAdmin} 
+                    initialParams={initialParams}
+                    isAdmin={isAdmin}
                 />
             ) : (
-                <GameTable 
-                    games={playedGames} 
+                <GameTable
+                    games={playedGames}
                     updateParams={updateParams}
-                    initialParams={initialParams} 
-                    isAdmin={isAdmin} 
+                    initialParams={initialParams}
+                    isAdmin={isAdmin}
                 />
             )}
         </>
