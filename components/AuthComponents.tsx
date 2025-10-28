@@ -1,5 +1,5 @@
 import { toast } from "react-toastify"
-import { handleRevalidate, handleSignIn, handleSignOut } from "utils/auth"
+import { handleSignIn, handleSignOut } from "utils/auth"
 
 export function SignIn({
     provider,
