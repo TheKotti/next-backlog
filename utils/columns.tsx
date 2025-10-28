@@ -53,7 +53,7 @@ export const gameTableColumns: Column<Partial<Game>>[] = [
   },
 ]
 
-export const backlogTableColumns: Column<Partial<Game & {hltbString: string}> >[] = [
+export const backlogTableColumns: Column<Partial<Game & { hltbString: string }>>[] = [
   {
     Header: 'Game',
     accessor: 'title',
@@ -70,6 +70,6 @@ export const backlogTableColumns: Column<Partial<Game & {hltbString: string}> >[
     accessor: '_id',
     disableGlobalFilter: true,
     disableSortBy: true,
-    Cell: ({ value, row }) => AdminCell({ value, row, showNextButton: true }),
+    Cell: ({ value, row }) => AdminCell({ value, row }),
   },
 ]
