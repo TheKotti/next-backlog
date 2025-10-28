@@ -114,30 +114,12 @@ export const FinishedCell = ({ value, row }) => {
   ) : null
 }
 
-export const AdminCell = ({ value, row, showVodButton = false, showNextButton = false }) => {
-  const setUpcoming = () => {
-    axios
-      .put('api/setUpcoming', { id: row.original._id })
-      .then((_res) => {
-        toast.success('Game set as upcoming 👌')
-      })
-      .catch((err) => {
-        toast.error('Save failed')
-        console.log('ERROR: ', err)
-      })
-  }
-
+export const AdminCell = ({ value, row, showVodButton = false }) => {
   return (
     <div className={`${styles['adminCell']}`}>
       <a href={`/recap?id=${value}`}>Recap</a>
 
       {showVodButton && <VodDialog game={row.original} />}
-
-      {showNextButton && (
-        <a href='#' onClick={setUpcoming}>
-          Set upcoming
-        </a>
-      )}
     </div>
   )
 }
