@@ -37,7 +37,8 @@ export async function updateGameAction(formData: FormData) {
             const gameText = String(formData.get('game'))
 
             const mongoId = new ObjectId(id)
-            const game = JSON.parse(gameText)
+            const game: Game = JSON.parse(gameText)
+            game.tags = game.tags?.map(t => t.trim().toLowerCase()).filter(t => !!t) || null
 
             // Update data
             const { db } = await connectToDatabase()

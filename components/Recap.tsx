@@ -46,7 +46,7 @@ export const Recap = ({ fetchedGame }: Props) => {
   }
 
   const handleTagChange = (value: string) => {
-    const tags = value.split(',').map((tag) => tag.trim().toLowerCase())
+    const tags = value.split(',')
     setGame({ ...game, tags })
   }
 
