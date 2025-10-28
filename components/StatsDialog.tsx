@@ -60,7 +60,6 @@ export const StatsDialog = (props: Props) => {
     const averageRating = ratings.reduce((a, b) => a + b, 0) / ratings.length
     const totalTime = allTimes.reduce((a, b) => a + b, 0)
     const averageTime = totalTime / allTimes.length
-    const sneakyGames = games.filter((x) => x.stealth).length
     const streamedGames = games.filter((x) => x.streamed).length
     const finishedGames = games.filter((x) => x.finished && x.finished !== 'Nope' && x.finished !== 'Happening').length
     const backlogLength = backlog.length
@@ -86,10 +85,6 @@ export const StatsDialog = (props: Props) => {
       {
         key: 'Streamed games',
         value: `${streamedGames}`,
-      },
-      {
-        key: 'Sneaky games',
-        value: `${sneakyGames}`,
       },
       {
         key: 'Finishing rate',

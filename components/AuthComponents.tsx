@@ -1,4 +1,3 @@
-import { toast } from "react-toastify"
 import { handleSignIn, handleSignOut } from "utils/auth"
 
 export function SignIn({

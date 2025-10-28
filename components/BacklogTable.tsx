@@ -1,9 +1,7 @@
 'use client'
 
-/* eslint-disable react/jsx-key */
 import { useMemo, useState } from 'react'
 import { usePagination, useSortBy, useTable } from 'react-table'
-
 import styles from '../styles/GameTable.module.css'
 import { backlogTableColumns } from '../utils/columns'
 import { formatCell, formatHeader, getHltbString } from '../utils/utils'
@@ -18,7 +16,7 @@ type Props = {
 
 export const BacklogTable = ({ games, updateParams, initialParams, isAdmin }: Props) => {
   const [titleFilter, setTitleFilter] = useState(initialParams.get('title') ?? '')
-  
+
   const data: Array<any> = useMemo(() => {
     return games
       .filter((x) => (titleFilter && x.title.toLowerCase().includes(titleFilter.toLowerCase())) || titleFilter === '')
@@ -26,7 +24,6 @@ export const BacklogTable = ({ games, updateParams, initialParams, isAdmin }: Pr
         return {
           _id: x._id,
           title: x.title,
-          notPollable: x.notPollable,
           igdbUrl: x.igdbUrl,
           releaseYear: x.releaseYear,
           hltbString: getHltbString(x),

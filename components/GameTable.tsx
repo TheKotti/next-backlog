@@ -36,7 +36,6 @@ export const GameTable = ({ games, updateParams, initialParams, isAdmin }: Props
           timeSpent: x.timeSpent,
           additionalTimeSpent: x.additionalTimeSpent,
           tags: x.tags,
-          stealth: x.stealth,
           igdbUrl: x.igdbUrl,
           releaseYear: x.releaseYear,
           vods: x.vods,
