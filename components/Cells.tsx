@@ -6,15 +6,23 @@ import { toast } from 'react-toastify'
 import { VodDialog } from './VodDialog'
 import styles from '../styles/GameTable.module.css'
 import CoverImage from './CoverImage'
+import { Tag } from './Tag'
 
 export const CommentCell = ({ value, row }) => {
-  const valueWithStealth = row.original.stealth
-    ? value + `\n- Sneaky <span class=${styles['color-icon']}>✔️</span>`
-    : value
+  const tags: string[] = row.original.tags
+
   return (
-    <span
-      dangerouslySetInnerHTML={{ __html: valueWithStealth.replace(/\n/g, `<div class="${styles['br-div']}"></div>`) }}
-    ></span>
+    <>
+      {tags && tags.length > 0 && (
+        <div className='pb-2'>
+          {tags.map((tag) => <Tag value={tag} key={tag}></Tag>)}
+        </div>
+      )}
+
+      <span
+        dangerouslySetInnerHTML={{ __html: value.replace(/\n/g, `<div class="${styles['br-div']}"></div>`) }}
+      ></span>
+    </>
   )
 }
 
