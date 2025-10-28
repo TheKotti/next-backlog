@@ -4,6 +4,7 @@ import { connectToDatabase } from "lib/mongo"
 import styles from 'styles/Home.module.css'
 import { Tables } from "components/Tables"
 import NavWrapper from "components/NavWrapper"
+import { Suspense } from "react"
 
 async function getGames() {
     const authState = await auth()
@@ -42,7 +43,9 @@ export default async function Admin() {
     return (
         <main className={styles.container}>
             <NavWrapper />
-            {isAdmin ? <Tables games={games} isAdmin={isAdmin} /> : null}
+            <Suspense>
+                {isAdmin ? <Tables games={games} isAdmin={isAdmin} /> : null}
+            </Suspense>
 
         </main>
     )
