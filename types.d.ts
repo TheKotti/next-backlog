@@ -9,13 +9,10 @@ type Game = {
   igdbId: number
   igdbUrl: string
   keywords: Array<string>
-  notPollable: string | null // delete
   platform: string | null
   rating: number | null
   releaseYear: number | null
-  stealth: boolean | null // migrate to tags
   timeSpent: number | null
-  tss: boolean | null // delete
   streamed: boolean | null
   vods: Array<string> | null
   hltbMain: number | null
@@ -32,7 +29,10 @@ type RandomGame = Game & {
 
 type GameOptions = {
   id: number
-  title: string
-  year: number
+  name: string
+  release_dates: Array<{
+    y: number
+    id: number
+  }>
   url: string
 }

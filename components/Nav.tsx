@@ -29,10 +29,6 @@ export default function Nav({ username, isAdmin }: { username: string, isAdmin: 
             Add game
           </Link>
 
-          <Link href='/random'>
-            Random
-          </Link>
-
           <button
             className='btn btn-light'
             onClick={() => revalidate()}
