@@ -127,6 +127,46 @@ export const GameTable = ({ games, updateParams, initialParams, isAdmin }: Props
           options={tagSelectOptions}
           onChange={e => handleTagFilterChange(e?.value)}
           isClearable
+          placeholder='Filter by tag'
+          styles={{
+            control: (baseStyles, state) => ({
+              ...baseStyles,
+              width: '200px',
+              borderColor: 'grey',
+              backgroundColor: '#333',
+              color: 'red',
+              cursor: 'pointer',
+
+            }),
+            menu: (baseStyles, state) => ({
+              ...baseStyles,
+              width: '300px',
+              borderColor: 'grey',
+              backgroundColor: '#333',
+            }),
+            menuList: (baseStyles, state) => ({
+              ...baseStyles,
+              borderRadius: '8px'
+            }),
+            option: (baseStyles, state) => ({
+              ...baseStyles,
+              textTransform: 'capitalize',
+              cursor: 'pointer',
+            }),
+            clearIndicator: (baseStyles, state) => ({
+              ...baseStyles,
+              color: 'grey !important',
+            }),
+            dropdownIndicator: (baseStyles, state) => ({
+              ...baseStyles,
+              color: 'grey !important',
+            }),
+            singleValue: (baseStyles, state) => ({
+              ...baseStyles,
+              color: 'white',
+              textTransform: 'capitalize',
+            }),
+          }}
         />
 
         <div className='form-check'>
