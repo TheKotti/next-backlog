@@ -3,6 +3,7 @@ import styles from '../styles/Home.module.css'
 import { Icon } from '../components/Icon'
 import { connectToDatabase } from 'lib/mongo'
 import { Tables } from 'components/Tables'
+import { Suspense } from 'react'
 
 async function getGames(): Promise<Game[]> {
   const { db } = await connectToDatabase()
@@ -50,7 +51,9 @@ export default async function Home() {
 
       <hr />
 
-      <Tables games={games} isAdmin={false} />
+      <Suspense>
+        <Tables games={games} isAdmin={false} />
+      </Suspense>
     </main>
   )
 }
