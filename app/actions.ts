@@ -18,7 +18,7 @@ export async function revalidateAction() {
         const username = authState?.user?.name ?? ""
         const isAdmin = process.env.ADMIN_USER_NAME === username
         if (isAdmin) {
-            await revalidatePath('/goty')
+            await revalidatePath('/')
             return true
         }
     } catch (error) {
