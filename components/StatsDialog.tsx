@@ -51,17 +51,18 @@ export const StatsDialog = (props: Props) => {
   const stats = useMemo(() => {
     if (games.length === 0) return []
     // This filter crap shouldn't be necessary but fuck it
-    const ratings = games.map((x) => x.rating).filter((x): x is number => x !== null)
-    const times = games.map((x) => x.timeSpent).filter((x): x is number => x !== null)
+    const ratings = games.map((x) => x.rating).filter((x): x is number => !!x)
+    const times = games.map((x) => x.timeSpent).filter((x): x is number => !!x)
+    const additionalTimes = games.map((x) => x.additionalTimeSpent).filter((x): x is number => !!x)
+    const allTimes = times.concat(additionalTimes)
     const backlog = games.filter((x) => !x.finishedDate)
 
     const averageRating = ratings.reduce((a, b) => a + b, 0) / ratings.length
-    const totalTime = times.reduce((a, b) => a + b, 0)
-    const averageTime = totalTime / times.length
+    const totalTime = allTimes.reduce((a, b) => a + b, 0)
+    const averageTime = totalTime / allTimes.length
     const sneakyGames = games.filter((x) => x.stealth).length
     const streamedGames = games.filter((x) => x.streamed).length
     const finishedGames = games.filter((x) => x.finished && x.finished !== 'Nope' && x.finished !== 'Happening').length
-    const droppedGames = games.filter((x) => x.finished && x.finished === 'Nope').length
     const backlogLength = backlog.length
     const playedGamesLength = games.filter((x) => x.finishedDate && x.finished !== 'Happening').length
     const backlogTime = backlog
