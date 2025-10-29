@@ -18,7 +18,7 @@ export function SignOut(props: any) {
             className="w-full"
         >
             <button className='btn btn-light' {...props}>
-                Sign Out
+                Sign Out ({props.username})
             </button>
         </form>
     )

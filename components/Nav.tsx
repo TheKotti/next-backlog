@@ -17,10 +17,10 @@ async function revalidate() {
 export default function Nav({ username, isAdmin }: { username: string, isAdmin: boolean }) {
   return (
     <nav className='w-100 pb-3 mb-3 border-bottom d-flex justify-content-between align-items-center'>
-      {isAdmin ? (
-        <>
-          <SignOut />
+      {username ? <SignOut username={username} /> : <SignIn />}
 
+      {isAdmin && (
+        <>
           <Link href='/admin'>
             Game list
           </Link>
@@ -36,8 +36,6 @@ export default function Nav({ username, isAdmin }: { username: string, isAdmin: 
             Revalidate
           </button>
         </>
-      ) : (
-        <SignIn />
       )}
     </nav>
   )
