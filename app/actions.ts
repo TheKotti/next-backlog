@@ -222,3 +222,31 @@ export async function addNewGameAction(formData: FormData) {
         return false
     }
 }
+
+export async function getTwitchUserAction(formData: FormData) {
+    try {
+        const authState = await auth()
+        const username = authState?.user?.name ?? ""
+        const isAdmin = process.env.ADMIN_USER_NAME === username
+
+        if (isAdmin) {
+            const authToken = await getIgdbToken(formData)
+            const username = 'TheKotti'
+            const url = `https://api.twitch.tv/helix/users?login=${username}`
+            const res = await fetch(url, {
+                headers: {
+                    Accept: 'application/json',
+                    'Client-ID': process.env.TWITCH_CLIENT_ID!,
+                    Authorization: `Bearer ${authToken}`,
+                },
+            })
+            const json = await res.json()
+            console.log('twitch user json', json)
+        }
+
+        return true
+    } catch (error) {
+        console.log('Error in get user action:', error)
+        return false
+    }
+}
