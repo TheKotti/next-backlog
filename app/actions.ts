@@ -202,7 +202,7 @@ export async function addNewGameAction(formData: FormData) {
             // Add cover image
             cloudinary.uploader.upload(
                 `https://images.igdb.com/igdb/image/upload/t_cover_big/${fetchedGame.cover.image_id}.png`,
-                { public_id: fetchedGame.cover.image_id, folder: 'covers', format: 'jpg' },
+                { public_id: fetchedGame.cover.image_id, folder: 'covers', format: 'jpg', overwrite: false },
                 function (error, result) {
                     console.error('cover image error', error)
                 }
