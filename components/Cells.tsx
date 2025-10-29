@@ -1,7 +1,5 @@
 import React from 'react'
-import axios from 'axios'
 import dayjs from 'dayjs'
-import { toast } from 'react-toastify'
 
 import { VodDialog } from './VodDialog'
 import styles from '../styles/GameTable.module.css'
@@ -15,7 +13,7 @@ export const CommentCell = ({ value, row }) => {
     <>
       {tags && tags.length > 0 && (
         <div className='pb-2 d-flex gap-2'>
-          {tags.map((tag) => <Tag value={tag} key={tag}></Tag>)}
+          {tags.sort().map((tag) => <Tag value={tag} key={tag}></Tag>)}
         </div>
       )}
 

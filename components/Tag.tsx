@@ -2,15 +2,16 @@ import styles from '../styles/GameTable.module.css'
 
 export const Tag = ({ value }: { value: string }) => {
     const length = value.length
-    const charCode = value.charCodeAt(2);
+    const charCode = value.charCodeAt(2) || 123;
     const hex = Math.floor((Math.abs(Math.sin(length * charCode) * 16777215))).toString(16);
-    var contrastColor = getContrastColor(hex);
+    const paddedHex = hex.padEnd(6, '0');
+    var contrastColor = getContrastColor(paddedHex);
     return (
         <span
             style={{
-                backgroundColor: `#${hex}`,
+                backgroundColor: `#${paddedHex}`,
                 color: `${contrastColor.text}`,
-                borderColor: `${contrastColor.border}`,
+                borderColor: `grey`,
 
             }}
             className={`${styles['tag']}`}
@@ -23,7 +24,7 @@ const getContrastColor = (hexColor: string) => {
     const rgbColor = hexToRgb(hexColor)
 
     if (!rgbColor) {
-        return { text: '#000000', border: 'grey' } // default to black if conversion fails
+        return { text: '#000000' } // default to black if conversion fails
     }
 
     const original = [rgbColor.r, rgbColor.g, rgbColor.b];
@@ -43,10 +44,10 @@ const getContrastColor = (hexColor: string) => {
     const luminance = 0.2126 * calculated[0] + 0.7152 * calculated[1] + 0.0722 * calculated[2]
 
     // Actual limit is 0.179, but lower value works better in practice
-    if (luminance > 0.1) {
-        return { text: '#000000', border: 'grey' }
+    if (luminance > 0.15) {
+        return { text: '#000000' }
     } else {
-        return { text: '#FFFFFF', border: '#FFFFFF' }
+        return { text: '#FFFFFF' }
     }
 }
 
