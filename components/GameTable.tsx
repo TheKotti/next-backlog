@@ -156,6 +156,10 @@ export const GameTable = ({ games, updateParams, initialParams, isAdmin }: Props
               ...baseStyles,
               color: 'grey !important',
             }),
+            indicatorSeparator: (baseStyles, state) => ({
+              ...baseStyles,
+              backgroundColor: 'grey !important',
+            }),
             dropdownIndicator: (baseStyles, state) => ({
               ...baseStyles,
               color: 'grey !important',
