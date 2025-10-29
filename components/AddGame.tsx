@@ -33,7 +33,7 @@ async function searchIgdb(searchTerm: string, authToken: string) {
 
 const AddGame = () => {
     const [token, setToken] = useState<string>('')
-    const [searchTerm, setSearchTerm] = useState<string>('fear the spotlight')
+    const [searchTerm, setSearchTerm] = useState<string>('')
     const [options, setOptions] = useState<GameOptions[]>([])
 
     useEffect(() => {
