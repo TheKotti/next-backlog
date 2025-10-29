@@ -65,7 +65,7 @@ const AddGame = () => {
                     </div>
 
                     {options.map((x, i) => {
-                        const years = x.release_dates.map(x => x.y)
+                        const years = x.release_dates?.map(x => x.y) || []
                         const initialYear = Math.min(...years)
                         return (
                             <div key={i}>
