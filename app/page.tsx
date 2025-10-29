@@ -22,7 +22,7 @@ async function getGames(): Promise<Game[]> {
 }
 
 export const metadata: Metadata = {
-  title: 'Played games | YAME! YAME!'
+  title: 'YAME! YAME!'
 }
 
 export default async function Home() {
