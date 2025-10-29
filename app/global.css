@@ -4,8 +4,6 @@ body {
     margin: 0;
     font-family: DejaVu Sans, Arial, Helvetica, sans-serif;
     color: grey;
-    background: url('/NJBG.jpg') no-repeat center center fixed;
-    background-size: cover;
 }
 
 a {
