@@ -6,14 +6,18 @@ import styles from '../styles/GameTable.module.css'
 import CoverImage from './CoverImage'
 import { Tag } from './Tag'
 
-export const CommentCell = ({ value, row }) => {
+export const CommentCell = ({ value, row, handleTagFilterChange }) => {
   const tags: string[] = row.original.tags
 
   return (
     <>
       {tags && tags.length > 0 && (
         <div className='pb-2 d-flex gap-2'>
-          {tags.sort().map((tag) => <Tag value={tag} key={tag}></Tag>)}
+          {tags.sort().map((tag) => {
+            return (
+              <Tag value={tag} key={tag} onClick={() => handleTagFilterChange(tag)}></Tag>
+            )
+          })}
         </div>
       )}
 

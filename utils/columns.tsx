@@ -30,7 +30,7 @@ export const gameTableColumns: Column<Partial<Game>>[] = [
   {
     Header: 'Comments',
     accessor: 'comment',
-    Cell: ({ value, row }) => CommentCell({ value, row }),
+    Cell: ({ value, row, handleTagFilterChange }) => CommentCell({ value, row, handleTagFilterChange }),
     disableSortBy: true,
   },
   {

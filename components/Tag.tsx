@@ -1,6 +1,6 @@
 import styles from '../styles/GameTable.module.css'
 
-export const Tag = ({ value }: { value: string }) => {
+export const Tag = ({ value, onClick }: { value: string, onClick: () => any }) => {
     const length = value.length
     const charCode = value.charCodeAt(2) || 123;
     var hue = `(${Math.floor((Math.abs(Math.sin(charCode / length) * 360)))}`;
@@ -11,6 +11,8 @@ export const Tag = ({ value }: { value: string }) => {
                 textTransform: `${length <= 3 ? 'uppercase' : 'capitalize'}`,
             }}
             className={`${styles['tag']}`}
+            role='button'
+            onClick={onClick}
         >
             {value}
         </span>)

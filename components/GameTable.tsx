@@ -200,7 +200,7 @@ export const GameTable = ({ games, updateParams, initialParams, isAdmin }: Props
             return (
               <tr {...row.getRowProps()} key={i}>
                 {row.cells.map((cell) => {
-                  return formatCell(cell, row, { showCovers })
+                  return formatCell(cell, row, { showCovers, handleTagFilterChange })
                 })}
               </tr>
             )

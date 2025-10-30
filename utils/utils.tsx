@@ -65,19 +65,20 @@ export const formatCell = (cell: Cell<object, any>, row: Row<object>, props?: an
   const { column } = cell
   const columnId = column.id
   const showCovers = props?.showCovers
+  const handleTagFilterChange = props?.handleTagFilterChange
 
   switch (true) {
     case COLUMN_IDS.TITLE.includes(columnId):
-      return renderCellWithProps(cell, { key: columnId + row.id }, { showCovers })
+      return renderCellWithProps(cell, { key: columnId + row.id }, { showCovers, handleTagFilterChange })
 
     case COLUMN_IDS.CENTERED.includes(columnId):
       return renderCellWithProps(cell, {
         key: columnId + row.id,
         style: { textAlign: 'center' },
-      })
+      }, { handleTagFilterChange })
 
     default:
-      return renderCellWithProps(cell, { key: columnId + row.id })
+      return renderCellWithProps(cell, { key: columnId + row.id }, { handleTagFilterChange })
   }
 }
 
