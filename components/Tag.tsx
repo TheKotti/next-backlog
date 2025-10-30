@@ -2,7 +2,7 @@ import styles from '../styles/GameTable.module.css'
 
 export const Tag = ({ value, onClick }: { value: string, onClick: () => any }) => {
     const length = value.length
-    const charCode = value.charCodeAt(2) || 123;
+    const charCode = value.charCodeAt(0);
     var hue = `(${Math.floor((Math.abs(Math.sin(charCode / length) * 360)))}`;
     return (
         <span
