@@ -52,8 +52,8 @@ export const Recap = ({ fetchedGame }: Props) => {
 
   const handleTimeChange = (value: string) => {
     const [timeString, additionalTimeString] = value.split('+')
-    const time = timeString ? parseInt(timeString) : null
-    const additionalTime = additionalTimeString ? parseInt(additionalTimeString) : null
+    const time = timeString ? parseFloat(timeString) : null
+    const additionalTime = additionalTimeString ? parseFloat(additionalTimeString) : null
 
     setGame({
       ...game,
