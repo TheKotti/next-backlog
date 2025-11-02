@@ -16,7 +16,7 @@ type Props = {
 }
 
 export const GameTable = ({ games, updateParams, initialParams, isAdmin }: Props) => {
-  const [showCovers, setShowCovers] = useState(true)
+  const [showCovers, setShowCovers] = useState(initialParams.get('showCovers') != 'false')
   const [titleFilter, setTitleFilter] = useState(initialParams.get('title') ?? '')
   const [tagFilter, setTagFilter] = useState(initialParams.get('tag') ?? null)
 
@@ -107,6 +107,11 @@ export const GameTable = ({ games, updateParams, initialParams, isAdmin }: Props
     updateParams({ tag: value })
   }
 
+  const handleShowCoversChange = (checked) => {
+    setShowCovers(checked)
+    updateParams({ showCovers: checked })
+  }
+
   useEffect(() => {
     updateParams({ sortBy: sortBy[0].id, sortDesc: sortBy[0].desc })
   }, [sortBy, updateParams])
@@ -178,7 +183,7 @@ export const GameTable = ({ games, updateParams, initialParams, isAdmin }: Props
               className={`form-check-input ${styles['dark-input']}`}
               type='checkbox'
               checked={showCovers}
-              onChange={(e) => setShowCovers(e.target.checked)}
+              onChange={(e) => handleShowCoversChange(e.target.checked)}
             />
             Show covers
           </label>

@@ -18,7 +18,8 @@ export const Tables = ({ games, isAdmin }: Props) => {
         sortDesc: true,
         title: '',
         showBacklog: false,
-        tag: null
+        tag: null,
+        showCovers: true,
     })
 
     const [viewBacklog, setViewBacklog] = useState(initialParams.get('showBacklog') == 'true')
