@@ -4,6 +4,7 @@ import { Cloudinary } from '@cloudinary/url-gen'
 
 import styles from '../styles/CoverImage.module.css'
 import { ScoreIndicator } from './ScoreIndicator'
+import { getHltbString } from 'utils/utils'
 
 const cld = new Cloudinary({
   cloud: {
@@ -14,9 +15,10 @@ const cld = new Cloudinary({
 type Props = {
   game: Game
   showScore?: boolean
+  showHltb?: boolean
 }
 
-const CoverImage = ({ game, showScore }: Props) => {
+const CoverImage = ({ game, showScore, showHltb }: Props) => {
   const myImage = cld.image(`covers/${game.coverImageId}`).resize(fill().width(150).height(200))
 
   const formattedTitle = game.title.startsWith("The ") ? game.title.substring(4) + ", The" : game.title
@@ -27,15 +29,22 @@ const CoverImage = ({ game, showScore }: Props) => {
     <div className={styles.imageContainer}>
       <AdvancedImage cldImg={myImage} />
 
-      <div className={styles.overlay}>
-        <a href={game.igdbUrl} target='_blank' rel='noreferrer'>
-          <div className={`${styles.titleText} ${showScore && styles.raiseText}`}>{title}</div>
-          {showScore && (
-            <div className={styles.scoreIndicator}>
-              <ScoreIndicator rating={game.rating} />
-            </div>
-          )}
+      <div className={`d-flex flex-column justify-content-center align-items-center text-center gap-1 ${styles.overlay}`}>
+        <a href={game.igdbUrl} target='_blank' rel='noreferrer' className={styles.titleText}>
+          {title}
         </a>
+
+        {showHltb && (
+          <span>
+            {getHltbString(game)}
+          </span>
+        )}
+
+        {showScore && (
+          <div className={styles.scoreIndicator}>
+            <ScoreIndicator rating={game.rating} />
+          </div>
+        )}
       </div>
     </div>
   )

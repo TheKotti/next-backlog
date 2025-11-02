@@ -20,7 +20,7 @@ export const getHltbString = (game: Game) => {
   if (extra === 0 && completionist === 0) {
     return `${main} h`
   }
-  return '-'
+  return ''
 }
 
 /*********************************************************************
@@ -51,6 +51,13 @@ export const titleSort = (rowA, rowB, id) => {
   const rowBFormatted = rowBValue.startsWith("The ") ? rowBValue.substring(4) : rowBValue
 
   return rowBFormatted.localeCompare(rowAFormatted)
+}
+
+export const titleSortSimple = (valueA: string, valueB: string) => {
+  const valueAFormatted = valueA.startsWith("The ") ? valueA.substring(4) : valueA
+  const valueBFormatted = valueB.startsWith("The ") ? valueB.substring(4) : valueB
+
+  return valueAFormatted.localeCompare(valueBFormatted)
 }
 
 /*********************************************************************

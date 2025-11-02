@@ -22,24 +22,12 @@
 }
 
 .titleText {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
     width: 80%;
-    color: white;
-    font-size: 14px;
+    font-size: 0.875rem;
     font-weight: bold;
-    text-align: center;
+    color: white;
 }
 
 .raiseText {
     top: 35%;
-}
-
-.scoreIndicator {
-    position: absolute;
-    top: 70%;
-    left: 50%;
-    transform: translate(-50%, -50%);
 }
