@@ -106,11 +106,14 @@ export const BacklogTable = ({ games, updateParams, initialParams, isAdmin }: Pr
 
       {showCovers ? (
         <div className='d-flex flex-wrap w-100 mt-3 justify-content-between gap-3'>
-          {games.sort((a, b) => titleSortSimple(a.title, b.title)).map((game) => {
-            return (
-              <CoverImage game={game} showHltb key={game._id} />
-            )
-          })}
+          {games
+            .filter((x) => (titleFilter && x.title.toLowerCase().includes(titleFilter.toLowerCase())) || titleFilter === '')
+            .sort((a, b) => titleSortSimple(a.title, b.title))
+            .map((game) => {
+              return (
+                <CoverImage game={game} showHltb key={game._id} isAdmin={isAdmin} />
+              )
+            })}
         </div>
       ) : (
         <>

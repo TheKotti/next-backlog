@@ -16,9 +16,10 @@ type Props = {
   game: Game
   showScore?: boolean
   showHltb?: boolean
+  isAdmin?: boolean
 }
 
-const CoverImage = ({ game, showScore, showHltb }: Props) => {
+const CoverImage = ({ game, showScore, showHltb, isAdmin }: Props) => {
   const myImage = cld.image(`covers/${game.coverImageId}`).resize(fill().width(150).height(200))
 
   const formattedTitle = game.title.startsWith("The ") ? game.title.substring(4) + ", The" : game.title
@@ -44,6 +45,10 @@ const CoverImage = ({ game, showScore, showHltb }: Props) => {
           <div className={styles.scoreIndicator}>
             <ScoreIndicator rating={game.rating} />
           </div>
+        )}
+
+        {isAdmin && (
+          <a href={`/recap?id=${game._id}`}>Recap</a>
         )}
       </div>
     </div>
