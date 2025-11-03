@@ -130,6 +130,7 @@ export const GameTable = ({ games, updateParams, initialParams, isAdmin }: Props
           value={tagSelectOptions.find(x => x.value == tagFilter)}
           options={tagSelectOptions}
           onChange={e => handleTagFilterChange(e?.value)}
+          id='tag-select'
           isClearable
           placeholder='Filter by tag'
           styles={{
