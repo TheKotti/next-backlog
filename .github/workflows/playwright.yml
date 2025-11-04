@@ -1,9 +1,8 @@
 name: Playwright Tests
 on:
-  push:
-    branches: [ main ]
-  pull_request:
-    branches: [ main ]
+  workflow_dispatch:
+  schedule:
+    - cron: '0 0 * * *' # runs daily at 00:00
 jobs:
   test:
     environment: Preview
@@ -11,6 +10,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
+      with:
+        fetch-depth: 0 # required to count the commits
+    - name: Get new commits
+      run: echo "NEW_COMMIT_COUNT=$(git log --oneline --since '24 hours ago' | wc -l)" >> $GITHUB_ENV
+      if: ${{ env.NEW_COMMIT_COUNT > 0 }}
     - uses: actions/setup-node@v4
       with:
         node-version: lts/*
