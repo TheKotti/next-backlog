@@ -27,6 +27,8 @@ jobs:
         NEXTAUTH_URL: ${{ secrets.NEXTAUTH_URL }}
         AUTH_TRUST_HOST: ${{ secrets.AUTH_TRUST_HOST }}
         APP_URL: ${{ secrets.APP_URL }}
+    - name: Run app
+      run: npm run start
     - name: Run Playwright tests
       run: npx playwright test
     - uses: actions/upload-artifact@v4
