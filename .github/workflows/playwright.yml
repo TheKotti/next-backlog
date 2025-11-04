@@ -28,7 +28,7 @@ jobs:
         AUTH_TRUST_HOST: ${{ secrets.AUTH_TRUST_HOST }}
         APP_URL: ${{ secrets.APP_URL }}
     - name: Run app
-      run: npm run start
+      run: npm run start & npx wait-on http://localhost:3000
     - name: Run Playwright tests
       run: npx playwright test
     - uses: actions/upload-artifact@v4
