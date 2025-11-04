@@ -19,6 +19,13 @@ jobs:
       run: npx playwright install --with-deps
     - name: Build app
       run: npm run build
+      env:
+        MONGODB_URI: ${{ secrets.MONGODB_URI }}
+        DB_NAME: ${{ secrets.DB_NAME }}
+        NEXTAUTH_SECRET: ${{ secrets.NEXTAUTH_SECRET }}
+        NEXTAUTH_URL: ${{ secrets.NEXTAUTH_URL }}
+        AUTH_TRUST_HOST: ${{ secrets.AUTH_TRUST_HOST }}
+        APP_URL: ${{ secrets.APP_URL }}
     - name: Run Playwright tests
       run: npx playwright test
     - uses: actions/upload-artifact@v4
