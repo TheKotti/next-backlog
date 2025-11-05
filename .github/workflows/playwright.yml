@@ -8,33 +8,58 @@ jobs:
     environment: Preview
     timeout-minutes: 60
     runs-on: ubuntu-latest
+
+    services:
+      mongodb:
+        image: mongo:6
+        ports:
+          - 27017:27017
+
     steps:
     - uses: actions/checkout@v4
       with:
         fetch-depth: 0 # required to count the commits
+
     - name: Get new commits
       run: echo "NEW_COMMIT_COUNT=$(git log --oneline --since '24 hours ago' | wc -l)" >> $GITHUB_ENV
+
       if: ${{ env.NEW_COMMIT_COUNT > 0 || github.event_name == 'workflow_dispatch' }}
     - uses: actions/setup-node@v4
       with:
         node-version: lts/*
+
     - name: Install dependencies
       run: npm ci
+
+    - name: Seed MongoDB
+      run: |
+        mongoimport --db test_db --collection games --drop --file tests/data/seed.json --jsonArray
+
     - name: Install Playwright Browsers
       run: npx playwright install --with-deps
+
     - name: Build app
       run: npm run build
       env:
-        MONGODB_URI: ${{ secrets.MONGODB_URI }}
-        DB_NAME: ${{ secrets.DB_NAME }}
+        MONGODB_URI: mongodb://localhost:27017
+        DB_NAME: test_db
         NEXTAUTH_SECRET: ${{ secrets.NEXTAUTH_SECRET }}
         NEXTAUTH_URL: ${{ secrets.NEXTAUTH_URL }}
         AUTH_TRUST_HOST: ${{ secrets.AUTH_TRUST_HOST }}
         APP_URL: ${{ secrets.APP_URL }}
+
     - name: Run app
       run: npm run start & npx wait-on http://localhost:3000
+      env:
+        MONGODB_URI: mongodb://localhost:27017
+        DB_NAME: test_db
+
     - name: Run Playwright tests
       run: npx playwright test
+      env:
+        MONGODB_URI: mongodb://localhost:27017
+        DB_NAME: test_db
+
     - uses: actions/upload-artifact@v4
       if: ${{ !cancelled() }}
       with:
