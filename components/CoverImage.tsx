@@ -1,5 +1,5 @@
-import { AdvancedImage } from '@cloudinary/react'
 import { fill } from '@cloudinary/url-gen/actions/resize'
+import { AdvancedImage } from '@cloudinary/react'
 import { Cloudinary } from '@cloudinary/url-gen'
 
 import styles from '../styles/CoverImage.module.css'
@@ -20,7 +20,7 @@ type Props = {
 }
 
 const CoverImage = ({ game, showScore, showHltb, isAdmin }: Props) => {
-  const myImage = cld.image(`covers/${game.coverImageId}`).resize(fill().width(150).height(200))
+  const coverImage = cld.image(`covers/${game.coverImageId}`).resize(fill().width(150).height(200))
 
   const formattedTitle = game.title.startsWith("The ") ? game.title.substring(4) + ", The" : game.title
 
@@ -28,7 +28,7 @@ const CoverImage = ({ game, showScore, showHltb, isAdmin }: Props) => {
 
   return (
     <div className={styles.imageContainer}>
-      <AdvancedImage cldImg={myImage} />
+      <AdvancedImage cldImg={coverImage} />
 
       <div className={`d-flex flex-column justify-content-center align-items-center text-center gap-1 ${styles.overlay}`}>
         <a href={game.igdbUrl} target='_blank' rel='noreferrer' className={styles.titleText}>

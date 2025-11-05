@@ -1,8 +1,10 @@
 /* eslint-disable @next/next/no-img-element */
 'use client'
 
-import { useEffect, useRef, useState } from 'react'
+import { useMemo, useRef, useState } from 'react'
 import Link from 'next/link'
+import { AdvancedImage } from '@cloudinary/react'
+import { Cloudinary } from '@cloudinary/url-gen'
 
 import styles from '../styles/Recap.module.css'
 import { Rating } from './Rating'
@@ -10,6 +12,12 @@ import { DetailsDialog } from './DetailsDialog'
 import { useTextareaScaling } from 'hooks/useTextareaScaling'
 import { updateGameAction } from 'app/actions'
 import { toast } from 'react-toastify'
+
+const cld = new Cloudinary({
+  cloud: {
+    cloudName: process.env.NEXT_PUBLIC_IMG_CLOUD_NAME,
+  },
+})
 
 type Props = {
   fetchedGame: Game
@@ -32,6 +40,8 @@ export const Recap = ({ fetchedGame }: Props) => {
   useTextareaScaling(textareaRef, game?.comment || '')
   useTextareaScaling(finishedRef, game?.finished || '')
   useTextareaScaling(tagsRef, game?.tags?.join(', ') || '')
+
+  const coverImage = useMemo(() => cld.image(`covers/${game.coverImageId}`), [game.coverImageId])
 
   const updateGame = async () => {
     const formData = new FormData()
@@ -66,7 +76,7 @@ export const Recap = ({ fetchedGame }: Props) => {
   return (
     <div className={styles.root}>
       <div className={styles.gameMeta}>
-        <img src={`https://images.igdb.com/igdb/image/upload/t_cover_big/${game.coverImageId}.png`} alt='cover' />
+        <AdvancedImage cldImg={coverImage} />
         <h1>{game.title}</h1>
         <div className={styles.webcam}></div>
       </div>
