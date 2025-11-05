@@ -14,8 +14,8 @@ export default async function RootLayout({
     children: React.ReactNode
 }) {
     return (
-        <html lang="en" style={{ background: `url('/${process.env.ADMIN_USER_NAME}.jpg') no-repeat center center fixed;`, backgroundSize: 'cover' }}>
-            <body style={{ background: `url('/${process.env.ADMIN_USER_NAME}.jpg') no-repeat center center fixed;`, backgroundSize: 'cover' }}>
+        <html lang="en" style={{ background: `url('/${process.env.ADMIN_USER_NAME}.jpg') no-repeat center center fixed`, backgroundSize: 'cover' }}>
+            <body style={{ background: `url('/${process.env.ADMIN_USER_NAME}.jpg') no-repeat center center fixed`, backgroundSize: 'cover' }}>
                 <SessionProvider>
                     {children}
                     <Analytics />
