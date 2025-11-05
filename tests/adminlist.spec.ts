@@ -1,8 +1,7 @@
 import { test, expect, Page } from '@playwright/test'
 
 const login = async (page: Page) => {
-  await page.goto('/admin')
-  await page.click('text=Sign in')
+  await page.goto('/api/auth/signin')
   await page.click('text=Sign in with Credentials')
   await page.goto('/admin')
 }
