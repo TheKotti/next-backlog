@@ -53,6 +53,7 @@ jobs:
         NEXTAUTH_URL: ${{ secrets.NEXTAUTH_URL }}
         AUTH_TRUST_HOST: ${{ secrets.AUTH_TRUST_HOST }}
         APP_URL: ${{ secrets.APP_URL }}
+        ADMIN_USER_NAME: ${{ secrets.ADMIN_USER_NAME }}
 
     - name: Run app
       run: npm run start & npx wait-on http://localhost:3000
