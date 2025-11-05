@@ -11,7 +11,7 @@ jobs:
 
     services:
       mongodb:
-        image: mongo:6
+        image: mongo:8
         ports:
           - 27017:27017
 
@@ -30,6 +30,12 @@ jobs:
 
     - name: Install dependencies
       run: npm ci
+
+    - name: Setup mongodb-tools
+      run: |
+        wget https://fastdl.mongodb.org/tools/db/mongodb-database-tools-ubuntu2204-x86_64-100.6.1.deb
+        sudo apt install ./mongodb-database-tools-*-100.6.1.deb
+        mongorestore --version
 
     - name: Seed MongoDB
       run: |
