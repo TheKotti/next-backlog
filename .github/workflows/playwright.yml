@@ -60,12 +60,22 @@ jobs:
       env:
         MONGODB_URI: mongodb://localhost:27017
         DB_NAME: test_db
+        NEXTAUTH_SECRET: ${{ secrets.NEXTAUTH_SECRET }}
+        NEXTAUTH_URL: ${{ secrets.NEXTAUTH_URL }}
+        AUTH_TRUST_HOST: ${{ secrets.AUTH_TRUST_HOST }}
+        APP_URL: ${{ secrets.APP_URL }}
+        ADMIN_USER_NAME: ${{ secrets.ADMIN_USER_NAME }}
 
     - name: Run Playwright tests
       run: npx playwright test
       env:
         MONGODB_URI: mongodb://localhost:27017
         DB_NAME: test_db
+        NEXTAUTH_SECRET: ${{ secrets.NEXTAUTH_SECRET }}
+        NEXTAUTH_URL: ${{ secrets.NEXTAUTH_URL }}
+        AUTH_TRUST_HOST: ${{ secrets.AUTH_TRUST_HOST }}
+        APP_URL: ${{ secrets.APP_URL }}
+        ADMIN_USER_NAME: ${{ secrets.ADMIN_USER_NAME }}
 
     - uses: actions/upload-artifact@v4
       if: ${{ !cancelled() }}
