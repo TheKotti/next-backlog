@@ -39,7 +39,7 @@ jobs:
 
     - name: Seed MongoDB
       run: |
-        mongoimport --db test_db --collection games --drop --file tests/data/seed.json --jsonArray
+        mongoimport --db test_db --collection games --drop --file tests/seed.json --jsonArray
 
     - name: Install Playwright Browsers
       run: npx playwright install --with-deps
