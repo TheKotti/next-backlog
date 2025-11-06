@@ -87,6 +87,7 @@ export const Recap = ({ fetchedGame }: Props) => {
             <label>Finished</label>
             <textarea
               ref={finishedRef}
+              id='finishedArea'
               value={game?.finished || ''}
               onChange={(e) => setGame({ ...game, finished: e.target.value })}
               className='p-2'
@@ -97,6 +98,7 @@ export const Recap = ({ fetchedGame }: Props) => {
             <label>Tags</label>
             <textarea
               ref={tagsRef}
+              id='tagsArea'
               value={game?.tags || ''}
               onChange={(e) => handleTagChange(e.target.value)}
               className='p-2'
@@ -107,6 +109,7 @@ export const Recap = ({ fetchedGame }: Props) => {
             <label>Time spent</label>
             <textarea
               value={timeToBeat || ''}
+              id='timeArea'
               onChange={(e) => handleTimeChange(e.target.value)}
               className='p-2'
             ></textarea>
@@ -117,6 +120,7 @@ export const Recap = ({ fetchedGame }: Props) => {
           <label>Comments</label>
           <textarea
             ref={textareaRef}
+            id='commentArea'
             value={game?.comment || ''}
             onChange={(e) => setGame({ ...game, comment: e.target.value })}
             className='p-2'

@@ -1,10 +1,5 @@
-import { test, expect, Page } from '@playwright/test'
-
-const login = async (page: Page) => {
-  await page.goto('/api/auth/signin')
-  await page.click('text=Sign in with Credentials')
-  await page.goto('/admin')
-}
+import { test, expect } from '@playwright/test'
+import { login } from './helpers'
 
 test('should log in to admin view', async ({ page }) => {
   await login(page)
@@ -42,4 +37,23 @@ test('should navigate to recap', async ({ page }) => {
   await expect(tbody).toContainText("Asghan")
   await page.click('text=Recap')
   await expect(page.locator('h1')).toContainText('Asghan: The Dragon Slayer')
+})
+
+test('should add vods', async ({ page }) => {
+
+  const vodTextInput = `url1
+url2;custom text`
+
+  await login(page)
+
+  const firstRow = await page.locator('css=tbody>tr').locator("nth=0")
+  firstRow.locator("text=Add vods").click()
+
+  await page.locator('css=#vodsArea').fill(vodTextInput)
+  await page.locator('css=#vodDialog').locator('text=Save').click()
+  await page.waitForLoadState('networkidle')
+  await page.reload()
+
+  await expect(firstRow.locator('td').locator("nth=-2")).toContainText('Part 1')
+  await expect(firstRow.locator('td').locator("nth=-2")).toContainText('custom text')
 })

@@ -29,7 +29,7 @@ export const Rating = (props: Props) => {
         let selectStatus
         switch (true) {
           case x.value === rating:
-            selectStatus = styles.selected
+            selectStatus = `selectedRating ${styles.selected}`
             break
           case rating && x.value > rating:
             selectStatus = styles.tooBig
@@ -45,7 +45,7 @@ export const Rating = (props: Props) => {
         return (
           <div
             key={x.value}
-            className={`${styles.ratingBox} ${selectStatus}`}
+            className={`ratingBox ${styles.ratingBox} ${selectStatus}`}
             style={{ backgroundColor: x.color }}
             onClick={() => setRating(x.value)}
           >

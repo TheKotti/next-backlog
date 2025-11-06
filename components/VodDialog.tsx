@@ -32,12 +32,12 @@ export const VodDialog = (props: Props) => {
       <a href='#' onClick={() => setShow(true)}>
         Add vods
       </a>
-      <Modal show={show} onHide={() => setShow(false)} centered>
+      <Modal show={show} onHide={() => setShow(false)} centered id="vodDialog">
         <Modal.Header closeButton>
           <Modal.Title>Add vods</Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <textarea cols={45} rows={5} value={textValue} onChange={(e) => setTextValue(e.target.value)} />
+          <textarea cols={45} rows={5} id="vodsArea" value={textValue} onChange={(e) => setTextValue(e.target.value)} />
         </Modal.Body>
         <Modal.Footer>
           <button className='btn btn-light' onClick={() => updateVods()}>

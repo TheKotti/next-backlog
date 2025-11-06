@@ -23415,38 +23415,4 @@
   "tags": null,
   "additionalTimeSpent": null,
   "addedDate": "2025-10-28T15:02:17.577Z"
-},
-{
-  "_id": {
-    "$oid": "690487d26280c41f95ef3534"
-  },
-  "title": "Halls of Torment",
-  "igdbId": 235846,
-  "coverImageId": "co65yp",
-  "keywords": [
-    "Role-playing (RPG)",
-    "Indie",
-    "Action"
-  ],
-  "developers": [
-    "Chasing Carrots"
-  ],
-  "releaseYear": 2023,
-  "igdbUrl": "https://www.igdb.com/games/halls-of-torment",
-  "finishedDate": null,
-  "comment": "",
-  "timeSpent": null,
-  "finished": "Happening",
-  "rating": null,
-  "platform": "",
-  "streamed": false,
-  "vods": null,
-  "hltbMain": null,
-  "hltbExtra": null,
-  "hltbCompletionist": null,
-  "tags": [
-    "roguelite"
-  ],
-  "additionalTimeSpent": null,
-  "addedDate": "2025-10-31T09:56:33.228Z"
 }]

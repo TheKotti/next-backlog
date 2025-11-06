@@ -15,7 +15,7 @@ export const DetailsDialog = (props: Props) => {
   return (
     <>
       <button onClick={() => setShow(true)}>Details</button>
-      <Modal show={show} onHide={() => setShow(false)} centered>
+      <Modal show={show} onHide={() => setShow(false)} centered id="detailsDialog">
         <Modal.Header closeButton>
           <Modal.Title>Details</Modal.Title>
         </Modal.Header>
