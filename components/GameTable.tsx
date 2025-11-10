@@ -88,10 +88,17 @@ export const GameTable = ({ games, updateParams, initialParams, isAdmin }: Props
     games.forEach(g => {
       g.tags?.forEach(t => tags.push(t))
     })
-    let uniqueTags = [...new Set(tags)].sort();
+    
+    // count occurrences per tag
+    const tagCounts: Record<string, number> = {}
+    tags.forEach(t => {
+      tagCounts[t] = (tagCounts[t] || 0) + 1
+    })
 
-    var tagOptions = uniqueTags.map(t => {
-      return { value: t, label: t }
+    const uniqueTags = [...new Set(tags)].sort()
+
+    const tagOptions = uniqueTags.map(t => {
+      return { value: t, label: `${t} (${tagCounts[t] ?? 0})` }
     })
 
     return tagOptions
