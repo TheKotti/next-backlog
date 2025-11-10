@@ -24,15 +24,26 @@ const getHue = (value: string) => {
     return randomizedHue
 }
 
+const getCaps = (value: string): 'capitalize' | 'uppercase' => {
+
+    if (value === 'mod') {
+        return 'capitalize'
+    } else if (value.length <= 3) {
+        return 'uppercase'
+    }
+    return 'capitalize'
+}
+
 export const Tag = ({ value, onClick }: { value: string, onClick?: () => any }) => {
     const length = value.length
     var hue = getHue(value)
+    var caps = getCaps(value)
 
     return (
         <span
             style={{
                 backgroundColor: `hsl(${hue}, 70%, 65%)`,
-                textTransform: `${length <= 3 ? 'uppercase' : 'capitalize'}`,
+                textTransform: `${caps}`,
             }}
             className={`${styles['tag']}`}
             role='button'
