@@ -40,7 +40,7 @@ export async function updateGameAction(formData: FormData) {
             const game: Game = JSON.parse(gameText)
             game.tags = game.tags?.map(t => t.trim().toLowerCase()).filter(t => !!t) || null
 
-            if (!!game.finishedDate) {
+            if (!game.finishedDate) {
                 game.finishedDate = (!game.finished || game.finished == 'Happening') ? null : new Date().toISOString();
             }
 
