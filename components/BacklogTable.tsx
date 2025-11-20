@@ -2,6 +2,7 @@
 
 import { useMemo, useState } from 'react'
 import { usePagination, useSortBy, useTable } from 'react-table'
+import Select from 'react-select'
 import styles from '../styles/GameTable.module.css'
 import { backlogTableColumns } from '../utils/columns'
 import { formatCell, formatHeader, getHltbString, titleSortSimple } from '../utils/utils'
@@ -18,20 +19,19 @@ type Props = {
 export const BacklogTable = ({ games, updateParams, initialParams, isAdmin }: Props) => {
   const [showCovers, setShowCovers] = useState(initialParams.get('showCovers') != 'false')
   const [titleFilter, setTitleFilter] = useState(initialParams.get('title') ?? '')
+  const [tagFilter, setTagFilter] = useState(initialParams.get('tag') ?? null)
 
   const data: Array<any> = useMemo(() => {
     return games
+      .filter((x) => (tagFilter && x.tags?.includes(tagFilter)) || !tagFilter)
       .filter((x) => (titleFilter && x.title.toLowerCase().includes(titleFilter.toLowerCase())) || titleFilter === '')
       .map((x) => {
         return {
-          _id: x._id,
-          title: x.title,
-          igdbUrl: x.igdbUrl,
-          releaseYear: x.releaseYear,
+          ...x,
           hltbString: getHltbString(x),
         }
       })
-  }, [games, titleFilter])
+  }, [games, tagFilter, titleFilter])
 
   const hiddenColumns = useMemo(() => (isAdmin ? [] : ['_id']), [isAdmin])
 
@@ -71,9 +71,36 @@ export const BacklogTable = ({ games, updateParams, initialParams, isAdmin }: Pr
     usePagination
   )
 
+  const tagSelectOptions = useMemo(() => {
+      const tags: string[] = []
+  
+      games.forEach(g => {
+        g.tags?.forEach(t => tags.push(t))
+      })
+      
+      // count occurrences per tag
+      const tagCounts: Record<string, number> = {}
+      tags.forEach(t => {
+        tagCounts[t] = (tagCounts[t] || 0) + 1
+      })
+  
+      const uniqueTags = [...new Set(tags)].sort()
+  
+      const tagOptions = uniqueTags.map(t => {
+        return { value: t, label: `${t} (${tagCounts[t] ?? 0})` }
+      })
+  
+      return tagOptions
+    }, [games])
+
   const handleTitleFilterChange = (value) => {
     setTitleFilter(value)
     updateParams({ title: value })
+  }
+
+  const handleTagFilterChange = (value) => {
+    setTagFilter(value)
+    updateParams({ tag: value })
   }
 
   const handleShowCoversChange = (checked) => {
@@ -91,6 +118,58 @@ export const BacklogTable = ({ games, updateParams, initialParams, isAdmin }: Pr
           placeholder='Search'
         />
 
+        <Select
+          value={tagSelectOptions.find(x => x.value == tagFilter)}
+          options={tagSelectOptions}
+          onChange={e => handleTagFilterChange(e?.value)}
+          id='tag-select'
+          isClearable
+          placeholder='Filter by tag'
+          styles={{
+            control: (baseStyles, state) => ({
+              ...baseStyles,
+              width: '200px',
+              borderColor: 'grey',
+              backgroundColor: '#333',
+              color: 'red',
+              cursor: 'pointer',
+
+            }),
+            menu: (baseStyles, state) => ({
+              ...baseStyles,
+              width: '300px',
+              borderColor: 'grey',
+              backgroundColor: '#333',
+            }),
+            menuList: (baseStyles, state) => ({
+              ...baseStyles,
+              borderRadius: '8px'
+            }),
+            option: (baseStyles, state) => ({
+              ...baseStyles,
+              textTransform: 'capitalize',
+              cursor: 'pointer',
+            }),
+            clearIndicator: (baseStyles, state) => ({
+              ...baseStyles,
+              color: 'grey !important',
+            }),
+            indicatorSeparator: (baseStyles, state) => ({
+              ...baseStyles,
+              backgroundColor: 'grey !important',
+            }),
+            dropdownIndicator: (baseStyles, state) => ({
+              ...baseStyles,
+              color: 'grey !important',
+            }),
+            singleValue: (baseStyles, state) => ({
+              ...baseStyles,
+              color: 'white',
+              textTransform: 'capitalize',
+            }),
+          }}
+        />
+
         <div className='form-check'>
           <label className='form-check-label'>
             <input
@@ -106,7 +185,7 @@ export const BacklogTable = ({ games, updateParams, initialParams, isAdmin }: Pr
 
       {showCovers ? (
         <div className='d-flex flex-wrap w-100 mt-3 justify-content-between gap-3'>
-          {games
+          {data
             .filter((x) => (titleFilter && x.title.toLowerCase().includes(titleFilter.toLowerCase())) || titleFilter === '')
             .sort((a, b) => titleSortSimple(a.title, b.title))
             .map((game) => {
