@@ -1,5 +1,5 @@
 import { Column } from 'react-table'
-import { AdminCell, CommentCell, DateCell, FinishedCell, TitleCell, VodCell } from '../components/Cells'
+import { AdminCell, CommentCell, DateCell, FinishedCell, TagCell, TitleCell, VodCell } from '../components/Cells'
 import { ScoreIndicator } from '../components/ScoreIndicator'
 import { dateSort, scoreSort, titleSort } from './utils'
 
@@ -60,6 +60,11 @@ export const backlogTableColumns: Column<Partial<Game & { hltbString: string }>>
     Cell: ({ value, row }) => TitleCell({ value, row, showCovers: false }),
     sortType: titleSort,
     sortDescFirst: true
+  },
+  {
+    Header: 'Tags',
+    accessor: 'tags',
+    Cell: ({ value, row, handleTagFilterChange }) => TagCell({ value, row, handleTagFilterChange }),
   },
   {
     Header: 'Howlongtobeat',

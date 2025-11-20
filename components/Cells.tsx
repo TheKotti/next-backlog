@@ -28,6 +28,25 @@ export const CommentCell = ({ value, row, handleTagFilterChange }) => {
   )
 }
 
+export const TagCell = ({ value, row, handleTagFilterChange }) => {
+  console.log(value)
+  const tags: string[] = row.original.tags
+
+  return (
+    <>
+      {tags && tags.length > 0 && (
+        <div className='d-flex gap-2'>
+          {tags.sort().map((tag) => {
+            return (
+              <Tag value={tag} key={tag} onClick={() => handleTagFilterChange(tag)}></Tag>
+            )
+          })}
+        </div>
+      )}
+    </>
+  )
+}
+
 export const DateCell = ({ value, row }) => {
   if (row.original['finished'] === 'Happening') return <span>Ongoing or soon™</span>
 

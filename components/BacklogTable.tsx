@@ -219,7 +219,7 @@ export const BacklogTable = ({ games, updateParams, initialParams, isAdmin }: Pr
                 return (
                   <tr {...rowProps} key={rowProps.key}>
                     {row.cells.map((cell) => {
-                      return formatCell(cell, row)
+                      return formatCell(cell, row, {handleTagFilterChange})
                     })}
                   </tr>
                 )
