@@ -34,8 +34,7 @@ const getCaps = (value: string): 'capitalize' | 'uppercase' => {
     return 'capitalize'
 }
 
-export const Tag = ({ value, onClick }: { value: string, onClick?: () => any }) => {
-    const length = value.length
+export const Tag = ({ value, onClick }: { value: string, onClick?: () => any}) => {
     var hue = getHue(value)
     var caps = getCaps(value)
 
@@ -46,7 +45,7 @@ export const Tag = ({ value, onClick }: { value: string, onClick?: () => any }) 
                 textTransform: `${caps}`,
             }}
             className={`${styles['tag']}`}
-            role='button'
+            role={'button'}
             onClick={onClick}
         >
             {value}

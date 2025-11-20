@@ -190,7 +190,13 @@ export const BacklogTable = ({ games, updateParams, initialParams, isAdmin }: Pr
             .sort((a, b) => titleSortSimple(a.title, b.title))
             .map((game) => {
               return (
-                <CoverImage game={game} showHltb key={game._id} isAdmin={isAdmin} />
+                <CoverImage 
+                  game={game} 
+                  showHltb 
+                  showTags 
+                  onTagClick={handleTagFilterChange} 
+                  key={game._id} 
+                  isAdmin={isAdmin} />
               )
             })}
         </div>

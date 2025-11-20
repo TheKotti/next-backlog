@@ -5,6 +5,7 @@ import { Cloudinary } from '@cloudinary/url-gen'
 import styles from '../styles/CoverImage.module.css'
 import { ScoreIndicator } from './ScoreIndicator'
 import { getHltbString } from 'utils/utils'
+import { Tag } from './Tag'
 
 const cld = new Cloudinary({
   cloud: {
@@ -16,10 +17,12 @@ type Props = {
   game: Game
   showScore?: boolean
   showHltb?: boolean
+  showTags?: boolean
+  onTagClick?: (tag: string) => void
   isAdmin?: boolean
 }
 
-const CoverImage = ({ game, showScore, showHltb, isAdmin }: Props) => {
+const CoverImage = ({ game, showScore, showHltb, showTags, onTagClick, isAdmin }: Props) => {
   const coverImage = cld.image(`covers/${game.coverImageId}`).resize(fill().width(150).height(200))
 
   const formattedTitle = game.title.startsWith("The ") ? game.title.substring(4) + ", The" : game.title
@@ -44,6 +47,16 @@ const CoverImage = ({ game, showScore, showHltb, isAdmin }: Props) => {
         {showScore && (
           <div className={styles.scoreIndicator}>
             <ScoreIndicator rating={game.rating} />
+          </div>
+        )}
+
+        {showTags && (
+          <div className='d-flex gap-1 flex-wrap justify-content-center'>
+            {game.tags?.sort().map((tag) => {
+              return (
+                <Tag value={tag} key={tag} onClick={() => onTagClick?.(tag)}></Tag>
+              )
+            })}
           </div>
         )}
 
