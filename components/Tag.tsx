@@ -41,7 +41,7 @@ export const Tag = ({ value, onClick }: { value: string, onClick?: () => any}) =
     return (
         <span
             style={{
-                backgroundColor: `hsl(${hue}, 70%, 65%)`,
+                backgroundColor: `hsl(${hue}, 45%, 65%)`,
                 textTransform: `${caps}`,
             }}
             className={`${styles['tag']}`}
