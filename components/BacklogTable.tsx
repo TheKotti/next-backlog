@@ -184,7 +184,7 @@ export const BacklogTable = ({ games, updateParams, initialParams, isAdmin }: Pr
       </div>
 
       {showCovers ? (
-        <div className='d-flex flex-wrap w-100 mt-3 justify-content-between gap-3'>
+        <div className={`${styles['backlog-grid']}`}>
           {data
             .filter((x) => (titleFilter && x.title.toLowerCase().includes(titleFilter.toLowerCase())) || titleFilter === '')
             .sort((a, b) => titleSortSimple(a.title, b.title))

@@ -76,3 +76,11 @@
   height: 1em;
   margin-right: 2px;
 }
+
+.backlog-grid {
+    width: 100%;
+    margin-top: 1rem;
+    gap: 1rem;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+}
