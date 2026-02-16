@@ -1,5 +1,6 @@
 import { Analytics } from "@vercel/analytics/react";
 import { ToastContainer } from "react-toastify";
+import { SpeedInsights } from "@vercel/speed-insights/next"
 import SessionProvider from "utils/SessionProvider";
 // These styles apply to every route in the application
 import 'bootstrap/dist/css/bootstrap.css';
@@ -32,6 +33,8 @@ export default async function RootLayout({
                         theme='dark'
                     />
                 </SessionProvider>
+
+                <SpeedInsights />
             </body>
         </html>
     )
