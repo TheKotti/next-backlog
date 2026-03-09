@@ -242,7 +242,7 @@ export const BacklogTable = ({
                             <tr>
                                 {headers.map((column) => {
                                     if (column.id === '_id' && !isAdmin) return
-                                    return formatHeader(column, isAdmin)
+                                    return formatHeader(column, hiddenColumns)
                                 })}
                             </tr>
                         </thead>
