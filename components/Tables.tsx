@@ -22,7 +22,9 @@ export const Tables = ({ games, isAdmin }: Props) => {
         showCovers: true,
     })
 
-    const [viewBacklog, setViewBacklog] = useState(initialParams.get('showBacklog') == 'true')
+    const [viewBacklog, setViewBacklog] = useState(
+        initialParams.get('showBacklog') == 'true'
+    )
 
     const playedGames = useMemo(
         () =>
@@ -30,11 +32,20 @@ export const Tables = ({ games, isAdmin }: Props) => {
                 .filter((x) => x.finishedDate || x.finished === 'Happening')
                 .map((x) => {
                     // Hacky shit because I fucked up the initial date insertions
-                    return { ...x, finishedDate: x.finishedDate ? new Date(x.finishedDate).toISOString() : null }
+                    return {
+                        ...x,
+                        finishedDate: x.finishedDate
+                            ? new Date(x.finishedDate).toISOString()
+                            : null,
+                    }
                 }),
         [games]
     )
-    const backlogGames = useMemo(() => games.filter((x) => !x.finishedDate && x.finished !== 'Happening'), [games])
+    const backlogGames = useMemo(
+        () =>
+            games.filter((x) => !x.finishedDate && x.finished !== 'Happening'),
+        [games]
+    )
 
     const handleBacklogToggle = (checked) => {
         setViewBacklog(checked)
@@ -43,13 +54,20 @@ export const Tables = ({ games, isAdmin }: Props) => {
 
     return (
         <>
-            <div className={`d-flex justify-content-between mb-3 ${styles.header}`}>
+            <div
+                className={`d-flex justify-content-between mb-3 ${styles.header}`}
+            >
                 <h2>{viewBacklog ? 'Backlog' : 'Previously played'}</h2>
-                <div className='d-flex gap-2'>
+                <div className="d-flex gap-2">
                     <StatsDialog games={games} />
 
-                    <button className='btn btn-primary' onClick={() => handleBacklogToggle(!viewBacklog)}>
-                        {viewBacklog ? 'Show previously played' : 'Show backlog'}
+                    <button
+                        className="btn btn-primary"
+                        onClick={() => handleBacklogToggle(!viewBacklog)}
+                    >
+                        {viewBacklog
+                            ? 'Show previously played'
+                            : 'Show backlog'}
                     </button>
                 </div>
             </div>

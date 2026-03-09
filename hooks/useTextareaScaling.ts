@@ -7,7 +7,10 @@ export const useTextareaScaling = (
     content: string
 ) => {
     const [fontSize, setFontSize] = useState<TextSize>('xx-large')
-    const sizes: TextSize[] = useMemo(() => ['xx-large', 'x-large', 'large', 'medium'], [])
+    const sizes: TextSize[] = useMemo(
+        () => ['xx-large', 'x-large', 'large', 'medium'],
+        []
+    )
     const fontSizeRef = useRef<TextSize>(fontSize)
 
     useLayoutEffect(() => {

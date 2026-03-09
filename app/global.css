@@ -2,7 +2,11 @@ html,
 body {
     padding: 0;
     margin: 0;
-    font-family: DejaVu Sans, Arial, Helvetica, sans-serif;
+    font-family:
+        DejaVu Sans,
+        Arial,
+        Helvetica,
+        sans-serif;
     color: grey;
 }
 
@@ -22,15 +26,15 @@ a {
 
 body * {
     --bs-modal-bg: rgb(0, 46, 2);
-    --bs-modal-color: #fff
+    --bs-modal-color: #fff;
 }
 
 .modal-header .btn-close {
-    display: none
+    display: none;
 }
 
 .btn:hover {
-    border-color: #fff
+    border-color: #fff;
 }
 
 /* Override bootstrap end */

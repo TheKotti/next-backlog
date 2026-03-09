@@ -15,40 +15,42 @@ test('should load existing data', async ({ page }) => {
     await login(page, 'playedGame')
 
     const commentArea = await page.locator('css=#commentArea')
-    await expect(commentArea).toContainText('The story had a bit of a slow start');
+    await expect(commentArea).toContainText(
+        'The story had a bit of a slow start'
+    )
 
     const finishedArea = await page.locator('css=#finishedArea')
-    await expect(finishedArea).toContainText('NG and NG+');
+    await expect(finishedArea).toContainText('NG and NG+')
 
     const tagsArea = await page.locator('css=#tagsArea')
-    await expect(tagsArea).toContainText('horror');
+    await expect(tagsArea).toContainText('horror')
 
     const timeArea = await page.locator('css=#timeArea')
-    await expect(timeArea).toContainText('12+8');
+    await expect(timeArea).toContainText('12+8')
 
     const selectedRating = await page.locator('css=.selectedRating')
-    await expect(selectedRating).toContainText('6');
+    await expect(selectedRating).toContainText('6')
 })
 
 test('should change comment area font size', async ({ page }) => {
     await login(page, 'playedGame')
 
     const commentArea = await page.locator('css=#commentArea')
-    await expect(commentArea).toHaveCSS('font-size', '16px');
+    await expect(commentArea).toHaveCSS('font-size', '16px')
     await commentArea.fill('short text')
-    await expect(commentArea).toHaveCSS('font-size', '32px');
+    await expect(commentArea).toHaveCSS('font-size', '32px')
     await commentArea.fill(longtext)
-    await expect(commentArea).toHaveCSS('font-size', '16px');
+    await expect(commentArea).toHaveCSS('font-size', '16px')
 })
 
 test('should save changes to played game', async ({ page }) => {
     await login(page, 'playedGame')
 
-    const testComment = "test comment"
-    const testFinished = "test finished"
-    const testTags = "testTag1,testTag2"
-    const testTime = "1.5+8"
-    const testScore = "2"
+    const testComment = 'test comment'
+    const testFinished = 'test finished'
+    const testTags = 'testTag1,testTag2'
+    const testTime = '1.5+8'
+    const testScore = '2'
 
     await page.locator('css=#commentArea').fill(testComment)
     await page.locator('css=#finishedArea').fill(testFinished)
@@ -58,7 +60,7 @@ test('should save changes to played game', async ({ page }) => {
 
     await page.locator(`css=button:has-text('Save')`).click()
     await page.waitForLoadState('networkidle')
-    await page.reload();
+    await page.reload()
 
     const commentArea = await page.locator('css=#commentArea')
     const finishedArea = await page.locator('css=#finishedArea')
@@ -66,11 +68,11 @@ test('should save changes to played game', async ({ page }) => {
     const timeArea = await page.locator('css=#timeArea')
     const selectedRating = await page.locator('css=.selectedRating')
 
-    await expect(commentArea).toContainText(testComment);
-    await expect(finishedArea).toContainText(testFinished);
-    await expect(tagsArea).toContainText(testTags.toLowerCase());
-    await expect(timeArea).toContainText(testTime);
-    await expect(selectedRating).toContainText(testScore);
+    await expect(commentArea).toContainText(testComment)
+    await expect(finishedArea).toContainText(testFinished)
+    await expect(tagsArea).toContainText(testTags.toLowerCase())
+    await expect(timeArea).toContainText(testTime)
+    await expect(selectedRating).toContainText(testScore)
 })
 
 test('should set game as ongoing', async ({ page }) => {
@@ -79,15 +81,15 @@ test('should set game as ongoing', async ({ page }) => {
     await page.locator('css=#finishedArea').fill('Happening')
     await page.locator(`css=button:has-text('Details')`).click()
     const dialog = await page.locator('css=#detailsDialog')
-    await dialog.getByRole('checkbox').check();
+    await dialog.getByRole('checkbox').check()
     await dialog.locator(`css=button:has-text('Close')`).click()
 
     await page.locator(`css=button:has-text('Save')`).click()
     await page.waitForLoadState('networkidle')
     await page.goto('/admin')
 
-    const firstRow = await page.locator('css=tbody>tr').locator("nth=0")
-    await expect(firstRow).toContainText("Ongoing or soon™");
-    await expect(firstRow).toContainText("Yakuza 0");
-    await expect(firstRow).toContainText("No vods available");
+    const firstRow = await page.locator('css=tbody>tr').locator('nth=0')
+    await expect(firstRow).toContainText('Ongoing or soon™')
+    await expect(firstRow).toContainText('Yakuza 0')
+    await expect(firstRow).toContainText('No vods available')
 })

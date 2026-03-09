@@ -6,7 +6,8 @@
     "dev": "next dev --turbopack",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint ."
+    "lint": "eslint .",
+    "format": "prettier --write '**/*.{ts,tsx,css}'"
   },
   "dependencies": {
     "@cloudinary/react": "^1.14.3",
@@ -40,6 +41,7 @@
     "eslint": "^9.38.0",
     "eslint-config-next": "^16.0.0",
     "globals": "^16.4.0",
+    "prettier": "^3.8.1",
     "typescript": "5.9.3"
   },
   "overrides": {

@@ -19,7 +19,10 @@ export const useNextQueryParams = (defaultValues: Record<string, any>) => {
     const currentRef = useRef<Record<string, string>>(initialObj)
 
     const updateParams = useCallback((newParams: Record<string, any>) => {
-        const merged: Record<string, any> = { ...currentRef.current, ...newParams }
+        const merged: Record<string, any> = {
+            ...currentRef.current,
+            ...newParams,
+        }
 
         forOwn(merged, (value, key) => {
             if (defaultsRef.current && defaultsRef.current[key] === value) {
@@ -32,14 +35,16 @@ export const useNextQueryParams = (defaultValues: Record<string, any>) => {
         })
 
         const entries: Record<string, string> = {}
-        Object.keys(merged).forEach(k => {
+        Object.keys(merged).forEach((k) => {
             entries[k] = String(merged[k])
         })
 
         currentRef.current = entries
 
         const params = new URLSearchParams(entries).toString()
-        const newUrl = params ? `?${params}` : `${window.location.pathname}${window.location.hash || ''}`
+        const newUrl = params
+            ? `?${params}`
+            : `${window.location.pathname}${window.location.hash || ''}`
         window.history.replaceState(null, '', newUrl)
     }, [])
 

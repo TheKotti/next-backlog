@@ -1,9 +1,9 @@
 'use server'
 
 import { revalidatePath } from 'next/cache'
-import { ObjectId } from "mongodb"
+import { ObjectId } from 'mongodb'
 import { v2 as cloudinary } from 'cloudinary'
-import { auth } from "./auth"
+import { auth } from './auth'
 const { connectToDatabase } = require('lib/mongo')
 
 cloudinary.config({
@@ -15,7 +15,7 @@ cloudinary.config({
 export async function revalidateAction() {
     try {
         const authState = await auth()
-        const username = authState?.user?.name ?? ""
+        const username = authState?.user?.name ?? ''
         const isAdmin = process.env.ADMIN_USER_NAME === username
         if (isAdmin) {
             await revalidatePath('/')
@@ -30,7 +30,7 @@ export async function revalidateAction() {
 export async function updateGameAction(formData: FormData) {
     try {
         const authState = await auth()
-        const username = authState?.user?.name ?? ""
+        const username = authState?.user?.name ?? ''
         const isAdmin = process.env.ADMIN_USER_NAME === username
         if (isAdmin) {
             const id = String(formData.get('id'))
@@ -38,19 +38,23 @@ export async function updateGameAction(formData: FormData) {
 
             const mongoId = new ObjectId(id)
             const game: Game = JSON.parse(gameText)
-            game.tags = game.tags?.map(t => t.trim().toLowerCase()).filter(t => !!t) || null
+            game.tags =
+                game.tags
+                    ?.map((t) => t.trim().toLowerCase())
+                    .filter((t) => !!t) || null
 
             if (!game.finishedDate) {
-                game.finishedDate = (!game.finished || game.finished == 'Happening') ? null : new Date().toISOString();
+                game.finishedDate =
+                    !game.finished || game.finished == 'Happening'
+                        ? null
+                        : new Date().toISOString()
             }
 
             // Update data
             const { db } = await connectToDatabase()
-            await db.collection('games')
-                .replaceOne(
-                    { _id: mongoId },
-                    { ...game, _id: mongoId }
-                )
+            await db
+                .collection('games')
+                .replaceOne({ _id: mongoId }, { ...game, _id: mongoId })
 
             return true
         }
@@ -63,7 +67,7 @@ export async function updateGameAction(formData: FormData) {
 export async function updateVodsAction(formData: FormData) {
     try {
         const authState = await auth()
-        const username = authState?.user?.name ?? ""
+        const username = authState?.user?.name ?? ''
         const isAdmin = process.env.ADMIN_USER_NAME === username
         if (isAdmin) {
             const id = String(formData.get('id'))
@@ -74,7 +78,9 @@ export async function updateVodsAction(formData: FormData) {
 
             // Update data
             const { db } = await connectToDatabase()
-            await db.collection('games').updateOne({ _id: mongoId }, { $set: { vods } })
+            await db
+                .collection('games')
+                .updateOne({ _id: mongoId }, { $set: { vods } })
 
             return true
         }
@@ -87,7 +93,7 @@ export async function updateVodsAction(formData: FormData) {
 export async function getIgdbToken(formData: FormData) {
     try {
         const authState = await auth()
-        const username = authState?.user?.name ?? ""
+        const username = authState?.user?.name ?? ''
         const isAdmin = process.env.ADMIN_USER_NAME === username
 
         if (isAdmin) {
@@ -107,7 +113,7 @@ export async function getIgdbToken(formData: FormData) {
 export async function searchIgdbAction(formData: FormData) {
     try {
         const authState = await auth()
-        const username = authState?.user?.name ?? ""
+        const username = authState?.user?.name ?? ''
         const isAdmin = process.env.ADMIN_USER_NAME === username
 
         if (isAdmin) {
@@ -125,7 +131,7 @@ export async function searchIgdbAction(formData: FormData) {
                 body: `
                     search "${searchTerm}";
                     fields name, id, release_dates.y, url;
-                    limit 50;`
+                    limit 50;`,
             })
             const foundGames = await res.json()
             return foundGames
@@ -141,7 +147,7 @@ export async function searchIgdbAction(formData: FormData) {
 export async function addNewGameAction(formData: FormData) {
     try {
         const authState = await auth()
-        const username = authState?.user?.name ?? ""
+        const username = authState?.user?.name ?? ''
         const isAdmin = process.env.ADMIN_USER_NAME === username
         if (isAdmin) {
             const authToken = String(formData.get('authToken'))
@@ -157,7 +163,7 @@ export async function addNewGameAction(formData: FormData) {
                 },
                 body: `
                     where id = ${gameId};
-                    fields name, id, genres.name, themes.name, cover.image_id, release_dates.y, url, involved_companies.company.name, involved_companies.developer;`
+                    fields name, id, genres.name, themes.name, cover.image_id, release_dates.y, url, involved_companies.company.name, involved_companies.developer;`,
             })
             const json = await res.json()
 
@@ -174,9 +180,16 @@ export async function addNewGameAction(formData: FormData) {
                 const themes = fetchedGame.themes.map((x) => x.name)
                 keywords.push(...themes)
             }
-            const developers = fetchedGame.involved_companies?.filter((x) => x.developer)?.map((x) => x.company.name) || []
+            const developers =
+                fetchedGame.involved_companies
+                    ?.filter((x) => x.developer)
+                    ?.map((x) => x.company.name) || []
             const releaseYear = fetchedGame.release_dates
-                ? Math.min(...fetchedGame.release_dates.map((x) => x.y).filter((x) => x))
+                ? Math.min(
+                      ...fetchedGame.release_dates
+                          .map((x) => x.y)
+                          .filter((x) => x)
+                  )
                 : null
 
             const game: Game = {
@@ -188,11 +201,11 @@ export async function addNewGameAction(formData: FormData) {
                 releaseYear,
                 igdbUrl: fetchedGame.url,
                 finishedDate: null,
-                comment: "",
+                comment: '',
                 timeSpent: null,
-                finished: "",
+                finished: '',
                 rating: null,
-                platform: "",
+                platform: '',
                 streamed: false,
                 vods: null,
                 hltbMain: null,
@@ -200,13 +213,18 @@ export async function addNewGameAction(formData: FormData) {
                 hltbCompletionist: null,
                 tags: null,
                 additionalTimeSpent: null,
-                addedDate: new Date().toISOString()
+                addedDate: new Date().toISOString(),
             }
 
             // Add cover image
             cloudinary.uploader.upload(
                 `https://images.igdb.com/igdb/image/upload/t_cover_big/${fetchedGame.cover.image_id}.png`,
-                { public_id: fetchedGame.cover.image_id, folder: 'covers', format: 'jpg', overwrite: false },
+                {
+                    public_id: fetchedGame.cover.image_id,
+                    folder: 'covers',
+                    format: 'jpg',
+                    overwrite: false,
+                },
                 function (error, result) {
                     console.error('cover image error', error)
                 }
@@ -230,7 +248,7 @@ export async function addNewGameAction(formData: FormData) {
 export async function getTwitchUserAction(formData: FormData) {
     try {
         const authState = await auth()
-        const username = authState?.user?.name ?? ""
+        const username = authState?.user?.name ?? ''
         const isAdmin = process.env.ADMIN_USER_NAME === username
 
         if (isAdmin) {

@@ -1,10 +1,10 @@
-import { Analytics } from "@vercel/analytics/react";
-import { ToastContainer } from "react-toastify";
-import { SpeedInsights } from "@vercel/speed-insights/next"
-import SessionProvider from "utils/SessionProvider";
+import { Analytics } from '@vercel/analytics/react'
+import { ToastContainer } from 'react-toastify'
+import { SpeedInsights } from '@vercel/speed-insights/next'
+import SessionProvider from 'utils/SessionProvider'
 // These styles apply to every route in the application
-import 'bootstrap/dist/css/bootstrap.css';
-import "react-datepicker/dist/react-datepicker.css";
+import 'bootstrap/dist/css/bootstrap.css'
+import 'react-datepicker/dist/react-datepicker.css'
 import './global.css'
 
 export default async function RootLayout({
@@ -15,13 +15,24 @@ export default async function RootLayout({
     children: React.ReactNode
 }) {
     return (
-        <html lang="en" style={{ background: `url('/${process.env.ADMIN_USER_NAME}.jpg') no-repeat center center fixed`, backgroundSize: 'cover' }}>
-            <body style={{ background: `url('/${process.env.ADMIN_USER_NAME}.jpg') no-repeat center center fixed`, backgroundSize: 'cover' }}>
+        <html
+            lang="en"
+            style={{
+                background: `url('/${process.env.ADMIN_USER_NAME}.jpg') no-repeat center center fixed`,
+                backgroundSize: 'cover',
+            }}
+        >
+            <body
+                style={{
+                    background: `url('/${process.env.ADMIN_USER_NAME}.jpg') no-repeat center center fixed`,
+                    backgroundSize: 'cover',
+                }}
+            >
                 <SessionProvider>
                     {children}
                     <Analytics />
                     <ToastContainer
-                        position='bottom-center'
+                        position="bottom-center"
                         autoClose={3000}
                         hideProgressBar
                         newestOnTop={false}
@@ -30,7 +41,7 @@ export default async function RootLayout({
                         pauseOnFocusLoss={false}
                         draggable={false}
                         pauseOnHover={false}
-                        theme='dark'
+                        theme="dark"
                     />
                 </SessionProvider>
 

@@ -1,7 +1,6 @@
 import styles from '../styles/GameTable.module.css'
 
 const getHue = (value: string) => {
-
     switch (value) {
         case 'horror':
             return 0
@@ -18,14 +17,15 @@ const getHue = (value: string) => {
     }
 
     const length = value.length
-    const charCode1 = value.charCodeAt(0);
-    const charCode2 = value.charCodeAt(1);
-    var randomizedHue = Math.floor((Math.abs(Math.sin((charCode1 - charCode2 - 3) / length) * 360)));
+    const charCode1 = value.charCodeAt(0)
+    const charCode2 = value.charCodeAt(1)
+    var randomizedHue = Math.floor(
+        Math.abs(Math.sin((charCode1 - charCode2 - 3) / length) * 360)
+    )
     return randomizedHue
 }
 
 const getCaps = (value: string): 'capitalize' | 'uppercase' => {
-
     if (value === 'mod') {
         return 'capitalize'
     } else if (value.length <= 3) {
@@ -34,7 +34,13 @@ const getCaps = (value: string): 'capitalize' | 'uppercase' => {
     return 'capitalize'
 }
 
-export const Tag = ({ value, onClick }: { value: string, onClick?: () => any}) => {
+export const Tag = ({
+    value,
+    onClick,
+}: {
+    value: string
+    onClick?: () => any
+}) => {
     var hue = getHue(value)
     var caps = getCaps(value)
 
@@ -49,5 +55,6 @@ export const Tag = ({ value, onClick }: { value: string, onClick?: () => any}) =
             onClick={onClick}
         >
             {value}
-        </span>)
+        </span>
+    )
 }

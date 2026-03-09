@@ -1,50 +1,50 @@
 .container {
-  width: 80%;
-  max-width: 1500px;
-  margin: 20px auto;
-  padding: 10px;
+    width: 80%;
+    max-width: 1500px;
+    margin: 20px auto;
+    padding: 10px;
 }
 
 .form {
-  width: 100%;
+    width: 100%;
 }
 
 .formItem {
-  display: block;
-  width: 100%;
-  margin: 10px auto;
+    display: block;
+    width: 100%;
+    margin: 10px auto;
 }
 
 .formItem label {
-  display: block;
+    display: block;
 }
 
 .formItem input[type='text'] {
-  display: block;
-  width: 100%;
-  padding: 10px;
+    display: block;
+    width: 100%;
+    padding: 10px;
 }
 
 .formItem textarea {
-  display: block;
-  width: 100%;
-  padding: 10px;
+    display: block;
+    width: 100%;
+    padding: 10px;
 }
 
 .error {
-  color: red;
+    color: red;
 }
 
 .message {
-  color: green;
+    color: green;
 }
 
 .header {
-  display: flex;
-  align-items: center;
+    display: flex;
+    align-items: center;
 }
 
 .header button {
-  height: fit-content;
-  margin-left: 16px;
+    height: fit-content;
+    margin-left: 16px;
 }

@@ -1,6 +1,9 @@
-import { Page } from "@playwright/test"
+import { Page } from '@playwright/test'
 
-export const login = async (page: Page, redirectUrl: 'admin' | 'playedGame' | 'backlogGame' = 'admin') => {
+export const login = async (
+    page: Page,
+    redirectUrl: 'admin' | 'playedGame' | 'backlogGame' = 'admin'
+) => {
     await page.goto('/api/auth/signin')
     await page.click('text=Sign in with Credentials')
 

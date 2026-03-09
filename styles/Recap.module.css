@@ -6,7 +6,6 @@
     position: relative;
     max-height: 100vh;
 }
- 
 
 .gameMeta {
     display: flex;
@@ -59,12 +58,16 @@
     gap: 2rem;
 }
 
-.formFinished, .formTimeSpent, .formTags {
+.formFinished,
+.formTimeSpent,
+.formTags {
     display: flex;
     flex-direction: column;
 }
 
-.formFinished textarea, .formTimeSpent textarea, .formTags textarea {
+.formFinished textarea,
+.formTimeSpent textarea,
+.formTags textarea {
     background: transparent;
     color: white;
     font-size: xx-large;
@@ -131,7 +134,7 @@
 
 .saveControls button {
     background-color: transparent;
-    color:white;
+    color: white;
 }
 
 .saveControls a:hover {
