@@ -67,6 +67,51 @@ export async function updateGameAction(formData: FormData) {
     }
 }
 
+export async function updateCoverArtAction(formData: FormData) {
+    try {
+        const authState = await auth()
+        const username = authState?.user?.name ?? ''
+        const isAdmin = process.env.ADMIN_USER_NAME === username
+        if (isAdmin) {
+            const id = String(formData.get('id'))
+            const imgString = String(formData.get('img'))
+            const imgName =
+                formData.get('imgName') +
+                Math.floor(Math.random() * 10000).toString()
+
+            const mongoId = new ObjectId(id)
+
+            // Add cover image
+            cloudinary.uploader.upload(
+                imgString,
+                {
+                    public_id: imgName,
+                    folder: 'covers',
+                    format: 'jpg',
+                    overwrite: false,
+                },
+                function (error, _result) {
+                    console.error('cover image error', error)
+                }
+            )
+
+            // Update data
+            const { db } = await connectToDatabase()
+            await db
+                .collection('games')
+                .updateOne(
+                    { _id: mongoId },
+                    { $set: { coverImageId: imgName } }
+                )
+
+            return true
+        }
+    } catch (error) {
+        console.log('Error in update vods action:', error)
+        return false
+    }
+}
+
 export async function updateVodsAction(formData: FormData) {
     try {
         const authState = await auth()

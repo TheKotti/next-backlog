@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { Modal } from 'react-bootstrap'
 import DatePicker from 'react-datepicker'
 import dayjs from 'dayjs'
-import { deleteGameAction } from 'app/actions'
+import { deleteGameAction, updateCoverArtAction } from 'app/actions'
 import { toast } from 'react-toastify'
 
 async function deleteGame(id: string) {
@@ -17,6 +17,28 @@ async function deleteGame(id: string) {
             toast.error('Deleting game failed')
         }
     }
+}
+
+async function updateCover(id: string, file: File) {
+    // convert file to data URL string for Cloudinary upload
+    const reader = new FileReader()
+    reader.onload = async () => {
+        const imgString = reader.result as string
+        const formData = new FormData()
+        formData.append('id', id.toString())
+        formData.append('img', imgString)
+        formData.append(
+            'imgName',
+            file.name.replaceAll(' ', '').replaceAll('.', '')
+        )
+        const res = await updateCoverArtAction(formData)
+        if (res) {
+            toast.success('Cover updated')
+        } else {
+            toast.error('Updating cover failed')
+        }
+    }
+    reader.readAsDataURL(file)
 }
 
 type Props = {
@@ -142,6 +164,23 @@ export const DetailsDialog = (props: Props) => {
                             type="string"
                             value={game.developers.join(',') || ''}
                             onChange={(e) => handleDevChange(e.target.value)}
+                        />
+                    </div>
+
+                    <div>
+                        <label htmlFor="cover" className="me-2">
+                            Cover image (max 1MB)
+                        </label>
+                        <input
+                            type="file"
+                            id="cover"
+                            accept=".png,.jpg,.jpeg"
+                            onChange={(e) => {
+                                const file = e.target.files?.[0]
+                                if (game._id && file) {
+                                    updateCover(game._id, file)
+                                }
+                            }}
                         />
                     </div>
 
