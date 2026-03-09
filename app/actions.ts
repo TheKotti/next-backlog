@@ -43,6 +43,9 @@ export async function updateGameAction(formData: FormData) {
                     ?.map((t) => t.trim().toLowerCase())
                     .filter((t) => !!t) || null
 
+            game.developers =
+                game.developers?.map((t) => t.trim()).filter((t) => !!t) || null
+
             if (!game.finishedDate) {
                 game.finishedDate =
                     !game.finished || game.finished == 'Happening'
@@ -241,6 +244,28 @@ export async function addNewGameAction(formData: FormData) {
         return true
     } catch (error) {
         console.log('Error in add new game action:', error)
+        return false
+    }
+}
+
+export async function deleteGameAction(formData: FormData) {
+    try {
+        const authState = await auth()
+        const username = authState?.user?.name ?? ''
+        const isAdmin = process.env.ADMIN_USER_NAME === username
+        if (isAdmin) {
+            const id = String(formData.get('id'))
+
+            const mongoId = new ObjectId(id)
+
+            // Update data
+            const { db } = await connectToDatabase()
+            await db.collection('games').deleteOne({ _id: mongoId })
+
+            return true
+        }
+    } catch (error) {
+        console.log('Error in delete game action:', error)
         return false
     }
 }
