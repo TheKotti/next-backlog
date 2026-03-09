@@ -28,14 +28,14 @@ export const metadata: Metadata = {
 }
 
 export default async function RecapPage({
-    params,
+    _params,
     searchParams,
 }: {
-    params: Promise<any>
+    _params: Promise<any>
     searchParams: Promise<{ [key: string]: string | string[] | undefined }>
 }) {
     const sp = await searchParams
-    var game = await getGame(sp.id as string)
+    const game = await getGame(sp.id as string)
 
     return <>{game ? <Recap fetchedGame={game} /> : null}</>
 }

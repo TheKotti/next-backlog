@@ -1,6 +1,6 @@
 'use server'
 
-import { auth, signIn, signOut } from 'app/auth'
+import { signIn, signOut } from 'app/auth'
 
 export async function handleSignIn(provider?: string) {
     await signIn(provider)

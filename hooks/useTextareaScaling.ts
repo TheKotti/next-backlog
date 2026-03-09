@@ -18,12 +18,10 @@ export const useTextareaScaling = (
         if (!textarea) return
 
         // Try sizes from largest -> smallest until content fits
-        let finalSize: TextSize = sizes[sizes.length - 1]
         for (let i = 0; i < sizes.length; i++) {
             textarea.style.fontSize = sizes[i]
             // reading scrollHeight forces layout so measurement is accurate
             if (textarea.scrollHeight <= textarea.clientHeight) {
-                finalSize = sizes[i]
                 break
             }
         }

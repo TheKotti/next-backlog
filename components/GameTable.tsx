@@ -1,7 +1,7 @@
 'use client'
 
 import React, { useEffect, useMemo, useState } from 'react'
-import { SortingRule, usePagination, useSortBy, useTable } from 'react-table'
+import { usePagination, useSortBy, useTable } from 'react-table'
 import Select from 'react-select'
 import styles from '../styles/GameTable.module.css'
 import { formatCell, formatHeader } from '../utils/utils'
@@ -14,17 +14,6 @@ type Props = {
     updateParams: (newParams: Record<string, any>) => void
     initialParams: ReadonlyURLSearchParams
 }
-
-// generic option type used across various Selects in this component
-// label must be a string, and value is generic (can be Partial<Game> or other)
-// this satisfies the request "label is string, value is Partial<Game>" when T=Partial<Game>
-export type Option<T> = {
-    label: string
-    value: T
-}
-
-// when we specifically need an option that holds a partial game object:
-export type GameOption = Option<Partial<Game>>
 
 export const GameTable = ({
     games,
@@ -42,7 +31,7 @@ export const GameTable = ({
 
     const selectStyles = useMemo(() => {
         return {
-            control: (baseStyles, state) => ({
+            control: (baseStyles, _state) => ({
                 ...baseStyles,
                 width: '200px',
                 borderColor: 'grey',
@@ -50,70 +39,39 @@ export const GameTable = ({
                 color: 'red',
                 cursor: 'pointer',
             }),
-            menu: (baseStyles, state) => ({
+            menu: (baseStyles, _state) => ({
                 ...baseStyles,
                 width: '300px',
                 borderColor: 'grey',
                 backgroundColor: '#333',
             }),
-            menuList: (baseStyles, state) => ({
+            menuList: (baseStyles, _state) => ({
                 ...baseStyles,
                 borderRadius: '8px',
             }),
-            option: (baseStyles, state) => ({
+            option: (baseStyles, _state) => ({
                 ...baseStyles,
                 textTransform: 'capitalize',
                 cursor: 'pointer',
             }),
-            clearIndicator: (baseStyles, state) => ({
+            clearIndicator: (baseStyles, _state) => ({
                 ...baseStyles,
                 color: 'grey !important',
             }),
-            indicatorSeparator: (baseStyles, state) => ({
+            indicatorSeparator: (baseStyles, _state) => ({
                 ...baseStyles,
                 backgroundColor: 'grey !important',
             }),
-            dropdownIndicator: (baseStyles, state) => ({
+            dropdownIndicator: (baseStyles, _state) => ({
                 ...baseStyles,
                 color: 'grey !important',
             }),
-            singleValue: (baseStyles, state) => ({
+            singleValue: (baseStyles, _state) => ({
                 ...baseStyles,
                 color: 'white',
                 textTransform: 'capitalize',
             }),
         }
-    }, [])
-
-    const sortOptions: Option<SortingRule<Partial<Game>>[]>[] = useMemo(() => {
-        return [
-            {
-                label: 'Entry date 🔺',
-                value: [{ id: 'finishedDate', desc: false }],
-            },
-            {
-                label: 'Entry date 🔻',
-                value: [{ id: 'finishedDate', desc: true }],
-            },
-            { label: 'Rating 🔺', value: [{ id: 'rating', desc: false }] },
-            { label: 'Rating 🔻', value: [{ id: 'rating', desc: true }] },
-            {
-                label: 'Time played 🔺',
-                value: [{ id: 'timeSpent', desc: false }],
-            },
-            {
-                label: 'Time played 🔻',
-                value: [{ id: 'timeSpent', desc: true }],
-            },
-            {
-                label: 'Release year 🔺',
-                value: [{ id: 'releaseYear', desc: false }],
-            },
-            {
-                label: 'Release year 🔻',
-                value: [{ id: 'releaseYear', desc: true }],
-            },
-        ]
     }, [])
 
     const data: Array<Partial<Game>> = useMemo(() => {
@@ -168,7 +126,6 @@ export const GameTable = ({
         nextPage,
         previousPage,
         setPageSize,
-        setSortBy,
         state: { pageIndex, pageSize, sortBy },
     } = useTable(
         {
@@ -252,19 +209,6 @@ export const GameTable = ({
                     id="tag-select"
                     isClearable
                     placeholder="Filter by tag"
-                    styles={selectStyles}
-                />
-
-                <Select
-                    value={sortOptions.find(
-                        (x) =>
-                            x.value[0].id === sortBy[0].id &&
-                            x.value[0].desc === sortBy[0].desc
-                    )}
-                    options={sortOptions}
-                    onChange={(e) => e && setSortBy(e.value)}
-                    id="tag-select"
-                    placeholder="Sort by"
                     styles={selectStyles}
                 />
 

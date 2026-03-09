@@ -54,7 +54,7 @@ export const Recap = ({ fetchedGame }: Props) => {
         const formData = new FormData()
         formData.append('id', game._id!)
         formData.append('game', JSON.stringify(game))
-        var res = await updateGameAction(formData)
+        const res = await updateGameAction(formData)
         if (res) {
             toast.success('Game updated')
         } else {

@@ -63,7 +63,6 @@ export const BacklogTable = ({
         getTableBodyProps,
         headers,
         prepareRow,
-        state,
         page,
         canPreviousPage,
         canNextPage,
@@ -149,7 +148,7 @@ export const BacklogTable = ({
                     isClearable
                     placeholder="Filter by tag"
                     styles={{
-                        control: (baseStyles, state) => ({
+                        control: (baseStyles, _state) => ({
                             ...baseStyles,
                             width: '200px',
                             borderColor: 'grey',
@@ -157,34 +156,34 @@ export const BacklogTable = ({
                             color: 'red',
                             cursor: 'pointer',
                         }),
-                        menu: (baseStyles, state) => ({
+                        menu: (baseStyles, _state) => ({
                             ...baseStyles,
                             width: '300px',
                             borderColor: 'grey',
                             backgroundColor: '#333',
                         }),
-                        menuList: (baseStyles, state) => ({
+                        menuList: (baseStyles, _state) => ({
                             ...baseStyles,
                             borderRadius: '8px',
                         }),
-                        option: (baseStyles, state) => ({
+                        option: (baseStyles, _state) => ({
                             ...baseStyles,
                             textTransform: 'capitalize',
                             cursor: 'pointer',
                         }),
-                        clearIndicator: (baseStyles, state) => ({
+                        clearIndicator: (baseStyles, _state) => ({
                             ...baseStyles,
                             color: 'grey !important',
                         }),
-                        indicatorSeparator: (baseStyles, state) => ({
+                        indicatorSeparator: (baseStyles, _state) => ({
                             ...baseStyles,
                             backgroundColor: 'grey !important',
                         }),
-                        dropdownIndicator: (baseStyles, state) => ({
+                        dropdownIndicator: (baseStyles, _state) => ({
                             ...baseStyles,
                             color: 'grey !important',
                         }),
-                        singleValue: (baseStyles, state) => ({
+                        singleValue: (baseStyles, _state) => ({
                             ...baseStyles,
                             color: 'white',
                             textTransform: 'capitalize',

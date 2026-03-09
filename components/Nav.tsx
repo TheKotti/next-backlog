@@ -6,7 +6,7 @@ import { SignIn, SignOut } from './AuthComponents'
 import { revalidateAction } from 'app/actions'
 
 async function revalidate() {
-    var res = await revalidateAction()
+    const res = await revalidateAction()
     if (res) {
         toast.success('Revalidated')
     } else {

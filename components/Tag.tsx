@@ -19,7 +19,7 @@ const getHue = (value: string) => {
     const length = value.length
     const charCode1 = value.charCodeAt(0)
     const charCode2 = value.charCodeAt(1)
-    var randomizedHue = Math.floor(
+    const randomizedHue = Math.floor(
         Math.abs(Math.sin((charCode1 - charCode2 - 3) / length) * 360)
     )
     return randomizedHue
@@ -41,8 +41,8 @@ export const Tag = ({
     value: string
     onClick?: () => any
 }) => {
-    var hue = getHue(value)
-    var caps = getCaps(value)
+    const hue = getHue(value)
+    const caps = getCaps(value)
 
     return (
         <span

@@ -19,7 +19,7 @@ export const VodDialog = (props: Props) => {
         const formData = new FormData()
         formData.append('id', game._id!)
         formData.append('vods', textValue)
-        var res = await updateVodsAction(formData)
+        const res = await updateVodsAction(formData)
         if (res) {
             toast.success('Vods updated')
         } else {

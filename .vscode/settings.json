@@ -3,6 +3,6 @@
     "eslint.format.enable": true,
     "eslint.useFlatConfig": true,
     "eslint.options": {
-        "overrideConfigFile": "./eslint.config.mjs"
+        "overrideConfigFile": "./eslint.config.mts"
     }
 }

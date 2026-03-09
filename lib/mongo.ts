@@ -30,9 +30,9 @@ export async function connectToDatabase() {
     const opts: MongoClientOptions = {}
 
     // Connect to cluster
-    let client = new MongoClient(MONGODB_URI!, opts)
+    const client = new MongoClient(MONGODB_URI!, opts)
     await client.connect()
-    let db = client.db(MONGODB_DB)
+    const db = client.db(MONGODB_DB)
 
     // set cache
     cachedClient = client

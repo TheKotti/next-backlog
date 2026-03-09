@@ -4,7 +4,7 @@ import { revalidatePath } from 'next/cache'
 import { ObjectId } from 'mongodb'
 import { v2 as cloudinary } from 'cloudinary'
 import { auth } from './auth'
-const { connectToDatabase } = require('lib/mongo')
+import { connectToDatabase } from 'lib/mongo'
 
 cloudinary.config({
     cloud_name: process.env.NEXT_PUBLIC_IMG_CLOUD_NAME,
@@ -90,7 +90,7 @@ export async function updateVodsAction(formData: FormData) {
     }
 }
 
-export async function getIgdbToken(formData: FormData) {
+export async function getIgdbToken(_formData: FormData) {
     try {
         const authState = await auth()
         const username = authState?.user?.name ?? ''
@@ -225,13 +225,13 @@ export async function addNewGameAction(formData: FormData) {
                     format: 'jpg',
                     overwrite: false,
                 },
-                function (error, result) {
+                function (error, _result) {
                     console.error('cover image error', error)
                 }
             )
 
             // connect to the database
-            let { db } = await connectToDatabase()
+            const { db } = await connectToDatabase()
             // add the game
             await db.collection('games').insertOne(game)
 
