@@ -86,7 +86,12 @@ export const Recap = ({ fetchedGame }: Props) => {
         <div className={styles.root}>
             <div className={styles.gameMeta}>
                 <AdvancedImage cldImg={coverImage} />
-                <h1>{game.title}</h1>
+                <h1>
+                    {game.title} ({game.releaseYear})
+                </h1>
+                {game.developers.length && (
+                    <h2>({game.developers.join(', ')})</h2>
+                )}
                 <div className={styles.webcam}></div>
             </div>
 
@@ -101,7 +106,6 @@ export const Recap = ({ fetchedGame }: Props) => {
                             onChange={(e) =>
                                 setGame({ ...game, finished: e.target.value })
                             }
-                            className="p-2"
                         ></textarea>
                     </div>
 
@@ -112,7 +116,6 @@ export const Recap = ({ fetchedGame }: Props) => {
                             id="tagsArea"
                             value={game?.tags || ''}
                             onChange={(e) => handleTagChange(e.target.value)}
-                            className="p-2"
                         ></textarea>
                     </div>
 
@@ -122,7 +125,6 @@ export const Recap = ({ fetchedGame }: Props) => {
                             value={timeToBeat || ''}
                             id="timeArea"
                             onChange={(e) => handleTimeChange(e.target.value)}
-                            className="p-2"
                         ></textarea>
                     </div>
                 </div>
@@ -136,14 +138,15 @@ export const Recap = ({ fetchedGame }: Props) => {
                         onChange={(e) =>
                             setGame({ ...game, comment: e.target.value })
                         }
-                        className="p-2"
                     ></textarea>
                 </div>
 
-                <Rating
-                    rating={game.rating}
-                    setRating={(r) => setGame({ ...game, rating: r })}
-                />
+                <div className={styles.rating}>
+                    <Rating
+                        rating={game.rating}
+                        setRating={(r) => setGame({ ...game, rating: r })}
+                    />
+                </div>
             </div>
 
             <div className={styles.saveControls}>
