@@ -9,7 +9,6 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    border: 2px yellow solid;
     padding: 5rem 1rem 0rem 1rem;
     text-align: center;
     gap: 1rem
@@ -39,7 +38,6 @@
     display: flex;
     flex-direction: column;
     font-size: 2.5em;
-    border: 2px red solid;
     padding: 4rem 1rem;
     gap: 2rem;
 }
