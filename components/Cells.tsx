@@ -37,7 +37,7 @@ export const CommentCell = ({ value, row, handleTagFilterChange }) => {
     )
 }
 
-export const TagCell = ({ value, row, handleTagFilterChange }) => {
+export const TagCell = ({ _value, row, handleTagFilterChange }) => {
     const tags: string[] = row.original.tags
 
     return (

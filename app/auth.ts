@@ -2,14 +2,14 @@ import NextAuth, { User } from 'next-auth'
 import TwitchProvider from 'next-auth/providers/twitch'
 import CredentialsProvider from 'next-auth/providers/credentials'
 
-const realProviders: any = [
+const realProviders = [
     TwitchProvider({
         clientId: process.env.TWITCH_CLIENT_ID,
         clientSecret: process.env.TWITCH_CLIENT_SECRET,
     }),
 ]
 
-const testProviders: any = [
+const testProviders = [
     CredentialsProvider({
         name: 'Credentials',
         async authorize(_credentials, _req): Promise<User> {

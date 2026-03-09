@@ -39,7 +39,7 @@ export const Tag = ({
     onClick,
 }: {
     value: string
-    onClick?: () => any
+    onClick?: () => void
 }) => {
     const hue = getHue(value)
     const caps = getCaps(value)

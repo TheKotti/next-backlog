@@ -86,9 +86,12 @@ const COLUMN_IDS = {
 }
 
 export const formatCell = (
-    cell: Cell<object, any>,
+    cell: Cell<object, unknown>,
     row: Row<object>,
-    props?: any
+    props?: {
+        showCovers?: boolean
+        handleTagFilterChange: (value: string) => void
+    }
 ) => {
     const { column } = cell
     const columnId = column.id
@@ -123,7 +126,7 @@ export const formatCell = (
 }
 
 const renderCellWithProps = (
-    cell: Cell<object, any>,
+    cell: Cell<object, unknown>,
     attrs: object,
     props?: object
 ) => {

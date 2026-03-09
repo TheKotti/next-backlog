@@ -28,10 +28,8 @@ export const metadata: Metadata = {
 }
 
 export default async function RecapPage({
-    _params,
     searchParams,
 }: {
-    _params: Promise<any>
     searchParams: Promise<{ [key: string]: string | string[] | undefined }>
 }) {
     const sp = await searchParams

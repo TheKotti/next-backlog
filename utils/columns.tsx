@@ -81,8 +81,8 @@ export const backlogTableColumns: Column<
     {
         Header: 'Tags',
         accessor: 'tags',
-        Cell: ({ value, row, handleTagFilterChange }) =>
-            TagCell({ value, row, handleTagFilterChange }),
+        Cell: ({ _value, row, handleTagFilterChange }) =>
+            TagCell({ _value, row, handleTagFilterChange }),
     },
     {
         Header: 'Howlongtobeat',

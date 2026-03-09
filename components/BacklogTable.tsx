@@ -1,7 +1,7 @@
 'use client'
 
 import { useMemo, useState } from 'react'
-import { usePagination, useSortBy, useTable } from 'react-table'
+import { usePagination, useSortBy, useTable, Column } from 'react-table'
 import Select from 'react-select'
 import styles from '../styles/GameTable.module.css'
 import { backlogTableColumns } from '../utils/columns'
@@ -17,7 +17,7 @@ import CoverImage from './CoverImage'
 type Props = {
     games: Array<Game>
     isAdmin: boolean
-    updateParams: (newParams: Record<string, any>) => void
+    updateParams: (newParams: Record<string, unknown>) => void
     initialParams: ReadonlyURLSearchParams
 }
 
@@ -35,7 +35,7 @@ export const BacklogTable = ({
     )
     const [tagFilter, setTagFilter] = useState(initialParams.get('tag') ?? null)
 
-    const data: Array<any> = useMemo(() => {
+    const data: Array<Game & { hltbString: string }> = useMemo(() => {
         return games
             .filter(
                 (x) => (tagFilter && x.tags?.includes(tagFilter)) || !tagFilter
@@ -75,7 +75,7 @@ export const BacklogTable = ({
         state: { pageIndex, pageSize },
     } = useTable(
         {
-            columns: backlogTableColumns as any, // TODO: Impletement cover art things here, and to randomizer
+            columns: backlogTableColumns as Column[],
             data,
             initialState: {
                 hiddenColumns,

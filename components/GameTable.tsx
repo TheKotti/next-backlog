@@ -11,7 +11,7 @@ import { ReadonlyURLSearchParams } from 'next/navigation'
 type Props = {
     games: Array<Game>
     isAdmin: boolean
-    updateParams: (newParams: Record<string, any>) => void
+    updateParams: (newParams: Record<string, unknown>) => void
     initialParams: ReadonlyURLSearchParams
 }
 

@@ -2,10 +2,10 @@ import { useCallback, useRef, useEffect } from 'react'
 import { useSearchParams } from 'next/navigation'
 import { forOwn } from 'lodash'
 
-export const useNextQueryParams = (defaultValues: Record<string, any>) => {
+export const useNextQueryParams = (defaultValues: Record<string, unknown>) => {
     const initialParams = useSearchParams()
 
-    const defaultsRef = useRef<Record<string, any>>(defaultValues)
+    const defaultsRef = useRef<Record<string, unknown>>(defaultValues)
     useEffect(() => {
         defaultsRef.current = defaultValues
     }, [defaultValues])
@@ -18,8 +18,8 @@ export const useNextQueryParams = (defaultValues: Record<string, any>) => {
     }
     const currentRef = useRef<Record<string, string>>(initialObj)
 
-    const updateParams = useCallback((newParams: Record<string, any>) => {
-        const merged: Record<string, any> = {
+    const updateParams = useCallback((newParams: Record<string, unknown>) => {
+        const merged: Record<string, unknown> = {
             ...currentRef.current,
             ...newParams,
         }
