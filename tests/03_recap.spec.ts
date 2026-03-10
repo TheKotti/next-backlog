@@ -36,11 +36,16 @@ test('should change comment area font size', async ({ page }) => {
     await login(page, 'playedGame')
 
     const commentArea = await page.locator('css=#commentArea')
-    await expect(commentArea).toHaveCSS('font-size', 'medium')
+
+    await expect(commentArea).toContainText(
+        'The story had a bit of a slow start'
+    )
+
+    await expect(commentArea).toHaveCSS('font-size', '16px')
     await commentArea.fill('short text')
-    await expect(commentArea).toHaveCSS('font-size', 'xx-large')
+    await expect(commentArea).toHaveCSS('font-size', '32px')
     await commentArea.fill(longtext)
-    await expect(commentArea).toHaveCSS('font-size', 'medium')
+    await expect(commentArea).toHaveCSS('font-size', '16px')
 })
 
 test('should save changes to played game', async ({ page }) => {
