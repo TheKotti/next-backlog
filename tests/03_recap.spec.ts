@@ -43,7 +43,7 @@ test('should change comment area font size', async ({ page }) => {
     await commentArea.fill(longtext)
     await expect(commentArea).toHaveCSS('font-size', '16px')
     await commentArea.fill('short text')
-    await expect(commentArea).toHaveCSS('font-size', '32x')
+    await expect(commentArea).toHaveCSS('font-size', '32px')
 })
 
 test('should save changes to played game', async ({ page }) => {
