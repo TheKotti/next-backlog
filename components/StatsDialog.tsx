@@ -154,35 +154,160 @@ export const StatsDialog = (props: Props) => {
         return data
     }, [games])
 
+    const developers = useMemo(() => {
+        const developerGames: Record<
+            string,
+            { title: string; rating: number; finishedDate?: string }[]
+        > = {}
+
+        games.forEach((game) => {
+            if (
+                game.developers?.length &&
+                game.rating &&
+                !game.tags?.includes('expansion')
+            ) {
+                game.developers.forEach((dev) => {
+                    if (!developerGames[dev]) {
+                        developerGames[dev] = []
+                    }
+                    if (game.rating) {
+                        const existingGame = developerGames[dev].find(
+                            (g) => g.title === game.title
+                        )
+                        if (existingGame) {
+                            // Update rating if the new finishedDate is more recent
+                            if (
+                                game.finishedDate &&
+                                existingGame.finishedDate &&
+                                new Date(game.finishedDate) >
+                                    new Date(existingGame.finishedDate)
+                            ) {
+                                existingGame.rating = game.rating
+                                existingGame.finishedDate = game.finishedDate
+                            }
+                        } else {
+                            developerGames[dev].push({
+                                title: game.title,
+                                rating: game.rating,
+                                finishedDate: game.finishedDate!,
+                            })
+                        }
+                    }
+                })
+            }
+        })
+
+        Object.keys(developerGames).forEach((dev) => {
+            if (developerGames[dev].length < 4) {
+                delete developerGames[dev]
+            }
+        })
+
+        const developerStats = Object.keys(developerGames)
+            .map((dev) => {
+                const games = developerGames[dev]
+                return {
+                    name: dev,
+                    games: games.sort((a, b) => b.rating - a.rating),
+                }
+            })
+            .sort((a, b) => {
+                const avgA =
+                    a.games.reduce((sum, game) => sum + game.rating, 0) /
+                    a.games.length
+                const avgB =
+                    b.games.reduce((sum, game) => sum + game.rating, 0) /
+                    b.games.length
+                return avgB - avgA
+            })
+
+        return developerStats
+    }, [games])
+
     return (
         <>
             <button className="btn btn-primary" onClick={() => setShow(true)}>
                 Stats for nerds
             </button>
-            <Modal show={show} onHide={() => setShow(false)} centered>
+            <Modal show={show} onHide={() => setShow(false)} fullscreen>
                 <Modal.Header closeButton>
                     <Modal.Title>Stats for nerds</Modal.Title>
                 </Modal.Header>
-                <Modal.Body>
-                    <table className="w-100">
-                        <tbody>
-                            {stats.map(({ key, value }, i) => {
-                                return (
-                                    <tr
-                                        key={key}
-                                        className={`lh-lg ${i !== stats.length - 1 ? 'border-bottom' : ''}`}
-                                    >
-                                        <td className="w-50">{key}</td>
-                                        <td>{value}</td>
+                <Modal.Body className="d-flex justify-content-center">
+                    <div className="d-flex gap-5">
+                        <div>
+                            <table className="w-100">
+                                <tbody>
+                                    {stats.map(({ key, value }, i) => {
+                                        return (
+                                            <tr
+                                                key={key}
+                                                className={`lh-lg ${i !== stats.length - 1 ? 'border-bottom' : ''}`}
+                                            >
+                                                <td className="w-50">{key}</td>
+                                                <td>{value}</td>
+                                            </tr>
+                                        )
+                                    })}
+                                </tbody>
+                            </table>
+
+                            <hr />
+
+                            <Bar
+                                data={ratingCountsData}
+                                options={chartOptions}
+                            />
+                        </div>
+
+                        <div className="h-100 border-1 border-start border-white" />
+
+                        <div>
+                            <table className="">
+                                <thead>
+                                    <tr>
+                                        <th>Developer</th>
+                                        <th className="pe-4">Average Rating</th>
+                                        <th>Games Rated 6+</th>
                                     </tr>
-                                )
-                            })}
-                        </tbody>
-                    </table>
-
-                    <hr />
-
-                    <Bar data={ratingCountsData} options={chartOptions} />
+                                </thead>
+                                <tbody>
+                                    {developers.slice(0, 10).map((dev) => {
+                                        const average =
+                                            dev.games.reduce(
+                                                (sum, game) =>
+                                                    sum + game.rating,
+                                                0
+                                            ) / dev.games.length
+                                        const highRatedGames = dev.games
+                                            .filter((game) => game.rating >= 6)
+                                            .map((game) => game.title)
+                                        return (
+                                            <tr
+                                                key={dev.name}
+                                                className="lh-lg border-bottom"
+                                            >
+                                                <td className="pe-4">
+                                                    {dev.name}
+                                                </td>
+                                                <td className="text-center">
+                                                    {average.toFixed(2)}
+                                                </td>
+                                                <td
+                                                    className="py-2"
+                                                    style={{
+                                                        maxWidth: '500px',
+                                                    }}
+                                                >
+                                                    {highRatedGames.join(', ')}
+                                                </td>
+                                            </tr>
+                                        )
+                                    })}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
                 </Modal.Body>
 
                 <Modal.Footer>
