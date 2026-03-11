@@ -275,6 +275,77 @@ export const StatsDialog = (props: Props) => {
         return developerStats
     }, [games])
 
+    const displayedTags = 5
+    const tags = useMemo(() => {
+        const tagGames: Record<
+            string,
+            { title: string; rating: number; finishedDate?: string }[]
+        > = {}
+
+        games.forEach((game) => {
+            if (
+                game.tags?.length &&
+                game.rating &&
+                !game.tags?.includes('expansion')
+            ) {
+                game.tags.forEach((tag) => {
+                    if (!tagGames[tag]) {
+                        tagGames[tag] = []
+                    }
+                    if (game.rating) {
+                        const existingGame = tagGames[tag].find(
+                            (g) => g.title === game.title
+                        )
+                        if (existingGame) {
+                            // Update rating if the new finishedDate is more recent
+                            if (
+                                game.finishedDate &&
+                                existingGame.finishedDate &&
+                                new Date(game.finishedDate) >
+                                    new Date(existingGame.finishedDate)
+                            ) {
+                                existingGame.rating = game.rating
+                                existingGame.finishedDate = game.finishedDate
+                            }
+                        } else {
+                            tagGames[tag].push({
+                                title: game.title,
+                                rating: game.rating,
+                                finishedDate: game.finishedDate!,
+                            })
+                        }
+                    }
+                })
+            }
+        })
+
+        Object.keys(tagGames).forEach((tag) => {
+            if (tagGames[tag].length < 4) {
+                delete tagGames[tag]
+            }
+        })
+
+        const tagStats = Object.keys(tagGames)
+            .map((tag) => {
+                const games = tagGames[tag]
+                return {
+                    name: tag,
+                    games: games.sort((a, b) => b.rating - a.rating),
+                }
+            })
+            .sort((a, b) => {
+                const avgA =
+                    a.games.reduce((sum, game) => sum + game.rating, 0) /
+                    a.games.length
+                const avgB =
+                    b.games.reduce((sum, game) => sum + game.rating, 0) /
+                    b.games.length
+                return avgB - avgA
+            })
+
+        return tagStats
+    }, [games])
+
     const displayedYears = 5
     // helper exported below; this call is just for memoization inside
     // the component
@@ -282,7 +353,7 @@ export const StatsDialog = (props: Props) => {
 
     return (
         <>
-            <button className="btn btn-warning" onClick={() => setShow(true)}>
+            <button className="btn btn-primary" onClick={() => setShow(true)}>
                 Stats for nerds
             </button>
             <Modal show={show} onHide={() => setShow(false)} centered>
@@ -374,6 +445,52 @@ export const StatsDialog = (props: Props) => {
                                                 </tr>
                                             )
                                         })}
+                                </tbody>
+                            </table>
+                        </Tab>
+
+                        <Tab
+                            title={
+                                <span className={styles['tab-title']}>
+                                    Tags
+                                </span>
+                            }
+                            eventKey="tags"
+                        >
+                            <table className="">
+                                <thead>
+                                    <tr>
+                                        <th>Tag</th>
+                                        <th className="py-2 pe-4">
+                                            Average Rating
+                                        </th>
+                                        <th>Games Rated 9+</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {tags.slice(0, displayedTags).map((tag) => {
+                                        const average =
+                                            tag.games.reduce(
+                                                (sum, game) =>
+                                                    sum + game.rating,
+                                                0
+                                            ) / tag.games.length
+                                        const highRatedGames = tag.games
+                                            .filter((game) => game.rating >= 9)
+                                            .map((game) => game.title)
+                                        return (
+                                            <tr
+                                                key={tag.name}
+                                                className="lh-lg border-top"
+                                            >
+                                                <td>{tag.name}</td>
+                                                <td>{average.toFixed(2)}</td>
+                                                <td>
+                                                    {highRatedGames.join(', ')}
+                                                </td>
+                                            </tr>
+                                        )
+                                    })}
                                 </tbody>
                             </table>
                         </Tab>
