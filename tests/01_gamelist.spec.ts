@@ -1,4 +1,5 @@
 import { test, expect } from '@playwright/test'
+import { getYears } from '../components/StatsDialog'
 
 test('should navigate to the backlog', async ({ page }) => {
     // Start from the index page (the baseURL is set via the webServer in the playwright.config.ts)
@@ -138,4 +139,32 @@ test('should sort by time spent', async ({ page }) => {
     await thead.locator('text=Finished').click()
     await expect(tbody).toContainText('Hexcells')
     await expect(page).toHaveURL('/?sortBy=timeSpent')
+})
+
+// ensure duplicate titles only count once in year stats, latest finishedDate wins
+// this test bypasses the UI entirely by calling the exported helper
+// `getYears` so we aren't subject to pagination or sorting quirks.
+
+// build a small game list replicating the duplicates from seed.json
+const dupGames = [
+    {
+        title: 'Duplicate Example',
+        releaseYear: 2020,
+        finishedDate: '2020-01-01T00:00:00.000Z',
+        rating: 5,
+    },
+    {
+        title: 'Duplicate Example',
+        releaseYear: 2020,
+        finishedDate: '2021-01-01T00:00:00.000Z',
+        rating: 9,
+    },
+]
+
+test('getYears dedupes games correctly', () => {
+    const years = getYears(dupGames as any)
+    const year2020 = years.find((y) => y.year === 2020)
+    expect(year2020).toBeDefined()
+    expect(year2020!.games.length).toBe(1)
+    expect(year2020!.games[0].rating).toBe(9)
 })

@@ -23415,4 +23415,18 @@
   "tags": null,
   "additionalTimeSpent": null,
   "addedDate": "2025-10-28T15:02:17.577Z"
-}]
+},
+  {
+    "_id": { "$oid": "700000000000000000000001" },
+    "title": "Duplicate Example",
+    "releaseYear": 2020,
+    "finishedDate": "2020-01-01T00:00:00.000Z",
+    "rating": 5
+  },
+  {
+    "_id": { "$oid": "700000000000000000000002" },
+    "title": "Duplicate Example",
+    "releaseYear": 2020,
+    "finishedDate": "2021-01-01T00:00:00.000Z",
+    "rating": 9
+  }]

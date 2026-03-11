@@ -1,7 +1,7 @@
 'use client'
 
 import React, { useMemo, useState } from 'react'
-import { Modal } from 'react-bootstrap'
+import { Modal, Tab, Tabs } from 'react-bootstrap'
 import { Bar } from 'react-chartjs-2'
 import {
     Chart as ChartJS,
@@ -13,6 +13,7 @@ import {
     ChartOptions,
     ChartData,
 } from 'chart.js'
+import styles from '../styles/StatsDialog.module.css'
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip)
 
@@ -40,6 +41,55 @@ const chartOptions: ChartOptions<'bar'> = {
 
 type Props = {
     games: Game[]
+}
+
+export function getYears(games: Game[]) {
+    // dedupe by title, preferring most recent finishedDate
+    const uniqueByTitle: Record<string, Game> = {}
+
+    games.forEach((game) => {
+        if (!game.title) return
+        const existing = uniqueByTitle[game.title]
+        if (existing) {
+            if (
+                game.finishedDate &&
+                existing.finishedDate &&
+                new Date(game.finishedDate) > new Date(existing.finishedDate)
+            ) {
+                uniqueByTitle[game.title] = game
+            }
+        } else {
+            uniqueByTitle[game.title] = game
+        }
+    })
+
+    const yearGroups: Record<number, { title: string; rating: number }[]> = {}
+
+    Object.values(uniqueByTitle).forEach((game) => {
+        if (game.rating && game.releaseYear) {
+            if (!yearGroups[game.releaseYear]) {
+                yearGroups[game.releaseYear] = []
+            }
+
+            yearGroups[game.releaseYear].push({
+                title: game.title,
+                rating: game.rating,
+            })
+        }
+    })
+
+    const sortedYears = Object.keys(yearGroups)
+        .map((year) => ({
+            year: parseInt(year),
+            games: yearGroups[parseInt(year)],
+        }))
+        .sort((a, b) => {
+            const aHighRated = a.games.filter((game) => game.rating >= 8).length
+            const bHighRated = b.games.filter((game) => game.rating >= 8).length
+            return bHighRated - aHighRated
+        })
+
+    return sortedYears
 }
 
 export const StatsDialog = (props: Props) => {
@@ -154,6 +204,7 @@ export const StatsDialog = (props: Props) => {
         return data
     }, [games])
 
+    const displayedDevs = 5
     const developers = useMemo(() => {
         const developerGames: Record<
             string,
@@ -224,52 +275,31 @@ export const StatsDialog = (props: Props) => {
         return developerStats
     }, [games])
 
-    const years = useMemo(() => {
-        const yearGroups: Record<number, { title: string; rating: number }[]> =
-            {}
-
-        games.forEach((game) => {
-            if (game.rating && game.releaseYear) {
-                if (!yearGroups[game.releaseYear]) {
-                    yearGroups[game.releaseYear] = []
-                }
-                yearGroups[game.releaseYear].push({
-                    title: game.title,
-                    rating: game.rating,
-                })
-            }
-        })
-
-        const sortedYears = Object.keys(yearGroups)
-            .map((year) => ({
-                year: parseInt(year),
-                games: yearGroups[parseInt(year)],
-            }))
-            .sort((a, b) => {
-                const aHighRated = a.games.filter(
-                    (game) => game.rating >= 8
-                ).length
-                const bHighRated = b.games.filter(
-                    (game) => game.rating >= 8
-                ).length
-                return bHighRated - aHighRated
-            })
-
-        return sortedYears
-    }, [games])
+    const displayedYears = 5
+    // helper exported below; this call is just for memoization inside
+    // the component
+    const years = useMemo(() => getYears(games), [games])
 
     return (
         <>
-            <button className="btn btn-primary" onClick={() => setShow(true)}>
+            <button className="btn btn-warning" onClick={() => setShow(true)}>
                 Stats for nerds
             </button>
-            <Modal show={show} onHide={() => setShow(false)} fullscreen>
+            <Modal show={show} onHide={() => setShow(false)} centered>
                 <Modal.Header closeButton>
                     <Modal.Title>Stats for nerds</Modal.Title>
                 </Modal.Header>
-                <Modal.Body className="d-flex justify-content-center">
-                    <div className="d-flex gap-5">
-                        <div>
+                <Modal.Body>
+                    {/* tab titles should be yellow text instead of a yellow background */}
+                    <Tabs defaultActiveKey="stats">
+                        <Tab
+                            title={
+                                <span className={styles['tab-title']}>
+                                    Stats
+                                </span>
+                            }
+                            eventKey="stats"
+                        >
                             <table className="w-100">
                                 <tbody>
                                     {stats.map(({ key, value }, i) => {
@@ -292,96 +322,106 @@ export const StatsDialog = (props: Props) => {
                                 data={ratingCountsData}
                                 options={chartOptions}
                             />
-                        </div>
+                        </Tab>
 
-                        <div className="h-100 border-1 border-start border-white" />
-
-                        <div>
-                            <h3 className="mb-4">Top developers</h3>
+                        <Tab
+                            title={
+                                <span className={styles['tab-title']}>
+                                    Developers
+                                </span>
+                            }
+                            eventKey="developers"
+                        >
                             <table className="">
                                 <thead>
                                     <tr>
                                         <th>Developer</th>
-                                        <th className="pe-4">Average Rating</th>
+                                        <th className="py-2 pe-4">
+                                            Average Rating
+                                        </th>
                                         <th>Games Rated 7+</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {developers.slice(0, 5).map((dev) => {
-                                        const average =
-                                            dev.games.reduce(
-                                                (sum, game) =>
-                                                    sum + game.rating,
-                                                0
-                                            ) / dev.games.length
-                                        const highRatedGames = dev.games
-                                            .filter((game) => game.rating >= 7)
-                                            .map((game) => game.title)
-                                        return (
-                                            <tr
-                                                key={dev.name}
-                                                className="lh-lg border-bottom"
-                                            >
-                                                <td className="pe-4">
-                                                    {dev.name}
-                                                </td>
-                                                <td className="text-center">
-                                                    {average.toFixed(2)}
-                                                </td>
-                                                <td
-                                                    className="py-2"
-                                                    style={{
-                                                        maxWidth: '400px',
-                                                    }}
+                                    {developers
+                                        .slice(0, displayedDevs)
+                                        .map((dev) => {
+                                            const average =
+                                                dev.games.reduce(
+                                                    (sum, game) =>
+                                                        sum + game.rating,
+                                                    0
+                                                ) / dev.games.length
+                                            const highRatedGames = dev.games
+                                                .filter(
+                                                    (game) => game.rating >= 7
+                                                )
+                                                .map((game) => game.title)
+                                            return (
+                                                <tr
+                                                    key={dev.name}
+                                                    className="lh-lg border-top"
                                                 >
-                                                    {highRatedGames.join(', ')}
-                                                </td>
-                                            </tr>
-                                        )
-                                    })}
+                                                    <td>{dev.name}</td>
+                                                    <td>
+                                                        {average.toFixed(2)}
+                                                    </td>
+                                                    <td>
+                                                        {highRatedGames.join(
+                                                            ', '
+                                                        )}
+                                                    </td>
+                                                </tr>
+                                            )
+                                        })}
                                 </tbody>
                             </table>
-                        </div>
+                        </Tab>
 
-                        <div className="h-100 border-1 border-start border-white" />
-
-                        <div>
-                            <h3 className="mb-4">Top years</h3>
+                        <Tab
+                            title={
+                                <span className={styles['tab-title']}>
+                                    Years
+                                </span>
+                            }
+                            eventKey="years"
+                        >
                             <table className="">
                                 <thead>
                                     <tr>
-                                        <th>Year</th>
+                                        <th className="py-2">Year</th>
                                         <th>Games Rated 8+</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {years.slice(0, 5).map((year) => {
-                                        const highRatedGames = year.games
-                                            .filter((game) => game.rating >= 8)
-                                            .map((game) => game.title)
-                                        return (
-                                            <tr
-                                                key={year.year}
-                                                className="lh-lg border-bottom"
-                                            >
-                                                <td className="pe-4">
-                                                    {year.year}
-                                                </td>
-                                                <td
-                                                    className="py-2"
-                                                    style={{
-                                                        maxWidth: '400px',
-                                                    }}
+                                    {years
+                                        .slice(0, displayedYears)
+                                        .map((year) => {
+                                            const highRatedGames = year.games
+                                                .filter(
+                                                    (game) => game.rating >= 8
+                                                )
+                                                .map((game) => game.title)
+                                            return (
+                                                <tr
+                                                    key={year.year}
+                                                    className="lh-lg border-top"
                                                 >
-                                                    {highRatedGames.join(', ')}
-                                                </td>
-                                            </tr>
-                                        )
-                                    })}
+                                                    <td className="pe-4">
+                                                        {year.year}
+                                                    </td>
+                                                    <td className="py-2">
+                                                        {highRatedGames.join(
+                                                            ', '
+                                                        )}
+                                                    </td>
+                                                </tr>
+                                            )
+                                        })}
                                 </tbody>
                             </table>
-                        </div>
-                    </div>
+                        </Tab>
+                    </Tabs>
                 </Modal.Body>
 
                 <Modal.Footer>
