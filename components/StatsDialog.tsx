@@ -224,6 +224,40 @@ export const StatsDialog = (props: Props) => {
         return developerStats
     }, [games])
 
+    const years = useMemo(() => {
+        const yearGroups: Record<number, { title: string; rating: number }[]> =
+            {}
+
+        games.forEach((game) => {
+            if (game.rating && game.releaseYear) {
+                if (!yearGroups[game.releaseYear]) {
+                    yearGroups[game.releaseYear] = []
+                }
+                yearGroups[game.releaseYear].push({
+                    title: game.title,
+                    rating: game.rating,
+                })
+            }
+        })
+
+        const sortedYears = Object.keys(yearGroups)
+            .map((year) => ({
+                year: parseInt(year),
+                games: yearGroups[parseInt(year)],
+            }))
+            .sort((a, b) => {
+                const aHighRated = a.games.filter(
+                    (game) => game.rating >= 8
+                ).length
+                const bHighRated = b.games.filter(
+                    (game) => game.rating >= 8
+                ).length
+                return bHighRated - aHighRated
+            })
+
+        return sortedYears
+    }, [games])
+
     return (
         <>
             <button className="btn btn-primary" onClick={() => setShow(true)}>
@@ -263,16 +297,17 @@ export const StatsDialog = (props: Props) => {
                         <div className="h-100 border-1 border-start border-white" />
 
                         <div>
+                            <h3 className="mb-4">Top developers</h3>
                             <table className="">
                                 <thead>
                                     <tr>
                                         <th>Developer</th>
                                         <th className="pe-4">Average Rating</th>
-                                        <th>Games Rated 6+</th>
+                                        <th>Games Rated 7+</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {developers.slice(0, 10).map((dev) => {
+                                    {developers.slice(0, 5).map((dev) => {
                                         const average =
                                             dev.games.reduce(
                                                 (sum, game) =>
@@ -280,7 +315,7 @@ export const StatsDialog = (props: Props) => {
                                                 0
                                             ) / dev.games.length
                                         const highRatedGames = dev.games
-                                            .filter((game) => game.rating >= 6)
+                                            .filter((game) => game.rating >= 7)
                                             .map((game) => game.title)
                                         return (
                                             <tr
@@ -296,7 +331,46 @@ export const StatsDialog = (props: Props) => {
                                                 <td
                                                     className="py-2"
                                                     style={{
-                                                        maxWidth: '500px',
+                                                        maxWidth: '400px',
+                                                    }}
+                                                >
+                                                    {highRatedGames.join(', ')}
+                                                </td>
+                                            </tr>
+                                        )
+                                    })}
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <div className="h-100 border-1 border-start border-white" />
+
+                        <div>
+                            <h3 className="mb-4">Top years</h3>
+                            <table className="">
+                                <thead>
+                                    <tr>
+                                        <th>Year</th>
+                                        <th>Games Rated 8+</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {years.slice(0, 5).map((year) => {
+                                        const highRatedGames = year.games
+                                            .filter((game) => game.rating >= 8)
+                                            .map((game) => game.title)
+                                        return (
+                                            <tr
+                                                key={year.year}
+                                                className="lh-lg border-bottom"
+                                            >
+                                                <td className="pe-4">
+                                                    {year.year}
+                                                </td>
+                                                <td
+                                                    className="py-2"
+                                                    style={{
+                                                        maxWidth: '400px',
                                                     }}
                                                 >
                                                     {highRatedGames.join(', ')}
