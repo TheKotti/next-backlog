@@ -141,11 +141,6 @@ test('should sort by time spent', async ({ page }) => {
     await expect(page).toHaveURL('/?sortBy=timeSpent')
 })
 
-// ensure duplicate titles only count once in year stats, latest finishedDate wins
-// this test bypasses the UI entirely by calling the exported helper
-// `getYears` so we aren't subject to pagination or sorting quirks.
-
-// build a small game list replicating the duplicates from seed.json
 const dupGames = [
     {
         title: 'Duplicate Example',
@@ -157,7 +152,7 @@ const dupGames = [
         title: 'Duplicate Example',
         releaseYear: 2020,
         finishedDate: '2021-01-01T00:00:00.000Z',
-        rating: 9,
+        rating: 6,
     },
 ]
 
@@ -166,5 +161,5 @@ test('getYears dedupes games correctly', () => {
     const year2020 = years.find((y) => y.year === 2020)
     expect(year2020).toBeDefined()
     expect(year2020!.games.length).toBe(1)
-    expect(year2020!.games[0].rating).toBe(9)
+    expect(year2020!.games[0].rating).toBe(6)
 })
