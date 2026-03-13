@@ -145,6 +145,7 @@ export const BacklogTable = ({
                     options={tagSelectOptions}
                     onChange={(e) => handleTagFilterChange(e?.value)}
                     id="tag-select"
+                    instanceId="tag-select"
                     isClearable
                     placeholder="Filter by tag"
                     styles={{
