@@ -97,11 +97,11 @@ export function getStats(games: Game[]) {
         },
         {
             key: 'Played games',
-            value: playedGamesLength,
+            value: `${playedGamesLength}`,
         },
         {
             key: 'Games in backlog',
-            value: backlogLength,
+            value: `${backlogLength}`,
         },
         {
             key: 'Backlog time estimate',
