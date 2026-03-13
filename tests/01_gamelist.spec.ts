@@ -1,5 +1,5 @@
 import { test, expect } from '@playwright/test'
-import { getYears } from '../components/StatsDialog'
+import { getYears, getStats, getDevelopers, getTags } from '../utils/stats'
 
 test('should navigate to the backlog', async ({ page }) => {
     // Start from the index page (the baseURL is set via the webServer in the playwright.config.ts)
@@ -157,9 +157,139 @@ const dupGames = [
 ]
 
 test('getYears dedupes games correctly', () => {
-    const years = getYears(dupGames as any)
+    const years = getYears(dupGames as Game[])
     const year2020 = years.find((y) => y.year === 2020)
     expect(year2020).toBeDefined()
     expect(year2020!.games.length).toBe(1)
     expect(year2020!.games[0].rating).toBe(6)
+})
+
+const statsGames = [
+    {
+        title: 'Game 1',
+        rating: 8,
+        timeSpent: 10,
+        additionalTimeSpent: 5,
+        streamed: true,
+        finished: 'Yes',
+        finishedDate: '2023-01-01T00:00:00.000Z',
+    },
+    {
+        title: 'Game 2',
+        rating: 7,
+        timeSpent: 15,
+        additionalTimeSpent: 0,
+        streamed: false,
+        finished: 'Yes',
+        finishedDate: '2023-02-01T00:00:00.000Z',
+    },
+    {
+        title: 'Game 3',
+        rating: 9,
+        timeSpent: 20,
+        additionalTimeSpent: 10,
+        streamed: true,
+        finished: 'Nope',
+        finishedDate: null,
+    },
+] as Game[]
+
+test('getStats calculates correct statistics', () => {
+    const stats = getStats(statsGames)
+    expect(stats).toHaveLength(8)
+    expect(stats.find(s => s.key === 'Average rating')?.value).toBe('8.00')
+    expect(stats.find(s => s.key === 'Average game length')?.value).toBe('12.00 hours')
+    expect(stats.find(s => s.key === 'Total time spent')?.value).toBe('60 hours')
+    expect(stats.find(s => s.key === 'Streamed games')?.value).toBe('2')
+    expect(stats.find(s => s.key === 'Finishing rate')?.value).toBe('100%')
+    expect(stats.find(s => s.key === 'Played games')?.value).toBe('2')
+    expect(stats.find(s => s.key === 'Games in backlog')?.value).toBe('1')
+    expect(stats.find(s => s.key === 'Backlog time estimate')?.value).toBe('0 hours')
+})
+
+const devGames = [
+    {
+        title: 'Game A',
+        developers: ['Dev1'],
+        rating: 9,
+        finishedDate: '2023-01-01T00:00:00.000Z',
+        tags: ['action'],
+    },
+    {
+        title: 'Game B',
+        developers: ['Dev1'],
+        rating: 8,
+        finishedDate: '2023-02-01T00:00:00.000Z',
+        tags: ['action'],
+    },
+    {
+        title: 'Game C',
+        developers: ['Dev1'],
+        rating: 7,
+        finishedDate: '2023-03-01T00:00:00.000Z',
+        tags: ['action'],
+    },
+    {
+        title: 'Game D',
+        developers: ['Dev1'],
+        rating: 6,
+        finishedDate: '2023-04-01T00:00:00.000Z',
+        tags: ['action'],
+    },
+    {
+        title: 'Game E',
+        developers: ['Dev2'],
+        rating: 10,
+        finishedDate: '2023-05-01T00:00:00.000Z',
+        tags: ['puzzle'],
+    },
+] as Game[]
+
+test('getDevelopers groups and sorts correctly', () => {
+    const developers = getDevelopers(devGames)
+    expect(developers).toHaveLength(1) // Only Dev1 has 4+ games
+    expect(developers[0].name).toBe('Dev1')
+    expect(developers[0].games).toHaveLength(4)
+    expect(developers[0].games[0].rating).toBe(9) // Sorted by rating desc
+})
+
+const tagGames = [
+    {
+        title: 'Game A',
+        tags: ['action'],
+        rating: 9,
+        finishedDate: '2023-01-01T00:00:00.000Z',
+    },
+    {
+        title: 'Game B',
+        tags: ['action'],
+        rating: 8,
+        finishedDate: '2023-02-01T00:00:00.000Z',
+    },
+    {
+        title: 'Game C',
+        tags: ['action'],
+        rating: 7,
+        finishedDate: '2023-03-01T00:00:00.000Z',
+    },
+    {
+        title: 'Game D',
+        tags: ['action'],
+        rating: 6,
+        finishedDate: '2023-04-01T00:00:00.000Z',
+    },
+    {
+        title: 'Game E',
+        tags: ['puzzle'],
+        rating: 10,
+        finishedDate: '2023-05-01T00:00:00.000Z',
+    },
+] as Game[]
+
+test('getTags groups and sorts correctly', () => {
+    const tags = getTags(tagGames)
+    expect(tags).toHaveLength(1) // Only action has 4+ games
+    expect(tags[0].name).toBe('action')
+    expect(tags[0].games).toHaveLength(4)
+    expect(tags[0].games[0].rating).toBe(9) // Sorted by rating desc
 })
