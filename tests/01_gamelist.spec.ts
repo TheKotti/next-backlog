@@ -197,14 +197,20 @@ const statsGames = [
 test('getStats calculates correct statistics', () => {
     const stats = getStats(statsGames)
     expect(stats).toHaveLength(8)
-    expect(stats.find(s => s.key === 'Average rating')?.value).toBe('8.00')
-    expect(stats.find(s => s.key === 'Average game length')?.value).toBe('12.00 hours')
-    expect(stats.find(s => s.key === 'Total time spent')?.value).toBe('60 hours')
-    expect(stats.find(s => s.key === 'Streamed games')?.value).toBe('2')
-    expect(stats.find(s => s.key === 'Finishing rate')?.value).toBe('100%')
-    expect(stats.find(s => s.key === 'Played games')?.value).toBe('2')
-    expect(stats.find(s => s.key === 'Games in backlog')?.value).toBe('1')
-    expect(stats.find(s => s.key === 'Backlog time estimate')?.value).toBe('0 hours')
+    expect(stats.find((s) => s.key === 'Average rating')?.value).toBe('8.00')
+    expect(stats.find((s) => s.key === 'Average game length')?.value).toBe(
+        '12.00 hours'
+    )
+    expect(stats.find((s) => s.key === 'Total time spent')?.value).toBe(
+        '60 hours'
+    )
+    expect(stats.find((s) => s.key === 'Streamed games')?.value).toBe('2')
+    expect(stats.find((s) => s.key === 'Finishing rate')?.value).toBe('100%')
+    expect(stats.find((s) => s.key === 'Played games')?.value).toBe('2')
+    expect(stats.find((s) => s.key === 'Games in backlog')?.value).toBe('1')
+    expect(stats.find((s) => s.key === 'Backlog time estimate')?.value).toBe(
+        '0 hours'
+    )
 })
 
 const devGames = [
