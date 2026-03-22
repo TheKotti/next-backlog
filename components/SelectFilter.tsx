@@ -1,12 +1,17 @@
 'use client'
 
-import React, { useMemo } from 'react'
+import React from 'react'
 import Select from 'react-select'
 
-type TagSelectProps = {
-    games: Array<Game>
-    tagFilter: string | null
-    onTagFilterChange: (value: string | null) => void
+type Props = {
+    options: Array<{
+        value: string
+        label: string
+    }>
+    value: string | null
+    onValueChange: (value: string | null) => void
+    id: string
+    placeholder: string
 }
 
 const selectStyles = {
@@ -50,44 +55,28 @@ const selectStyles = {
         color: 'white',
         textTransform: 'capitalize',
     }),
+    input: (baseStyles, _state) => ({
+        ...baseStyles,
+        color: 'white !important',
+    }),
 }
 
-export const TagSelect = ({
-    games,
-    tagFilter,
-    onTagFilterChange,
-}: TagSelectProps) => {
-    const tagSelectOptions = useMemo(() => {
-        const tags: string[] = []
-
-        games.forEach((g) => {
-            g.tags?.forEach((t) => tags.push(t))
-        })
-
-        // count occurrences per tag
-        const tagCounts: Record<string, number> = {}
-        tags.forEach((t) => {
-            tagCounts[t] = (tagCounts[t] || 0) + 1
-        })
-
-        const uniqueTags = [...new Set(tags)].sort()
-
-        const tagOptions = uniqueTags.map((t) => {
-            return { value: t, label: `${t} (${tagCounts[t] ?? 0})` }
-        })
-
-        return tagOptions
-    }, [games])
-
+export const SelectFilter = ({
+    options,
+    value,
+    onValueChange,
+    id,
+    placeholder,
+}: Props) => {
     return (
         <Select
-            value={tagSelectOptions.find((x) => x.value == tagFilter)}
-            options={tagSelectOptions}
-            onChange={(e) => onTagFilterChange(e?.value ?? null)}
-            id="tag-select"
-            instanceId="tag-select"
+            value={options.find((x) => x.value == value)}
+            options={options}
+            onChange={(e) => onValueChange(e?.value ?? null)}
+            id={id}
+            instanceId={id}
             isClearable
-            placeholder="Filter by tag"
+            placeholder={placeholder}
             styles={selectStyles}
         />
     )

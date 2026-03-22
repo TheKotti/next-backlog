@@ -1,9 +1,9 @@
 import { useCallback, useRef, useEffect } from 'react'
-import { useSearchParams } from 'next/navigation'
+import { ReadonlyURLSearchParams, useSearchParams } from 'next/navigation'
 import { forOwn } from 'lodash'
 
 export const useNextQueryParams = (defaultValues: Record<string, unknown>) => {
-    const initialParams = useSearchParams()
+    const initialParams = useSearchParams() || new ReadonlyURLSearchParams()
 
     const defaultsRef = useRef<Record<string, unknown>>(defaultValues)
     useEffect(() => {

@@ -19,6 +19,7 @@ export const Tables = ({ games, isAdmin }: Props) => {
         title: '',
         showBacklog: false,
         tag: null,
+        dev: null,
         showCovers: true,
     })
 

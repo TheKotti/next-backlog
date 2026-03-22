@@ -6,7 +6,7 @@ import styles from '../styles/GameTable.module.css'
 import { formatCell, formatHeader } from '../utils/utils'
 import { gameTableColumns } from '../utils/columns'
 import { ReadonlyURLSearchParams } from 'next/navigation'
-import { TagSelect } from './TagSelect'
+import { SelectFilter } from './SelectFilter'
 
 type Props = {
     games: Array<Game>
@@ -28,11 +28,17 @@ export const GameTable = ({
         initialParams.get('title') ?? ''
     )
     const [tagFilter, setTagFilter] = useState(initialParams.get('tag') ?? null)
+    const [devFilter, setDevFilter] = useState(initialParams.get('dev') ?? null)
 
     const data: Array<Partial<Game>> = useMemo(() => {
         return games
             .filter(
                 (x) => (tagFilter && x.tags?.includes(tagFilter)) || !tagFilter
+            )
+            .filter(
+                (x) =>
+                    (devFilter && x.developers?.includes(devFilter)) ||
+                    !devFilter
             )
             .filter(
                 (x) =>
@@ -60,12 +66,65 @@ export const GameTable = ({
                     coverImageId: x.coverImageId,
                 }
             })
-    }, [games, tagFilter, titleFilter])
+    }, [games, tagFilter, devFilter, titleFilter])
 
     const hiddenColumns = useMemo(
         () => (isAdmin ? ['releaseYear'] : ['releaseYear', '_id']),
         [isAdmin]
     )
+
+    const tagOptions = useMemo(() => {
+        const tags: string[] = []
+
+        games.forEach((g) => {
+            g.tags?.forEach((t) => tags.push(t))
+        })
+
+        // count occurrences per tag
+        const tagCounts: Record<string, number> = {}
+        tags.forEach((t) => {
+            tagCounts[t] = (tagCounts[t] || 0) + 1
+        })
+
+        const uniqueTags = [...new Set(tags)].sort()
+
+        const tagOptions = uniqueTags.map((t) => {
+            return { value: t, label: `${t} (${tagCounts[t] ?? 0})` }
+        })
+
+        return tagOptions
+    }, [games])
+
+    const devOptions = useMemo(() => {
+        const devs: string[] = []
+
+        games.forEach((g) => {
+            g.developers?.forEach((t) => devs.push(t))
+        })
+
+        // count occurrences per dev
+        const devCounts: Record<string, number> = {}
+        devs.forEach((t) => {
+            devCounts[t] = (devCounts[t] || 0) + 1
+        })
+
+        const uniqueTags = [...new Set(devs)]
+
+        const devOptions = uniqueTags
+            .sort((a, b) => {
+                const countA = devCounts[a] ?? 0
+                const countB = devCounts[b] ?? 0
+                if (countA !== countB) {
+                    return countB - countA // descending by count
+                }
+                return a.localeCompare(b) // ascending by name
+            })
+            .map((t) => {
+                return { value: t, label: `${t} (${devCounts[t] ?? 0})` }
+            })
+
+        return devOptions
+    }, [games])
 
     const {
         getTableProps,
@@ -116,6 +175,11 @@ export const GameTable = ({
         updateParams({ tag: value })
     }
 
+    const handleDevFilterChange = (value: string | null) => {
+        setDevFilter(value)
+        updateParams({ dev: value })
+    }
+
     const handleShowCoversChange = (checked) => {
         setShowCovers(checked)
         updateParams({ showCovers: checked })
@@ -135,10 +199,20 @@ export const GameTable = ({
                     placeholder="Search"
                 />
 
-                <TagSelect
-                    games={games}
-                    tagFilter={tagFilter}
-                    onTagFilterChange={handleTagFilterChange}
+                <SelectFilter
+                    options={tagOptions}
+                    value={tagFilter}
+                    onValueChange={handleTagFilterChange}
+                    id="tag-select"
+                    placeholder="Filter by tag"
+                />
+
+                <SelectFilter
+                    options={devOptions}
+                    value={devFilter}
+                    onValueChange={handleDevFilterChange}
+                    id="dev-select"
+                    placeholder="Filter by developer"
                 />
 
                 <div className="form-check">
