@@ -6,11 +6,11 @@ import styles from '../styles/GameTable.module.css'
 import { formatCell, formatHeader } from '../utils/utils'
 import { gameTableColumns } from '../utils/columns'
 import { ReadonlyURLSearchParams } from 'next/navigation'
-import Select from 'react-select'
-import { SelectFilter } from './SelectFilter'
+import { ColumnSelectFilter, SelectFilter } from './SelectFilter'
 
 const TOGGLEABLE_COLUMNS = [
     { id: 'finishedDate', label: 'Date' },
+    { id: 'releaseYear', label: 'Release year' },
     { id: 'rating', label: 'Rating' },
     { id: 'comment', label: 'Comments' },
     { id: 'timeSpent', label: 'Finished' },
@@ -84,7 +84,7 @@ export const GameTable = ({
 
     const hiddenColumns = useMemo(
         () => [
-            ...(isAdmin ? ['releaseYear'] : ['releaseYear', '_id']),
+            ...(isAdmin ? [] : ['_id']),
             ...userHiddenColumns,
         ],
         [isAdmin, userHiddenColumns]
@@ -245,6 +245,19 @@ export const GameTable = ({
                     placeholder="Filter by developer"
                 />
 
+                <ColumnSelectFilter
+                    options={TOGGLEABLE_COLUMNS.map(({ id, label }) => ({
+                        value: id,
+                        label,
+                    }))}
+                    value={TOGGLEABLE_COLUMNS.filter(
+                        ({ id }) => !userHiddenColumns.includes(id)
+                    ).map(({ id, label }) => ({ value: id, label }))}
+                    onValueChange={handleColumnToggle}
+                    id="column-select"
+                    placeholder="Columns"
+                />
+
                 <div className="form-check">
                     <label className="form-check-label">
                         <input
@@ -258,72 +271,6 @@ export const GameTable = ({
                         Show covers
                     </label>
                 </div>
-
-                <Select
-                    isMulti
-                    options={TOGGLEABLE_COLUMNS.map(({ id, label }) => ({
-                        value: id,
-                        label,
-                    }))}
-                    value={TOGGLEABLE_COLUMNS.filter(
-                        ({ id }) => !userHiddenColumns.includes(id)
-                    ).map(({ id, label }) => ({ value: id, label }))}
-                    onChange={(selected) =>
-                        handleColumnToggle(selected.map((s) => s.value))
-                    }
-                    placeholder="Columns"
-                    instanceId="column-select"
-                    styles={{
-                        control: (base) => ({
-                            ...base,
-                            minWidth: '140px',
-                            borderColor: 'grey',
-                            backgroundColor: '#333',
-                            cursor: 'pointer',
-                        }),
-                        menu: (base) => ({
-                            ...base,
-                            backgroundColor: '#333',
-                            borderColor: 'grey',
-                        }),
-                        menuList: (base) => ({
-                            ...base,
-                            borderRadius: '8px',
-                        }),
-                        option: (base) => ({
-                            ...base,
-                            cursor: 'pointer',
-                        }),
-                        multiValue: (base) => ({
-                            ...base,
-                            backgroundColor: '#555',
-                        }),
-                        multiValueLabel: (base) => ({
-                            ...base,
-                            color: 'white',
-                        }),
-                        multiValueRemove: (base) => ({
-                            ...base,
-                            color: 'grey',
-                        }),
-                        clearIndicator: (base) => ({
-                            ...base,
-                            color: 'grey !important',
-                        }),
-                        indicatorSeparator: (base) => ({
-                            ...base,
-                            backgroundColor: 'grey !important',
-                        }),
-                        dropdownIndicator: (base) => ({
-                            ...base,
-                            color: 'grey !important',
-                        }),
-                        input: (base) => ({
-                            ...base,
-                            color: 'white !important',
-                        }),
-                    }}
-                />
             </div>
 
             <table {...getTableProps()} className={`w-100 ${styles.gameTable}`}>
