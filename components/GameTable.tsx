@@ -6,7 +6,16 @@ import styles from '../styles/GameTable.module.css'
 import { formatCell, formatHeader } from '../utils/utils'
 import { gameTableColumns } from '../utils/columns'
 import { ReadonlyURLSearchParams } from 'next/navigation'
+import Select from 'react-select'
 import { SelectFilter } from './SelectFilter'
+
+const TOGGLEABLE_COLUMNS = [
+    { id: 'finishedDate', label: 'Date' },
+    { id: 'rating', label: 'Rating' },
+    { id: 'comment', label: 'Comments' },
+    { id: 'timeSpent', label: 'Finished' },
+    { id: 'streamed', label: 'Vods' },
+]
 
 type Props = {
     games: Array<Game>
@@ -68,9 +77,17 @@ export const GameTable = ({
             })
     }, [games, tagFilter, devFilter, titleFilter])
 
+    const [userHiddenColumns, setUserHiddenColumns] = useState<string[]>(() => {
+        const param = initialParams.get('hiddenCols')
+        return param ? param.split(',').filter(Boolean) : []
+    })
+
     const hiddenColumns = useMemo(
-        () => (isAdmin ? ['releaseYear'] : ['releaseYear', '_id']),
-        [isAdmin]
+        () => [
+            ...(isAdmin ? ['releaseYear'] : ['releaseYear', '_id']),
+            ...userHiddenColumns,
+        ],
+        [isAdmin, userHiddenColumns]
     )
 
     const tagOptions = useMemo(() => {
@@ -140,6 +157,7 @@ export const GameTable = ({
         nextPage,
         previousPage,
         setPageSize,
+        setHiddenColumns,
         state: { pageIndex, pageSize, sortBy },
     } = useTable(
         {
@@ -185,6 +203,18 @@ export const GameTable = ({
         updateParams({ showCovers: checked })
     }
 
+    const handleColumnToggle = (visibleIds: string[]) => {
+        const next = TOGGLEABLE_COLUMNS.map((c) => c.id).filter(
+            (id) => !visibleIds.includes(id)
+        )
+        setUserHiddenColumns(next)
+        updateParams({ hiddenCols: next.join(',') || null })
+    }
+
+    useEffect(() => {
+        setHiddenColumns(hiddenColumns)
+    }, [hiddenColumns, setHiddenColumns])
+
     useEffect(() => {
         updateParams({ sortBy: sortBy[0].id, sortDesc: sortBy[0].desc })
     }, [sortBy, updateParams])
@@ -228,6 +258,72 @@ export const GameTable = ({
                         Show covers
                     </label>
                 </div>
+
+                <Select
+                    isMulti
+                    options={TOGGLEABLE_COLUMNS.map(({ id, label }) => ({
+                        value: id,
+                        label,
+                    }))}
+                    value={TOGGLEABLE_COLUMNS.filter(
+                        ({ id }) => !userHiddenColumns.includes(id)
+                    ).map(({ id, label }) => ({ value: id, label }))}
+                    onChange={(selected) =>
+                        handleColumnToggle(selected.map((s) => s.value))
+                    }
+                    placeholder="Columns"
+                    instanceId="column-select"
+                    styles={{
+                        control: (base) => ({
+                            ...base,
+                            minWidth: '140px',
+                            borderColor: 'grey',
+                            backgroundColor: '#333',
+                            cursor: 'pointer',
+                        }),
+                        menu: (base) => ({
+                            ...base,
+                            backgroundColor: '#333',
+                            borderColor: 'grey',
+                        }),
+                        menuList: (base) => ({
+                            ...base,
+                            borderRadius: '8px',
+                        }),
+                        option: (base) => ({
+                            ...base,
+                            cursor: 'pointer',
+                        }),
+                        multiValue: (base) => ({
+                            ...base,
+                            backgroundColor: '#555',
+                        }),
+                        multiValueLabel: (base) => ({
+                            ...base,
+                            color: 'white',
+                        }),
+                        multiValueRemove: (base) => ({
+                            ...base,
+                            color: 'grey',
+                        }),
+                        clearIndicator: (base) => ({
+                            ...base,
+                            color: 'grey !important',
+                        }),
+                        indicatorSeparator: (base) => ({
+                            ...base,
+                            backgroundColor: 'grey !important',
+                        }),
+                        dropdownIndicator: (base) => ({
+                            ...base,
+                            color: 'grey !important',
+                        }),
+                        input: (base) => ({
+                            ...base,
+                            color: 'white !important',
+                        }),
+                    }}
+                />
             </div>
 
             <table {...getTableProps()} className={`w-100 ${styles.gameTable}`}>
