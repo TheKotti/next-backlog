@@ -82,6 +82,7 @@ const COLUMN_IDS = {
         'stealth',
         '_id',
         'rating',
+        'releaseYear',
     ],
 }
 
@@ -142,7 +143,7 @@ const renderCellWithProps = (
  *********************************************************************/
 const COLUMN_HEADER_IDS = {
     CONCENCED: ['streamed', 'stealth'],
-    TIME_SPENT: ['timeSpent'],
+    TIME_SPENT: ['timeSpent', 'releaseYear'],
 }
 
 export const formatHeader = (

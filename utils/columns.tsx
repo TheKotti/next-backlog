@@ -28,6 +28,10 @@ export const gameTableColumns: Column<Partial<Game>>[] = [
         sortDescFirst: true,
     },
     {
+        Header: 'Release year',
+        accessor: 'releaseYear',
+    },
+    {
         Header: 'Rating',
         accessor: 'rating',
         sortDescFirst: true,
@@ -35,10 +39,6 @@ export const gameTableColumns: Column<Partial<Game>>[] = [
             return <ScoreIndicator rating={value as number | null} />
         },
         sortType: scoreSort,
-    },
-    {
-        Header: 'Release year',
-        accessor: 'releaseYear',
     },
     {
         Header: 'Comments',

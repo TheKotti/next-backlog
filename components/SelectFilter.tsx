@@ -3,62 +3,43 @@
 import React from 'react'
 import Select from 'react-select'
 
-type Props = {
-    options: Array<{
-        value: string
-        label: string
-    }>
+type Option = { value: string; label: string }
+
+const sharedSelectStyles = {
+    menu: (base, _state) => ({
+        ...base,
+        borderColor: 'grey',
+        backgroundColor: '#333',
+    }),
+    menuList: (base, _state) => ({
+        ...base,
+        borderRadius: '8px',
+    }),
+    option: (base, _state) => ({
+        ...base,
+        textTransform: 'capitalize' as const,
+        cursor: 'pointer',
+    }),
+    indicatorSeparator: (base, _state) => ({
+        ...base,
+        backgroundColor: 'grey !important',
+    }),
+    dropdownIndicator: (base, _state) => ({
+        ...base,
+        color: 'grey !important',
+    }),
+    input: (base, _state) => ({
+        ...base,
+        color: 'white !important',
+    }),
+}
+
+type SelectFilterProps = {
+    options: Array<Option>
     value: string | null
     onValueChange: (value: string | null) => void
     id: string
     placeholder: string
-}
-
-const selectStyles = {
-    control: (baseStyles, _state) => ({
-        ...baseStyles,
-        width: '200px',
-        borderColor: 'grey',
-        backgroundColor: '#333',
-        color: 'red',
-        cursor: 'pointer',
-    }),
-    menu: (baseStyles, _state) => ({
-        ...baseStyles,
-        width: '300px',
-        borderColor: 'grey',
-        backgroundColor: '#333',
-    }),
-    menuList: (baseStyles, _state) => ({
-        ...baseStyles,
-        borderRadius: '8px',
-    }),
-    option: (baseStyles, _state) => ({
-        ...baseStyles,
-        textTransform: 'capitalize',
-        cursor: 'pointer',
-    }),
-    clearIndicator: (baseStyles, _state) => ({
-        ...baseStyles,
-        color: 'grey !important',
-    }),
-    indicatorSeparator: (baseStyles, _state) => ({
-        ...baseStyles,
-        backgroundColor: 'grey !important',
-    }),
-    dropdownIndicator: (baseStyles, _state) => ({
-        ...baseStyles,
-        color: 'grey !important',
-    }),
-    singleValue: (baseStyles, _state) => ({
-        ...baseStyles,
-        color: 'white',
-        textTransform: 'capitalize',
-    }),
-    input: (baseStyles, _state) => ({
-        ...baseStyles,
-        color: 'white !important',
-    }),
 }
 
 export const SelectFilter = ({
@@ -67,7 +48,7 @@ export const SelectFilter = ({
     onValueChange,
     id,
     placeholder,
-}: Props) => {
+}: SelectFilterProps) => {
     return (
         <Select
             value={options.find((x) => x.value == value)}
@@ -77,7 +58,89 @@ export const SelectFilter = ({
             instanceId={id}
             isClearable
             placeholder={placeholder}
-            styles={selectStyles}
+            styles={{
+                ...sharedSelectStyles,
+                control: (base, _state) => ({
+                    ...base,
+                    width: '200px',
+                    borderColor: 'grey',
+                    backgroundColor: '#333',
+                    cursor: 'pointer',
+                }),
+                menu: (base, _state) => ({
+                    ...sharedSelectStyles.menu(base, _state),
+                    width: '300px',
+                }),
+                clearIndicator: (base, _state) => ({
+                    ...base,
+                    color: 'grey !important',
+                }),
+                singleValue: (base, _state) => ({
+                    ...base,
+                    color: 'white',
+                    textTransform: 'capitalize' as const,
+                }),
+            }}
+        />
+    )
+}
+
+type ColumnSelectFilterProps = {
+    options: Array<Option>
+    value: Array<Option>
+    onValueChange: (visibleIds: string[]) => void
+    id: string
+    placeholder: string
+}
+
+export const ColumnSelectFilter = ({
+    options,
+    value,
+    onValueChange,
+    id,
+    placeholder,
+}: ColumnSelectFilterProps) => {
+    return (
+        <Select
+            isMulti
+            controlShouldRenderValue={false}
+            hideSelectedOptions={false}
+            closeMenuOnSelect={false}
+            isClearable={false}
+            options={options}
+            value={value}
+            onChange={(selected) => onValueChange(selected.map((s) => s.value))}
+            placeholder={placeholder}
+            instanceId={id}
+            components={{
+                Option: ({ innerProps, label, isSelected }) => (
+                    <div
+                        {...innerProps}
+                        style={{
+                            padding: '8px 12px',
+                            cursor: 'pointer',
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: '8px',
+                        }}
+                    >
+                        <span style={{ width: '1em' }}>
+                            {isSelected ? '✓' : ''}
+                        </span>
+                        {label}
+                    </div>
+                ),
+            }}
+            styles={{
+                ...sharedSelectStyles,
+                control: (base, _state) => ({
+                    ...base,
+                    minWidth: '120px',
+                    borderColor: 'grey',
+                    backgroundColor: '#333',
+                    cursor: 'pointer',
+                }),
+            }}
         />
     )
 }
