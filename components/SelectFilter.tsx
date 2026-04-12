@@ -50,38 +50,41 @@ export const SelectFilter = ({
     placeholder,
 }: SelectFilterProps) => {
     return (
-        <Select
-            value={options.find((x) => x.value == value)}
-            options={options}
-            onChange={(e) => onValueChange(e?.value ?? null)}
-            id={id}
-            instanceId={id}
-            isClearable
-            placeholder={placeholder}
-            styles={{
-                ...sharedSelectStyles,
-                control: (base, _state) => ({
-                    ...base,
-                    width: '200px',
-                    borderColor: 'grey',
-                    backgroundColor: '#333',
-                    cursor: 'pointer',
-                }),
-                menu: (base, _state) => ({
-                    ...sharedSelectStyles.menu(base, _state),
-                    width: '300px',
-                }),
-                clearIndicator: (base, _state) => ({
-                    ...base,
-                    color: 'grey !important',
-                }),
-                singleValue: (base, _state) => ({
-                    ...base,
-                    color: 'white',
-                    textTransform: 'capitalize' as const,
-                }),
-            }}
-        />
+        <div data-testid={id}>
+            <Select
+                value={options.find((x) => x.value == value)}
+                options={options}
+                onChange={(e) => onValueChange(e?.value ?? null)}
+                id={id}
+                instanceId={id}
+                isClearable
+                classNamePrefix="react-select"
+                placeholder={placeholder}
+                styles={{
+                    ...sharedSelectStyles,
+                    control: (base, _state) => ({
+                        ...base,
+                        width: '200px',
+                        borderColor: 'grey',
+                        backgroundColor: '#333',
+                        cursor: 'pointer',
+                    }),
+                    menu: (base, _state) => ({
+                        ...sharedSelectStyles.menu(base, _state),
+                        width: '300px',
+                    }),
+                    clearIndicator: (base, _state) => ({
+                        ...base,
+                        color: 'grey !important',
+                    }),
+                    singleValue: (base, _state) => ({
+                        ...base,
+                        color: 'white',
+                        textTransform: 'capitalize' as const,
+                    }),
+                }}
+            />
+        </div>
     )
 }
 
@@ -101,7 +104,8 @@ export const ColumnSelectFilter = ({
     placeholder,
 }: ColumnSelectFilterProps) => {
     return (
-        <Select
+        <div data-testid={id}>
+            <Select
             isMulti
             controlShouldRenderValue={false}
             hideSelectedOptions={false}
@@ -112,6 +116,7 @@ export const ColumnSelectFilter = ({
             onChange={(selected) => onValueChange(selected.map((s) => s.value))}
             placeholder={placeholder}
             instanceId={id}
+            classNamePrefix="react-select"
             components={{
                 Option: ({ innerProps, label, isSelected }) => (
                     <div
@@ -141,6 +146,7 @@ export const ColumnSelectFilter = ({
                     cursor: 'pointer',
                 }),
             }}
-        />
+            />
+        </div>
     )
 }
