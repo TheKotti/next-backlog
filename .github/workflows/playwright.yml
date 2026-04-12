@@ -3,8 +3,24 @@ on:
   workflow_dispatch:
   schedule:
     - cron: '0 0 * * *' # runs daily at 00:00
+
 jobs:
+  check-commits:
+    runs-on: ubuntu-latest
+    outputs:
+      has_new_commits: ${{ steps.check.outputs.has_new_commits }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # required to read git log history
+      - id: check
+        run: |
+          COUNT=$(git log --oneline --since '24 hours ago' origin/main | wc -l)
+          echo "has_new_commits=$([ $COUNT -gt 0 ] && echo 'true' || echo 'false')" >> $GITHUB_OUTPUT
+
   test:
+    needs: check-commits
+    if: needs.check-commits.outputs.has_new_commits == 'true' || github.event_name == 'workflow_dispatch'
     environment: Preview
     timeout-minutes: 60
     runs-on: ubuntu-latest
@@ -17,13 +33,7 @@ jobs:
 
     steps:
     - uses: actions/checkout@v4
-      with:
-        fetch-depth: 0 # required to count the commits
 
-    - name: Get new commits
-      run: echo "NEW_COMMIT_COUNT=$(git log --oneline --since '24 hours ago' | wc -l)" >> $GITHUB_ENV
-
-      if: ${{ env.NEW_COMMIT_COUNT > 0 || github.event_name == 'workflow_dispatch' }}
     - uses: actions/setup-node@v4
       with:
         node-version: lts/*
