@@ -28,7 +28,7 @@ export const gameTableColumns: Column<Partial<Game>>[] = [
         sortDescFirst: true,
     },
     {
-        Header: 'Release year',
+        Header: 'Year',
         accessor: 'releaseYear',
     },
     {

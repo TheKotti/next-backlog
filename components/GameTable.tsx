@@ -10,7 +10,7 @@ import { ColumnSelectFilter, SelectFilter } from './SelectFilter'
 
 const TOGGLEABLE_COLUMNS = [
     { id: 'finishedDate', label: 'Date' },
-    { id: 'releaseYear', label: 'Release year' },
+    { id: 'releaseYear', label: 'Year' },
     { id: 'rating', label: 'Rating' },
     { id: 'comment', label: 'Comments' },
     { id: 'timeSpent', label: 'Finished' },
@@ -83,10 +83,7 @@ export const GameTable = ({
     })
 
     const hiddenColumns = useMemo(
-        () => [
-            ...(isAdmin ? [] : ['_id']),
-            ...userHiddenColumns,
-        ],
+        () => [...(isAdmin ? [] : ['_id']), ...userHiddenColumns],
         [isAdmin, userHiddenColumns]
     )
 
