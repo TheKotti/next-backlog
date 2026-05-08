@@ -35,7 +35,9 @@ export const Tables = ({ games, isAdmin }: Props) => {
 
     useEffect(() => {
         fetch('/api/votes')
-            .then((res) => res.json())
+            .then((res) => {
+                return res.json()
+            })
             .then((data) => setLiveVotes(data))
             .catch(console.error)
     }, [])
@@ -71,13 +73,6 @@ export const Tables = ({ games, isAdmin }: Props) => {
     const handleBacklogToggle = (checked) => {
         setViewBacklog(checked)
         updateParams({ showBacklog: checked })
-    }
-
-    const refreshVotes = () => {
-        fetch('/api/votes')
-            .then((res) => res.json())
-            .then((data) => setLiveVotes(data))
-            .catch(console.error)
     }
 
     return (
