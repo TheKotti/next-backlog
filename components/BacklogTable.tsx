@@ -283,6 +283,8 @@ export const BacklogTable = ({
                                         {row.cells.map((cell) => {
                                             return formatCell(cell, row, {
                                                 handleTagFilterChange,
+                                                username,
+                                                onVoteChange,
                                             })
                                         })}
                                     </tr>

@@ -7,9 +7,10 @@ import {
     TagCell,
     TitleCell,
     VodCell,
+    VoteCell,
 } from '../components/Cells'
 import { ScoreIndicator } from '../components/ScoreIndicator'
-import { dateSort, scoreSort, titleSort } from './utils'
+import { dateSort, scoreSort, titleSort, voteSort } from './utils'
 
 export const gameTableColumns: Column<Partial<Game>>[] = [
     {
@@ -87,6 +88,14 @@ export const backlogTableColumns: Column<
     {
         Header: 'Howlongtobeat',
         accessor: 'hltbString',
+    },
+    {
+        Header: 'Votes',
+        accessor: 'votes',
+        sortType: voteSort,
+        sortDescFirst: true,
+        Cell: ({ value, row, username, onVoteChange }) =>
+            VoteCell({ value, row, username, onVoteChange }),
     },
     {
         Header: 'Admin',
