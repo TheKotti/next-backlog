@@ -46,7 +46,10 @@ export const scoreSort = (rowA, rowB, id) => {
 }
 
 export const voteSort = (rowA, rowB, _id) => {
-    return rowA.values['votes']?.length || 0 - rowB.values['votes']?.length || 0
+    return (
+        (rowA.values['votes']?.length || 0) -
+        (rowB.values['votes']?.length || 0)
+    )
 }
 
 export const titleSort = (rowA, rowB, id) => {
