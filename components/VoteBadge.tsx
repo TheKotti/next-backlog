@@ -9,7 +9,6 @@ type Props = {
     voters: string[]
     username: string | null
     gameId: string
-    onVoteChange: () => void
 }
 
 export const VoteBadge = ({
@@ -18,7 +17,6 @@ export const VoteBadge = ({
     voters,
     username,
     gameId,
-    onVoteChange,
 }: Props) => {
     const [optimisticVoted, setOptimisticVoted] = useState<boolean | null>(null)
     const [loading, setLoading] = useState(false)
@@ -44,7 +42,6 @@ export const VoteBadge = ({
 
         try {
             await toggleVoteAction(gameId)
-            onVoteChange()
         } catch {
             setOptimisticVoted(null)
         } finally {

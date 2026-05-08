@@ -94,8 +94,7 @@ export const backlogTableColumns: Column<
         accessor: 'votes',
         sortType: voteSort,
         sortDescFirst: true,
-        Cell: ({ value, row, username, onVoteChange }) =>
-            VoteCell({ value, row, username, onVoteChange }),
+        Cell: ({ value, row, username }) => VoteCell({ value, row, username }),
     },
     {
         Header: 'Admin',

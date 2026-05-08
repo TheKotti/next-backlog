@@ -101,7 +101,6 @@ export const formatCell = (
         showCovers?: boolean
         handleTagFilterChange: (value: string) => void
         username?: string | null
-        onVoteChange?: () => void
     }
 ) => {
     const { column } = cell
@@ -109,7 +108,6 @@ export const formatCell = (
     const showCovers = props?.showCovers
     const handleTagFilterChange = props?.handleTagFilterChange
     const username = props?.username
-    const onVoteChange = props?.onVoteChange
 
     switch (true) {
         case COLUMN_IDS.TITLE.includes(columnId):
@@ -126,7 +124,7 @@ export const formatCell = (
                     key: columnId + row.id,
                     style: { textAlign: 'center' },
                 },
-                { handleTagFilterChange, username, onVoteChange }
+                { handleTagFilterChange, username }
             )
 
         default:

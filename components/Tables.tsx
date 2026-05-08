@@ -107,7 +107,6 @@ export const Tables = ({ games, isAdmin }: Props) => {
                     initialParams={initialParams}
                     isAdmin={isAdmin}
                     username={session?.user?.name ?? null}
-                    onVoteChange={refreshVotes}
                 />
             ) : (
                 <GameTable

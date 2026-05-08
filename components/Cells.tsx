@@ -170,7 +170,7 @@ export const AdminCell = ({ value, row, showVodButton = false }) => {
     )
 }
 
-export const VoteCell = ({ value, row, username, onVoteChange }) => {
+export const VoteCell = ({ value, row, username }) => {
     const voters: string[] = value ?? []
     const gameId: string = row.original._id
     const hasVoted = username ? voters.includes(username) : false
@@ -198,7 +198,6 @@ export const VoteCell = ({ value, row, username, onVoteChange }) => {
         setOptimisticVoted(!displayVoted)
         try {
             await toggleVoteAction(gameId)
-            onVoteChange()
         } catch {
             setOptimisticVoted(null)
         } finally {

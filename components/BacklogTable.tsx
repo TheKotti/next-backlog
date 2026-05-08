@@ -21,7 +21,6 @@ type Props = {
     updateParams: (newParams: Record<string, unknown>) => void
     initialParams: ReadonlyURLSearchParams
     username: string | null
-    onVoteChange: () => void
 }
 
 export const BacklogTable = ({
@@ -30,7 +29,6 @@ export const BacklogTable = ({
     initialParams,
     isAdmin,
     username,
-    onVoteChange,
 }: Props) => {
     const [showCovers, setShowCovers] = useState(
         initialParams.get('showCovers') != 'false'
@@ -152,6 +150,8 @@ export const BacklogTable = ({
                 pageSize: 10,
             },
             disableSortRemove: true,
+            autoResetSortBy: false,
+            autoResetPage: false,
         },
         useSortBy,
         usePagination
@@ -253,7 +253,6 @@ export const BacklogTable = ({
                                         voters={game.votes ?? []}
                                         username={username}
                                         gameId={game._id!}
-                                        onVoteChange={onVoteChange}
                                     />
                                 </div>
                             )
@@ -284,7 +283,6 @@ export const BacklogTable = ({
                                             return formatCell(cell, row, {
                                                 handleTagFilterChange,
                                                 username,
-                                                onVoteChange,
                                             })
                                         })}
                                     </tr>
