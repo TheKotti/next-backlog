@@ -2,6 +2,8 @@ import { auth } from 'app/auth'
 import { ObjectId } from 'mongodb'
 import { connectToDatabase } from 'lib/mongo'
 
+export const dynamic = 'force-dynamic'
+
 export async function POST(request: Request) {
     const authState = await auth()
     const username = authState?.user?.name
