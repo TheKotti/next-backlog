@@ -4,7 +4,7 @@ import styles from '../styles/Home.module.css'
 import { Icon } from '../components/Icon'
 import { connectToDatabase } from 'lib/mongo'
 import { Tables } from 'components/Tables'
-import NavWrapper from 'components/NavWrapper'
+import { AuthBar } from 'components/AuthBar'
 
 async function getGames(): Promise<Game[]> {
     const { db } = await connectToDatabase()
@@ -34,7 +34,7 @@ export default async function Home() {
 
     return (
         <main className={styles.container}>
-            <NavWrapper />
+            <AuthBar />
 
             <div className="d-flex justify-content-between">
                 <h1>{process.env.ADMIN_USER_NAME}&apos;s bad takes on games</h1>
