@@ -1,34 +1,103 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# next-backlog
 
-## Getting Started
+A personal game backlog tracker. Displays a list of previously played games with ratings and stats, and a backlog of upcoming games. Visitors can sign in with Twitch to vote for which backlog game gets played next.
 
-First, run the development server:
+## Architecture
 
-```bash
-npm run dev
-# or
-yarn dev
+**Framework:** Next.js 15 (App Router) deployed on Vercel  
+**Database:** MongoDB (direct driver, no ORM)  
+**Auth:** NextAuth v5 with Twitch OAuth  
+**Images:** Cloudinary (cover art)  
+**Game metadata:** IGDB API  
+
+### Rendering strategy
+
+The public home page (`/`) is statically rendered and only rebuilds when the admin clicks the **Revalidate** button. This keeps Vercel ISR write usage minimal and page loads fast.
+
+Vote counts are the exception — they are fetched client-side via `GET /api/votes` on page load, so they stay live without triggering a revalidation.
+
+### Pages
+
+| Route | Access | Description |
+|-------|--------|-------------|
+| `/` | Public | Game list — previously played and backlog |
+| `/admin` | Admin only | Edit games, manage the list |
+| `/add-game` | Admin only | Search IGDB and add a new game |
+| `/recap` | Admin only | Per-game recap editor |
+
+### Key files
+
+```
+app/
+  page.tsx          # Public home page (static render)
+  auth.ts           # NextAuth config (Twitch OAuth)
+  actions.ts        # Server actions: edit games, vote, revalidate
+  api/votes/        # GET /api/votes — live vote counts
+
+components/
+  NavWrapper.tsx    # Server component — reads auth state, renders Nav
+  Nav.tsx           # Client nav: sign in/out, admin links
+  Tables.tsx        # Fetches live votes, renders played/backlog tables
+  BacklogTable.tsx  # Backlog grid with cover images and vote badges
+  VoteBadge.tsx     # Vote button and count per game
+
+lib/
+  mongo.ts          # MongoDB connection with caching
+
+types.d.ts          # Game type definition
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### Data model
 
-You can start editing the page by modifying `pages/index.tsx`. The page auto-updates as you edit the file.
+Games are stored as documents in the `games` MongoDB collection. The `votes` field is an array of Twitch usernames who have voted for that game.
 
-[API routes](https://nextjs.org/docs/api-routes/introduction) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.ts`.
+Admin status is determined by comparing the authenticated user's Twitch username against the `ADMIN_USER_NAME` environment variable.
 
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/api-routes/introduction) instead of React pages.
+## Development
 
-## Learn More
+### Prerequisites
 
-To learn more about Next.js, take a look at the following resources:
+- Node.js 18+
+- A MongoDB database
+- A Twitch application (for OAuth and IGDB access)
+- A Cloudinary account (for cover image uploads)
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+### Environment variables
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+Create a `.env.local` file:
 
-## Deploy on Vercel
+```
+MONGODB_URI=
+DB_NAME=
+ADMIN_USER_NAME=        # Your Twitch username
+TWITCH_CLIENT_ID=       # From dev.twitch.tv/console/apps
+TWITCH_CLIENT_SECRET=
+NEXTAUTH_SECRET=        # Any random string, e.g. output of: openssl rand -hex 32
+NEXT_PUBLIC_IMG_CLOUD_NAME=
+IMG_API_KEY=
+IMG_API_SECRET=
+```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+The Twitch application needs `http://localhost:3000/api/auth/callback/twitch` added as an OAuth redirect URL in the Twitch developer console.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+### Running locally
+
+```bash
+npm install
+npm run dev       # starts on http://localhost:3000 with Turbopack
+```
+
+### Other commands
+
+```bash
+npm run build     # production build
+npm run lint      # ESLint
+npm run format    # Prettier (ts, tsx, css)
+npx playwright test  # end-to-end tests
+```
+
+## Deployment
+
+The app is deployed on Vercel. Automatic git deployments are disabled (`vercel.json`) — deploy manually via the Vercel dashboard or CLI.
+
+The public home page is statically cached. After editing game data in the admin panel, click **Revalidate** to rebuild the public page.
