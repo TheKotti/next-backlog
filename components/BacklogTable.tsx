@@ -13,12 +13,15 @@ import {
 import { ReadonlyURLSearchParams } from 'next/navigation'
 import CoverImage from './CoverImage'
 import { SelectFilter } from './SelectFilter'
+import { VoteBadge } from './VoteBadge'
 
 type Props = {
     games: Array<Game>
     isAdmin: boolean
     updateParams: (newParams: Record<string, unknown>) => void
     initialParams: ReadonlyURLSearchParams
+    username: string | null
+    onVoteChange: () => void
 }
 
 export const BacklogTable = ({
@@ -26,6 +29,8 @@ export const BacklogTable = ({
     updateParams,
     initialParams,
     isAdmin,
+    username,
+    onVoteChange,
 }: Props) => {
     const [showCovers, setShowCovers] = useState(
         initialParams.get('showCovers') != 'false'
@@ -226,15 +231,31 @@ export const BacklogTable = ({
                         )
                         .sort((a, b) => titleSortSimple(a.title, b.title))
                         .map((game) => {
+                            const voteCount = game.votes?.length ?? 0
+                            const hasVoted = username
+                                ? game.votes?.includes(username)
+                                : false
                             return (
-                                <CoverImage
-                                    game={game}
-                                    showHltb
-                                    showTags
-                                    onTagClick={handleTagFilterChange}
+                                <div
                                     key={game._id}
-                                    isAdmin={isAdmin}
-                                />
+                                    style={{ position: 'relative' }}
+                                >
+                                    <CoverImage
+                                        game={game}
+                                        showHltb
+                                        showTags
+                                        onTagClick={handleTagFilterChange}
+                                        isAdmin={isAdmin}
+                                    />
+                                    <VoteBadge
+                                        count={voteCount}
+                                        hasVoted={hasVoted}
+                                        voters={game.votes ?? []}
+                                        username={username}
+                                        gameId={game._id!}
+                                        onVoteChange={onVoteChange}
+                                    />
+                                </div>
                             )
                         })}
                 </div>

@@ -21,6 +21,7 @@ type Game = {
     tags: Array<string> | null
     additionalTimeSpent: number | null
     addedDate: string | null // not nullable after db update
+    votes: Array<string>
 }
 
 type GameOptions = {

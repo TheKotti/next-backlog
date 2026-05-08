@@ -262,6 +262,7 @@ export async function addNewGameAction(formData: FormData) {
                 tags: null,
                 additionalTimeSpent: null,
                 addedDate: new Date().toISOString(),
+                votes: [],
             }
 
             // Add cover image
@@ -311,6 +312,37 @@ export async function deleteGameAction(formData: FormData) {
         }
     } catch (error) {
         console.log('Error in delete game action:', error)
+        return false
+    }
+}
+
+export async function toggleVoteAction(gameId: string) {
+    try {
+        const authState = await auth()
+        const username = authState?.user?.name
+        if (!username) return false
+
+        const { db } = await connectToDatabase()
+        const mongoId = new ObjectId(gameId)
+
+        const game = await db.collection('games').findOne({ _id: mongoId })
+        if (!game) return false
+
+        const hasVoted = (game.votes ?? []).includes(username)
+
+        if (hasVoted) {
+            await db
+                .collection('games')
+                .updateOne({ _id: mongoId }, { $pull: { votes: username } })
+        } else {
+            await db
+                .collection('games')
+                .updateOne({ _id: mongoId }, { $addToSet: { votes: username } })
+        }
+
+        return !hasVoted
+    } catch (error) {
+        console.log('Error in toggle vote action:', error)
         return false
     }
 }
