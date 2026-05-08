@@ -1,7 +1,6 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import { toggleVoteAction } from 'app/actions'
 
 type Props = {
     count: number
@@ -39,9 +38,12 @@ export const VoteBadge = ({
         if (!username || loading) return
         setLoading(true)
         setOptimisticVoted(!displayVoted)
-
         try {
-            await toggleVoteAction(gameId)
+            await fetch('/api/votes', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ gameId }),
+            })
         } catch {
             setOptimisticVoted(null)
         } finally {

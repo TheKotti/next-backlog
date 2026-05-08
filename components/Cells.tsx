@@ -5,7 +5,6 @@ import { VodDialog } from './VodDialog'
 import styles from '../styles/GameTable.module.css'
 import CoverImage from './CoverImage'
 import { Tag } from './Tag'
-import { toggleVoteAction } from 'app/actions'
 
 export const CommentCell = ({ value, row, handleTagFilterChange }) => {
     const tags: string[] = row.original.tags
@@ -197,7 +196,11 @@ export const VoteCell = ({ value, row, username }) => {
         setLoading(true)
         setOptimisticVoted(!displayVoted)
         try {
-            await toggleVoteAction(gameId)
+            await fetch('/api/votes', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ gameId }),
+            })
         } catch {
             setOptimisticVoted(null)
         } finally {
