@@ -270,6 +270,7 @@ export const GameTable = ({
                 </div>
             </div>
 
+            <div className={styles.tableWrapper}>
             <table {...getTableProps()} className={`w-100 ${styles.gameTable}`}>
                 <thead>
                     <tr>
@@ -295,6 +296,7 @@ export const GameTable = ({
                     })}
                 </tbody>
             </table>
+            </div>
 
             <div className="pagination d-flex align-items-center gap-2">
                 <div className="btn-group">

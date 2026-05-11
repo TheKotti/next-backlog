@@ -1,8 +1,12 @@
-.gameTable {
-    width: -webkit-fill-available;
-    border-collapse: collapse;
+.tableWrapper {
+    overflow-x: auto;
     background-color: rgb(0, 0, 0, 0.7);
     margin: 16px 0;
+}
+
+.gameTable {
+    width: 100%;
+    border-collapse: collapse;
 }
 
 .gameTable td {

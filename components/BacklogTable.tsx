@@ -260,6 +260,7 @@ export const BacklogTable = ({
                 </div>
             ) : (
                 <>
+                    <div className={styles.tableWrapper}>
                     <table
                         {...getTableProps}
                         className={`w-100 ${styles.gameTable}`}
@@ -290,6 +291,7 @@ export const BacklogTable = ({
                             })}
                         </tbody>
                     </table>
+                    </div>
 
                     <div className="pagination d-flex align-items-center gap-2">
                         <div className="btn-group">
