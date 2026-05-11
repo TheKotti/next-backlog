@@ -270,31 +270,36 @@ export const GameTable = ({
                 </div>
             </div>
 
-            <table {...getTableProps()} className={`w-100 ${styles.gameTable}`}>
-                <thead>
-                    <tr>
-                        {headers.map((column) => {
-                            return formatHeader(column, hiddenColumns)
-                        })}
-                    </tr>
-                </thead>
+            <div className={styles['tableWrapper']}>
+                <table
+                    {...getTableProps()}
+                    className={`w-100 ${styles.gameTable}`}
+                >
+                    <thead>
+                        <tr>
+                            {headers.map((column) => {
+                                return formatHeader(column, hiddenColumns)
+                            })}
+                        </tr>
+                    </thead>
 
-                <tbody {...getTableBodyProps()}>
-                    {page.map((row, i) => {
-                        prepareRow(row)
-                        return (
-                            <tr {...row.getRowProps()} key={i}>
-                                {row.cells.map((cell) => {
-                                    return formatCell(cell, row, {
-                                        showCovers,
-                                        handleTagFilterChange,
-                                    })
-                                })}
-                            </tr>
-                        )
-                    })}
-                </tbody>
-            </table>
+                    <tbody {...getTableBodyProps()}>
+                        {page.map((row, i) => {
+                            prepareRow(row)
+                            return (
+                                <tr {...row.getRowProps()} key={i}>
+                                    {row.cells.map((cell) => {
+                                        return formatCell(cell, row, {
+                                            showCovers,
+                                            handleTagFilterChange,
+                                        })
+                                    })}
+                                </tr>
+                            )
+                        })}
+                    </tbody>
+                </table>
+            </div>
 
             <div className="pagination d-flex align-items-center gap-2">
                 <div className="btn-group">

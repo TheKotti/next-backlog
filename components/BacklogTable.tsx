@@ -260,36 +260,42 @@ export const BacklogTable = ({
                 </div>
             ) : (
                 <>
-                    <table
-                        {...getTableProps}
-                        className={`w-100 ${styles.gameTable}`}
-                    >
-                        <thead>
-                            <tr>
-                                {headers.map((column) => {
-                                    if (column.id === '_id' && !isAdmin) return
-                                    return formatHeader(column, hiddenColumns)
-                                })}
-                            </tr>
-                        </thead>
+                    <div className={styles['tableWrapper']}>
+                        <table
+                            {...getTableProps}
+                            className={`w-100 ${styles.gameTable}`}
+                        >
+                            <thead>
+                                <tr>
+                                    {headers.map((column) => {
+                                        if (column.id === '_id' && !isAdmin)
+                                            return
+                                        return formatHeader(
+                                            column,
+                                            hiddenColumns
+                                        )
+                                    })}
+                                </tr>
+                            </thead>
 
-                        <tbody {...getTableBodyProps()}>
-                            {page.map((row) => {
-                                prepareRow(row)
-                                const rowProps = row.getRowProps()
-                                return (
-                                    <tr {...rowProps} key={rowProps.key}>
-                                        {row.cells.map((cell) => {
-                                            return formatCell(cell, row, {
-                                                handleTagFilterChange,
-                                                username,
-                                            })
-                                        })}
-                                    </tr>
-                                )
-                            })}
-                        </tbody>
-                    </table>
+                            <tbody {...getTableBodyProps()}>
+                                {page.map((row) => {
+                                    prepareRow(row)
+                                    const rowProps = row.getRowProps()
+                                    return (
+                                        <tr {...rowProps} key={rowProps.key}>
+                                            {row.cells.map((cell) => {
+                                                return formatCell(cell, row, {
+                                                    handleTagFilterChange,
+                                                    username,
+                                                })
+                                            })}
+                                        </tr>
+                                    )
+                                })}
+                            </tbody>
+                        </table>
+                    </div>
 
                     <div className="pagination d-flex align-items-center gap-2">
                         <div className="btn-group">
