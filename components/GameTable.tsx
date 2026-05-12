@@ -41,9 +41,11 @@ export const GameTable = ({
 
     const data: Array<Partial<Game>> = useMemo(() => {
         return games
-            .filter(
-                (x) => (tagFilter && x.tags?.includes(tagFilter)) || !tagFilter
-            )
+            .filter((x) => {
+                if (!tagFilter) return true
+                if (tagFilter === '__untagged__') return !x.tags?.length
+                return x.tags?.includes(tagFilter)
+            })
             .filter(
                 (x) =>
                     (devFilter && x.developers?.includes(devFilter)) ||
@@ -102,9 +104,15 @@ export const GameTable = ({
 
         const uniqueTags = [...new Set(tags)].sort()
 
-        const tagOptions = uniqueTags.map((t) => {
-            return { value: t, label: `${t} (${tagCounts[t] ?? 0})` }
-        })
+        const untaggedCount = games.filter((g) => !g.tags?.length).length
+
+        const tagOptions = [
+            { value: '__untagged__', label: `Untagged (${untaggedCount})` },
+            ...uniqueTags.map((t) => ({
+                value: t,
+                label: `${t} (${tagCounts[t] ?? 0})`,
+            })),
+        ]
 
         return tagOptions
     }, [games])
