@@ -54,7 +54,7 @@ export const VoteBadge = ({
     return (
         <div
             className="position-absolute d-flex align-items-center gap-1"
-            style={{ bottom: 6, right: 6, zIndex: 2 }}
+            style={{ bottom: 6, right: 6 }}
         >
             {displayCount > 0 && (
                 <span
