@@ -78,7 +78,7 @@ export const Tables = ({ games, isAdmin }: Props) => {
     return (
         <>
             <div
-                className={`d-flex justify-content-between mb-3 ${styles.header}`}
+                className={`d-flex justify-content-between mb-3 flex-wrap gap-2 ${styles.header}`}
             >
                 <h2>{viewBacklog ? 'Backlog' : 'Previously played'}</h2>
                 <div className="d-flex gap-2">

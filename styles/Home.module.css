@@ -48,3 +48,10 @@
     height: fit-content;
     margin-left: 16px;
 }
+
+@media (max-width: 768px) {
+    .container {
+        width: 95%;
+        margin: 10px auto;
+    }
+}

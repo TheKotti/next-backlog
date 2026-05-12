@@ -36,7 +36,7 @@ export default async function Home() {
         <main className={styles.container}>
             <AuthBar />
 
-            <div className="d-flex justify-content-between">
+            <div className="d-flex justify-content-between align-items-start flex-wrap gap-2">
                 <h1>{process.env.ADMIN_USER_NAME}&apos;s bad takes on games</h1>
 
                 <div className="row gx-3">

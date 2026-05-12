@@ -183,7 +183,12 @@ export const BacklogTable = ({
                 <input
                     value={titleFilter}
                     onChange={(e) => handleTitleFilterChange(e.target.value)}
-                    className={`form-control w-25 ${styles['dark-input']}`}
+                    className={`form-control ${styles['dark-input']}`}
+                    style={{
+                        minWidth: '120px',
+                        maxWidth: '25%',
+                        flex: '1 1 120px',
+                    }}
                     placeholder="Search"
                 />
 
@@ -297,7 +302,7 @@ export const BacklogTable = ({
                         </table>
                     </div>
 
-                    <div className="pagination d-flex align-items-center gap-2">
+                    <div className="pagination d-flex align-items-center gap-2 flex-wrap">
                         <div className="btn-group">
                             <button
                                 className={`btn ${styles['dark-input']}`}

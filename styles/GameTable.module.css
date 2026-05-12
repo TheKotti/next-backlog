@@ -34,6 +34,7 @@
 
 .filters {
     display: flex;
+    flex-wrap: wrap;
     gap: 16px;
 }
 
@@ -99,4 +100,10 @@
     gap: 1rem;
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+}
+
+@media (max-width: 768px) {
+    .filters > * {
+        flex: 1 1 140px;
+    }
 }
