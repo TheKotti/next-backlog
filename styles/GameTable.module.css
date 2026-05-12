@@ -1,7 +1,18 @@
 .tableWrapper {
     overflow-x: auto;
-    background-color: rgb(0, 0, 0, 0.7);
+    background-color: rgba(8, 12, 24, 0.72);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.07);
+    border-radius: 6px;
     margin: 16px 0;
+}
+
+/* Add a left-border highlight on row hover */
+.gameTable tr:hover td {
+    background-color: rgba(255, 255, 255, 0.03);
+    border-left-color: rgba(160, 140, 255, 0.5); /* soft violet accent */
+    transition: background-color 0.15s ease;
 }
 
 .gameTable {
@@ -63,7 +74,8 @@
     height: fit-content;
     font-weight: bold;
     font-size: 80%;
-    color: black;
+    color: rgba(0, 0, 0, 0.85);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
 }
 
 .tag:before {
