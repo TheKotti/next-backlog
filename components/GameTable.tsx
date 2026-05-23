@@ -182,6 +182,7 @@ export const GameTable = ({
                 pageSize: 10,
             },
             autoResetSortBy: false,
+            autoResetPage: false,
             disableSortRemove: true,
         },
         useSortBy,
