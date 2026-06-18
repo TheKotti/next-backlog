@@ -210,10 +210,7 @@ export const VoteCell = ({ value, row, username }) => {
 
     return (
         <div className="d-flex align-items-center justify-content-center gap-2">
-            <span
-                title={voters.join(', ')}
-                style={{ minWidth: '1.5rem', textAlign: 'right' }}
-            >
+            <span style={{ minWidth: '1.5rem', textAlign: 'right' }}>
                 {displayCount}
             </span>
             {username && (

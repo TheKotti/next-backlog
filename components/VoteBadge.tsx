@@ -59,7 +59,6 @@ export const VoteBadge = ({
             {displayCount > 0 && (
                 <span
                     className="badge bg-danger fs-6"
-                    title={voters.join(', ')}
                     style={{ cursor: 'default' }}
                 >
                     {displayCount}
