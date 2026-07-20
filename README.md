@@ -18,6 +18,40 @@ You can start editing the page by modifying `pages/index.tsx`. The page auto-upd
 
 The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/api-routes/introduction) instead of React pages.
 
+## Games API
+
+`GET /api/games?title=<title>` returns the most recent backlog entry whose title
+matches, as JSON.
+
+### Authentication
+
+Send the token from the `API_TOKEN` environment variable as a bearer token:
+
+```bash
+curl -H "Authorization: Bearer $API_TOKEN" \
+  'https://<host>/api/games?title=Doom%20Eternal'
+```
+
+### Matching
+
+The `title` parameter is matched exactly but case-insensitively, so `doom
+eternal` finds `DOOM Eternal` while `doom` does not. When several entries share
+a title the most recently finished one wins; entries that aren't finished yet
+sort last.
+
+### Responses
+
+| Status | Body              | Meaning                                   |
+| ------ | ----------------- | ----------------------------------------- |
+| 200    | The game document | A matching entry was found                |
+| 400    | `{ error: ... }`  | The `title` parameter is missing or empty |
+| 401    | `{ error: ... }`  | The bearer token is missing or incorrect  |
+| 404    | `{ error: ... }`  | No entry matched the title                |
+| 500    | `{ error: ... }`  | `API_TOKEN` is unset, or the query failed |
+
+A 200 response is the raw game document — see the `Game` type in `types.d.ts`
+for its shape.
+
 ## Learn More
 
 To learn more about Next.js, take a look at the following resources:
