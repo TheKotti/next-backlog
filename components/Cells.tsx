@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import dayjs from 'dayjs'
 
 import { VodDialog } from './VodDialog'
@@ -165,6 +165,64 @@ export const AdminCell = ({ value, row, showVodButton = false }) => {
             <a href={`/recap?id=${value}`}>Recap</a>
 
             {showVodButton && <VodDialog game={row.original} />}
+        </div>
+    )
+}
+
+export const VoteCell = ({ value, row, username }) => {
+    const voters: string[] = value ?? []
+    const gameId: string = row.original._id
+    const hasVoted = username ? voters.includes(username) : false
+
+    const [optimisticVoted, setOptimisticVoted] = useState<boolean | null>(null)
+    const [loading, setLoading] = useState(false)
+
+    useEffect(() => {
+        if (optimisticVoted !== null && optimisticVoted === hasVoted) {
+            setOptimisticVoted(null)
+        }
+    }, [hasVoted, optimisticVoted])
+
+    const displayVoted = optimisticVoted ?? hasVoted
+    const displayCount =
+        optimisticVoted === null
+            ? voters.length
+            : optimisticVoted
+              ? voters.length + (hasVoted ? 0 : 1)
+              : voters.length - (hasVoted ? 1 : 0)
+
+    const handleVote = async () => {
+        if (!username || loading) return
+        setLoading(true)
+        setOptimisticVoted(!displayVoted)
+        try {
+            await fetch('/api/votes', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ gameId }),
+            })
+        } catch {
+            setOptimisticVoted(null)
+        } finally {
+            setLoading(false)
+        }
+    }
+
+    return (
+        <div className="d-flex align-items-center justify-content-center gap-2">
+            <span style={{ minWidth: '1.5rem', textAlign: 'right' }}>
+                {displayCount}
+            </span>
+            {username && (
+                <button
+                    className={`btn btn-sm ${displayVoted ? 'btn-primary' : 'btn-outline-secondary'}`}
+                    onClick={handleVote}
+                    disabled={loading}
+                    title={displayVoted ? 'Remove vote' : 'Vote for this game'}
+                >
+                    {displayVoted ? '✕' : '▲'}
+                </button>
+            )}
         </div>
     )
 }

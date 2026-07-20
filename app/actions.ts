@@ -262,6 +262,7 @@ export async function addNewGameAction(formData: FormData) {
                 tags: null,
                 additionalTimeSpent: null,
                 addedDate: new Date().toISOString(),
+                votes: [],
             }
 
             // Add cover image

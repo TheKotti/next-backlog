@@ -45,6 +45,13 @@ export const scoreSort = (rowA, rowB, id) => {
     return rowA.values[id] - rowB.values[id]
 }
 
+export const voteSort = (rowA, rowB, _id) => {
+    return (
+        (rowA.values['votes']?.length || 0) -
+        (rowB.values['votes']?.length || 0)
+    )
+}
+
 export const titleSort = (rowA, rowB, id) => {
     const rowAValue: string = rowA.values[id]
     const rowBValue: string = rowB.values[id]
@@ -83,6 +90,7 @@ const COLUMN_IDS = {
         '_id',
         'rating',
         'releaseYear',
+        'votes',
     ],
 }
 
@@ -92,12 +100,14 @@ export const formatCell = (
     props?: {
         showCovers?: boolean
         handleTagFilterChange: (value: string) => void
+        username?: string | null
     }
 ) => {
     const { column } = cell
     const columnId = column.id
     const showCovers = props?.showCovers
     const handleTagFilterChange = props?.handleTagFilterChange
+    const username = props?.username
 
     switch (true) {
         case COLUMN_IDS.TITLE.includes(columnId):
@@ -114,7 +124,7 @@ export const formatCell = (
                     key: columnId + row.id,
                     style: { textAlign: 'center' },
                 },
-                { handleTagFilterChange }
+                { handleTagFilterChange, username }
             )
 
         default:

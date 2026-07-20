@@ -1,21 +1,36 @@
-import { handleSignIn, handleSignOut } from 'utils/auth'
+'use client'
 
-export function SignIn({ provider, ...props }: { provider?: string }) {
+import { signIn, signOut } from 'next-auth/react'
+import { Icon } from './Icon'
+
+export function SignIn({ provider }: { provider?: string }) {
     return (
-        <form action={handleSignIn.bind(null, provider)}>
-            <button className="btn btn-light" {...props}>
-                Sign In
-            </button>
-        </form>
+        <button
+            className="btn btn-light"
+            onClick={() => signIn(provider)}
+            style={{
+                background: '#6f42c1',
+                borderColor: '#6f42c1',
+                color: 'white',
+            }}
+        >
+            Sign in to vote for upcoming games <Icon type="twitch" />
+        </button>
     )
 }
 
 export function SignOut(props: { username: string }) {
     return (
-        <form action={handleSignOut} className="w-full">
-            <button className="btn btn-light">
-                Sign Out ({props.username})
-            </button>
-        </form>
+        <button
+            className="btn btn-light"
+            onClick={() => signOut()}
+            style={{
+                background: '#6f42c1',
+                borderColor: '#6f42c1',
+                color: 'white',
+            }}
+        >
+            Sign Out ({props.username})
+        </button>
     )
 }

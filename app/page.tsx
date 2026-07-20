@@ -1,9 +1,10 @@
+import { Suspense } from 'react'
 import type { Metadata } from 'next'
 import styles from '../styles/Home.module.css'
 import { Icon } from '../components/Icon'
 import { connectToDatabase } from 'lib/mongo'
 import { Tables } from 'components/Tables'
-import { Suspense } from 'react'
+import { AuthBar } from 'components/AuthBar'
 
 async function getGames(): Promise<Game[]> {
     const { db } = await connectToDatabase()
@@ -33,7 +34,9 @@ export default async function Home() {
 
     return (
         <main className={styles.container}>
-            <div className="d-flex justify-content-between">
+            <AuthBar />
+
+            <div className="d-flex justify-content-between align-items-start flex-wrap gap-2">
                 <h1>{process.env.ADMIN_USER_NAME}&apos;s bad takes on games</h1>
 
                 <div className="row gx-3">

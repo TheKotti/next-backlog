@@ -13,12 +13,14 @@ import {
 import { ReadonlyURLSearchParams } from 'next/navigation'
 import CoverImage from './CoverImage'
 import { SelectFilter } from './SelectFilter'
+import { VoteBadge } from './VoteBadge'
 
 type Props = {
     games: Array<Game>
     isAdmin: boolean
     updateParams: (newParams: Record<string, unknown>) => void
     initialParams: ReadonlyURLSearchParams
+    username: string | null
 }
 
 export const BacklogTable = ({
@@ -26,6 +28,7 @@ export const BacklogTable = ({
     updateParams,
     initialParams,
     isAdmin,
+    username,
 }: Props) => {
     const [showCovers, setShowCovers] = useState(
         initialParams.get('showCovers') != 'false'
@@ -38,9 +41,11 @@ export const BacklogTable = ({
 
     const data: Array<Game & { hltbString: string }> = useMemo(() => {
         return games
-            .filter(
-                (x) => (tagFilter && x.tags?.includes(tagFilter)) || !tagFilter
-            )
+            .filter((x) => {
+                if (!tagFilter) return true
+                if (tagFilter === '__untagged__') return !x.tags?.length
+                return x.tags?.includes(tagFilter)
+            })
             .filter(
                 (x) =>
                     (devFilter && x.developers?.includes(devFilter)) ||
@@ -79,9 +84,15 @@ export const BacklogTable = ({
 
         const uniqueTags = [...new Set(tags)].sort()
 
-        const tagOptions = uniqueTags.map((t) => {
-            return { value: t, label: `${t} (${tagCounts[t] ?? 0})` }
-        })
+        const untaggedCount = games.filter((g) => !g.tags?.length).length
+
+        const tagOptions = [
+            { value: '__untagged__', label: `Untagged (${untaggedCount})` },
+            ...uniqueTags.map((t) => ({
+                value: t,
+                label: `${t} (${tagCounts[t] ?? 0})`,
+            })),
+        ]
 
         return tagOptions
     }, [games])
@@ -147,6 +158,8 @@ export const BacklogTable = ({
                 pageSize: 10,
             },
             disableSortRemove: true,
+            autoResetSortBy: false,
+            autoResetPage: false,
         },
         useSortBy,
         usePagination
@@ -178,7 +191,12 @@ export const BacklogTable = ({
                 <input
                     value={titleFilter}
                     onChange={(e) => handleTitleFilterChange(e.target.value)}
-                    className={`form-control w-25 ${styles['dark-input']}`}
+                    className={`form-control ${styles['dark-input']}`}
+                    style={{
+                        minWidth: '120px',
+                        maxWidth: '25%',
+                        flex: '1 1 120px',
+                    }}
                     placeholder="Search"
                 />
 
@@ -226,51 +244,73 @@ export const BacklogTable = ({
                         )
                         .sort((a, b) => titleSortSimple(a.title, b.title))
                         .map((game) => {
+                            const voteCount = game.votes?.length ?? 0
+                            const hasVoted = username
+                                ? game.votes?.includes(username)
+                                : false
                             return (
-                                <CoverImage
-                                    game={game}
-                                    showHltb
-                                    showTags
-                                    onTagClick={handleTagFilterChange}
+                                <div
                                     key={game._id}
-                                    isAdmin={isAdmin}
-                                />
+                                    style={{ position: 'relative' }}
+                                >
+                                    <CoverImage
+                                        game={game}
+                                        showHltb
+                                        showTags
+                                        onTagClick={handleTagFilterChange}
+                                        isAdmin={isAdmin}
+                                    />
+                                    <VoteBadge
+                                        count={voteCount}
+                                        hasVoted={hasVoted}
+                                        voters={game.votes ?? []}
+                                        username={username}
+                                        gameId={game._id!}
+                                    />
+                                </div>
                             )
                         })}
                 </div>
             ) : (
                 <>
-                    <table
-                        {...getTableProps}
-                        className={`w-100 ${styles.gameTable}`}
-                    >
-                        <thead>
-                            <tr>
-                                {headers.map((column) => {
-                                    if (column.id === '_id' && !isAdmin) return
-                                    return formatHeader(column, hiddenColumns)
+                    <div className={styles['tableWrapper']}>
+                        <table
+                            {...getTableProps}
+                            className={`w-100 ${styles.gameTable}`}
+                        >
+                            <thead>
+                                <tr>
+                                    {headers.map((column) => {
+                                        if (column.id === '_id' && !isAdmin)
+                                            return
+                                        return formatHeader(
+                                            column,
+                                            hiddenColumns
+                                        )
+                                    })}
+                                </tr>
+                            </thead>
+
+                            <tbody {...getTableBodyProps()}>
+                                {page.map((row) => {
+                                    prepareRow(row)
+                                    const rowProps = row.getRowProps()
+                                    return (
+                                        <tr {...rowProps} key={rowProps.key}>
+                                            {row.cells.map((cell) => {
+                                                return formatCell(cell, row, {
+                                                    handleTagFilterChange,
+                                                    username,
+                                                })
+                                            })}
+                                        </tr>
+                                    )
                                 })}
-                            </tr>
-                        </thead>
+                            </tbody>
+                        </table>
+                    </div>
 
-                        <tbody {...getTableBodyProps()}>
-                            {page.map((row) => {
-                                prepareRow(row)
-                                const rowProps = row.getRowProps()
-                                return (
-                                    <tr {...rowProps} key={rowProps.key}>
-                                        {row.cells.map((cell) => {
-                                            return formatCell(cell, row, {
-                                                handleTagFilterChange,
-                                            })
-                                        })}
-                                    </tr>
-                                )
-                            })}
-                        </tbody>
-                    </table>
-
-                    <div className="pagination d-flex align-items-center gap-2">
+                    <div className="pagination d-flex align-items-center gap-2 flex-wrap">
                         <div className="btn-group">
                             <button
                                 className={`btn ${styles['dark-input']}`}
