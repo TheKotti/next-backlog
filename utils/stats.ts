@@ -1,5 +1,5 @@
-export function getYears(games: Game[]) {
-    // dedupe by title, preferring most recent finishedDate
+// dedupe by title, preferring the entry with the most recent finishedDate
+export function dedupeByTitle(games: Game[]): Game[] {
     const uniqueByTitle: Record<string, Game> = {}
 
     games.forEach((game) => {
@@ -18,9 +18,15 @@ export function getYears(games: Game[]) {
         }
     })
 
+    return Object.values(uniqueByTitle)
+}
+
+export function getYears(games: Game[]) {
+    const uniqueByTitle = dedupeByTitle(games)
+
     const yearGroups: Record<number, { title: string; rating: number }[]> = {}
 
-    Object.values(uniqueByTitle).forEach((game) => {
+    uniqueByTitle.forEach((game) => {
         if (game.rating && game.releaseYear) {
             if (!yearGroups[game.releaseYear]) {
                 yearGroups[game.releaseYear] = []
@@ -49,8 +55,11 @@ export function getYears(games: Game[]) {
 
 export function getStats(games: Game[]) {
     if (games.length === 0) return []
-    // This filter crap shouldn't be necessary but fuck it
-    const ratings = games.map((x) => x.rating).filter((x): x is number => !!x)
+    // Average rating should count each game once, even if it was replayed and
+    // rated multiple times (matches the Developers/Tags/Years tabs).
+    const ratings = dedupeByTitle(games)
+        .map((x) => x.rating)
+        .filter((x): x is number => !!x)
     const times = games.map((x) => x.timeSpent).filter((x): x is number => !!x)
     const additionalTimes = games
         .map((x) => x.additionalTimeSpent)
