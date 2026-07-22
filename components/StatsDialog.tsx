@@ -14,7 +14,13 @@ import {
     ChartData,
 } from 'chart.js'
 import styles from '../styles/StatsDialog.module.css'
-import { getYears, getStats, getDevelopers, getTags } from '../utils/stats'
+import {
+    getYears,
+    getStats,
+    getDevelopers,
+    getTags,
+    dedupeByTitle,
+} from '../utils/stats'
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip)
 
@@ -67,7 +73,9 @@ export const StatsDialog = (props: Props) => {
         }
 
         if (games.length) {
-            games.forEach((game) => {
+            // Count each game once so replays rated multiple times don't
+            // inflate the distribution.
+            dedupeByTitle(games).forEach((game) => {
                 if (game.rating) {
                     ratingCounts[game.rating]++
                 }
