@@ -110,7 +110,7 @@ NEXTAUTH_SECRET=        # Any random string, e.g. output of: openssl rand -hex 3
 NEXT_PUBLIC_IMG_CLOUD_NAME=
 IMG_API_KEY=
 IMG_API_SECRET=
-API_KEY=
+API_TOKEN=
 ```
 
 The Twitch application needs `http://localhost:3000/api/auth/callback/twitch` added as an OAuth redirect URL in the Twitch developer console.
