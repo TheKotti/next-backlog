@@ -299,8 +299,12 @@ test.describe('Previously Played table', () => {
         await page.locator('table tbody tr').first().waitFor()
 
         const goToInput = page.locator('.pagination input[type="number"]')
-        await goToInput.fill('5')
-        await goToInput.press('Enter')
+        // The input navigates on `onChange` (no Enter handler). Type like a real
+        // user so React's onChange fires reliably across browsers — Playwright's
+        // fill() on a number input doesn't trigger it in Firefox.
+        await goToInput.click()
+        await goToInput.press('ControlOrMeta+a')
+        await goToInput.pressSequentially('5')
 
         await expect(page.locator('.pagination strong')).toContainText('5 of')
     })
